@@ -41,3 +41,5 @@ def top_5():
 @app.route("/post", methods=["POST"])
 def post_data():
     cursor.execute("INSERT INTO scores VALUES (%s, %s, %s)", ("kingslayer69", 25000, 250))
+    database_url.commit()
+    return jsonify({"message": "score saved"}), 201
