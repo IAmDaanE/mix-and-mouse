@@ -10,7 +10,12 @@ cursor = database_url.cursor()
 def ping():
     return "succesful response"
 
-@app.route("/winner")
-def top_player():
-    cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 1")
+@app.route("/top10")
+def top_10():
+    cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 10")
+    return cursor.fetchall()
+
+@app.route("/top5")
+def top_5():
+    cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 5")
     return cursor.fetchall()
