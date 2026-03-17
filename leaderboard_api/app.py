@@ -1,7 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify
 import psycopg2
 import os
-import jsonify
 
 app = Flask(__name__)
 database_url = psycopg2.connect(os.getenv("DATABASE_URL"))
