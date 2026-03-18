@@ -3,8 +3,9 @@ import psycopg2
 import os
 
 app = Flask(__name__)
-database_url = psycopg2.connect(os.getenv("DATABASE_URL"))
-cursor = database_url.cursor()
+def get_db():
+    database_url = psycopg2.connect(os.getenv("DATABASE_URL"))
+    return database_url
 
 @app.route("/ping")
 def ping():
@@ -12,6 +13,8 @@ def ping():
 
 @app.route("/top10")
 def top_10():
+    conn = get_db()
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 10")
     rows = cursor.fetchall()
     result = []
@@ -22,10 +25,13 @@ def top_10():
             "customers_served": row[2],
             "best_cocktail_value": row[3]
         })
+    conn.close()
     return jsonify(result)
 
 @app.route("/top5")
 def top_5():
+    conn = get_db()
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 5")
     rows = cursor.fetchall()
     result = []
@@ -36,19 +42,36 @@ def top_5():
             "customers_served": row[2],
             "best_cocktail_value": row[3]
         })
+    conn.close()
     return jsonify(result)
 
 @app.route("/post", methods=["POST"])
 def post_data():
+    conn = get_db()
+    cursor = conn.cursor()
     data = request.json
     name = data["name"]
     customers_served = data["customers_served"]
-    best_cocktail__value = data["best_cocktail_value"]
-    cursor.execute("INSERT INTO scores (name, customers_served, best_cocktail_value) VALUES (%s, %s, %s)", (name, customers_served, best_cocktail__value))
-    database_url.commit()
+    best_cocktail_value = data["best_cocktail_value"]
+    cursor.execute("INSERT INTO scores (name, customers_served, best_cocktail_value) VALUES (%s, %s, %s)", (name, customers_served, best_cocktail_value))
+    conn.commit()
+    conn.close()
     return jsonify({"message": "score saved"}), 201
 
 @app.route("/full")
 def full_database():
+    conn = get_db()
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM scores")
-    return cursor.fetchall()
+    response = cursor.fetchall()
+    conn.close()
+    return jsonify(response)
+
+@app.route("/best_recipe")
+def best_recipe():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, best_cocktail_value FROM scores ORDER BY best_cocktail_value DESC LIMIT 1")
+    response = cursor.fetchall()
+    conn.close()
+    return response
