@@ -48,7 +48,7 @@ def post_data():
     database_url.commit()
     return jsonify({"message": "score saved"}), 201
 
-app.route("/full")
+@app.route("/full")
 def full_database():
     cursor.execute("SELECT * FROM scores")
     return cursor.fetchall()
