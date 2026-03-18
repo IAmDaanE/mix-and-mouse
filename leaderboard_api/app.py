@@ -40,6 +40,15 @@ def top_5():
 
 @app.route("/post", methods=["POST"])
 def post_data():
-    cursor.execute("INSERT INTO scores (name, customers_served, best_cocktail_value) VALUES (%s, %s, %s)", ("kingslayer69", 25000, 250))
+    data = request.json
+    name = data["name"]
+    customers_served = data["customers_served"]
+    best_cocktail__value = data["best_cocktail_value"]
+    cursor.execute("INSERT INTO scores (name, customers_served, best_cocktail_value) VALUES (%s, %s, %s)", (name, customers_served, best_cocktail__value))
     database_url.commit()
     return jsonify({"message": "score saved"}), 201
+
+app.route("/full")
+def full_database():
+    cursor.execute("SELECT * FROM scores")
+    return cursor.fetchall()
