@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import psycopg2
 import os
 
@@ -9,7 +9,7 @@ def get_db():
 
 @app.route("/ping")
 def ping():
-    return "succesful response"
+    return render_template("ping.html")
 
 @app.route("/top10")
 def top_10():
