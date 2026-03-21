@@ -7,9 +7,13 @@ def get_db():
     database_url = psycopg2.connect(os.getenv("DATABASE_URL"))
     return database_url
 
-@app.route("/ping")
-def ping():
-    return render_template("ping.html")
+@app.route("/html")
+def html():
+    return render_template("testing.html")
+
+@app.route("/wakeup")
+def wakeup():
+    return "im awake gng"
 
 @app.route("/top10")
 def top_10():
@@ -75,3 +79,4 @@ def best_recipe():
     response = cursor.fetchall()
     conn.close()
     return response
+
