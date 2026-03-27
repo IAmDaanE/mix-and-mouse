@@ -1824,35 +1824,36 @@ while running:
     
     #---------event loop---------
 
-    new_ingredient_unlocked = False
-    left_mouse_clicked = False
-    right_mouse_clicked = False
-    transition_this_frame = False
-    pos = pygame.mouse.get_pos()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            pos = event.pos
-            left_mouse_clicked = True
-            if cocktail_shaker_rect.collidepoint(pos):
-                dragging = True
-                cocktail_shaker_x_offset = cocktail_shaker_rect.x - event.pos[0]
-                cocktail_shaker_y_offset = cocktail_shaker_rect.y - event.pos[1]
-        if event.type == pygame.MOUSEMOTION:
-            if dragging and cocktail_done:
-                cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
-                cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            dragging = False
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
-            pos = event.pos
-            right_mouse_clicked = True
-        if event.type == pygame.TEXTINPUT and len(playthrough_name_text) <= 15:
-            playthrough_name_text += event.text
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
-                playthrough_name_text = playthrough_name_text[:-1]
+    if True:
+        new_ingredient_unlocked = False
+        left_mouse_clicked = False
+        right_mouse_clicked = False
+        transition_this_frame = False
+        pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = event.pos
+                left_mouse_clicked = True
+                if cocktail_shaker_rect.collidepoint(pos):
+                    dragging = True
+                    cocktail_shaker_x_offset = cocktail_shaker_rect.x - event.pos[0]
+                    cocktail_shaker_y_offset = cocktail_shaker_rect.y - event.pos[1]
+            if event.type == pygame.MOUSEMOTION:
+                if dragging and cocktail_done:
+                    cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
+                    cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                dragging = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                pos = event.pos
+                right_mouse_clicked = True
+            if event.type == pygame.TEXTINPUT and len(playthrough_name_text) <= 15:
+                playthrough_name_text += event.text
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    playthrough_name_text = playthrough_name_text[:-1]
     
     #-----------updates--------------
 
