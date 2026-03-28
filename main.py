@@ -524,7 +524,6 @@ if True:
 #--------other variables--------
 
 if True:
-    screen_displayed_now = "startscreen"
     click_duration = 80
     screen_switch_duration = 85
     running = True
@@ -569,6 +568,7 @@ if True:
     unlocks = {}
     normal_guest_timer_range = [3, 23]
     sped_up_guest_timer_range = [1, 2]
+    current_username_string = """"""
 
 #--------random rects and lists--------
 
@@ -976,12 +976,24 @@ if True:
         return int(math.ceil(n / 12) * 12)
 
     save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}/save_files"
+    username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}/username.txt"
+
     os.makedirs(save_files_location, exist_ok=True)
+                
+    if not os.path.exists(username_txt_file):
+        open(username_txt_file, "w").close()
+        screen_displayed_now = "username"
+    else:
+        screen_displayed_now = "startscreen"
 
     saves_amount = 0
     for folder in os.listdir(save_files_location):
         collision_rects_saves.append(pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[saves_amount], 500, 120))
         saves_amount += 1
+
+    def  write_username_file(username):
+        with open(username_txt_file, "w") as f:
+            f.write(username)
 
     def check_valid_dir_input():
         global playthrough_name_text
@@ -1003,6 +1015,7 @@ if True:
             folder_counter += 1
 
     def new_save():
+        global username
         os.mkdir(f"{save_files_location}/{playthrough_name_text}")
         basic_data = {"balance": balance, "customers_served": customers_served, "dev_mode": str(settings["dev_mode"]), "sound_on": str(settings["sound_on"]), "last_save": time.strftime("%m/%d/%Y")}
         guest_data = {"key": "value"} #TWAN
@@ -1016,12 +1029,13 @@ if True:
             "ingredients": unlocked_ingredients_data,
             "unlocks": unlocks_data
             }
-        
         with open(f"{save_files_location}/{playthrough_name_text}/data.json", "w") as f:
             json.dump(save_data, f)
+        with open(username_txt_file, "r") as f:
+            username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -1032,7 +1046,9 @@ if True:
             guests = raw_unloaded_data["guests"]
             guest_available_spots = raw_unloaded_data["guest_available_spots"]
             first_save_done = raw_unloaded_data["first_save_done"]
-            calculate_stock_pages()
+        calculate_stock_pages()
+        with open(username_txt_file, "r") as f:
+            username = f.read()
     
     def display_save_details():
         save_counter = 0
@@ -1156,8 +1172,9 @@ def check_unlocks():
 #---------display functions----------
 
 if True:
+
     def display_startscreen():
-        global continue_button_clicked, continue_button_clicktime, pos, settings_button_clicked, exit_button_clicked, settings_button_clicktime, exit_button_clicktime, screen_displayed_now, running, transition_this_frame, new_button_clicked, new_button_clicktime, save_details
+        global continue_button_clicked, continue_button_clicktime, pos, settings_button_clicked, exit_button_clicked, settings_button_clicktime, exit_button_clicktime, screen_displayed_now, running, transition_this_frame, new_button_clicked, new_button_clicktime, save_details, playthrough_name_text
         #---------button logic----------
         
         if not transition_this_frame:
@@ -1196,6 +1213,7 @@ if True:
             new_button_clicktime = 0
             screen_displayed_now = "new_screen"
             transition_this_frame = True
+            playthrough_name_text = ""
 
         #----------displaying-----------
         
@@ -1280,6 +1298,7 @@ if True:
                 print(folder_count)
 
         #----------displaying----------
+        
         screen.fill((0, 89, 76))
         screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
         screen.blit(create_button_clicked_img if create_button_clicked else create_button_img, create_button_rect)
@@ -1484,6 +1503,8 @@ if True:
         screen.blit(save_button_clicked_img if save_button_clicked else save_button_img, save_button_rect)
         screen.blit(save_exit_button_clicked_img if save_exit_button_clicked else save_exit_button_img, save_exit_button_rect)
         screen.blit(settings_button_clicked_img if settings_button_clicked else settings_button_img, settings_button_rect)
+        username_text = save_detail_font_nums.render(username, True, (255,255,255))
+        screen.blit(username_text, (WINDOW_WIDTH - 10 - username_text.get_width(), 10))
         pygame.draw.rect(screen, (100, 0, 0), progress_screen_button_rect, 1)
 
     def display_menu_screen():
@@ -1818,6 +1839,37 @@ if True:
             screen.blit(guest_images_library[guest["image_num"]], guest_rects_library[guest["rect_num"]])
         pygame.draw.rect(screen, (255, 0, 0), money_cheat_rect, 1)
 
+    def display_create_username():
+        global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now
+        #----------button logic--------
+
+        if left_mouse_clicked and continue_button2_rect.collidepoint(pos):
+            continue_button2_clicked = True
+            continue_button2_clicktime = now
+
+        if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - click_duration:
+            continue_button2_clicked = False
+        
+        if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
+            continue_button2_clicktime = 0
+            username = current_username_string
+            write_username_file(username)
+            screen_displayed_now = "startscreen"
+            current_username_string = """"""
+
+        #----------displaying----------
+
+        screen.fill((0, 89, 76))
+        screen.blit(continue_button2_clicked_img if continue_button2_clicked else continue_button2_img, continue_button2_rect)
+        username_name_rendered_text = playthrough_name_font.render(playthrough_name_text, True, (0,0,0))
+        screen.blit(username_name_rendered_text, (448, 401))
+        username_text1 = playthrough_text_font.render("enter a username:", True, (0,0,0))
+        username_text2 = playthrough_text_font.render("used on global leaderboard!", True, (0,0,0))
+        screen.blit(username_text1, (476, 230))
+        screen.blit(username_text2, (504, 300))
+        pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_big, 1, border_radius=10)
+        pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_small, 1, border_radius=10)
+
 #-----------main loop-----------
 
 while running:
@@ -1849,11 +1901,13 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 pos = event.pos
                 right_mouse_clicked = True
-            if event.type == pygame.TEXTINPUT and len(playthrough_name_text) <= 15:
+            if event.type == pygame.TEXTINPUT and len(playthrough_name_text) <= 15 and len(current_username_string) <= 15:
                 playthrough_name_text += event.text
+                current_username_string += event.text
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
                     playthrough_name_text = playthrough_name_text[:-1]
+                    current_username_string = current_username_string[:-1]
     
     #-----------updates--------------
 
@@ -1900,6 +1954,8 @@ while running:
     
     elif screen_displayed_now == "guest_screen":
         display_guest_screen()
+    elif screen_displayed_now == "username":
+        display_create_username()
 
     #----------------------------------
 
