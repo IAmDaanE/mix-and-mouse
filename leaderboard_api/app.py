@@ -93,7 +93,7 @@ def best_recipe():
     conn.close()
     return response
 
-@app.route("/check_conflict")
+@app.route("/check_conflict", methods=["POST"])
 def check_conflict():
     conn = get_db()
     cursor = conn.cursor()
