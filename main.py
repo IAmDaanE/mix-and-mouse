@@ -620,7 +620,7 @@ if True:
 
         temp_drink_info.append({"preperation": used_ing})
         
-        print(temp_drink_info)
+        
         succesful_making = False
         return temp_drink_info
 
@@ -1292,7 +1292,7 @@ if True:
         stock_screen_row_counter = 0
 
     def display_cocktailmaker():
-        global drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect
+        global newly_made_cocktail, shaking_complete, drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect
         #-------button logic---------
 
         if not transition_this_frame:
@@ -1417,6 +1417,7 @@ if True:
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
             if shaking_complete:
                 screen_displayed_now = "cocktail_made_screen"
+                shaking_complete = False
 
     if drink_made == 1:
         drink_made = 2
@@ -1572,7 +1573,7 @@ if True:
     def display_cocktail_made_screen():
         pass
 #-----------main loop-----------
-
+total_dif = 0
 while running:
     
     #---------event loop---------
@@ -1591,10 +1592,22 @@ while running:
                 left_mouse_clicked = True
                 if cocktail_shaker_rect.collidepoint(pos):
                     dragging = True
+                    temppos = pos[1]
                     cocktail_shaker_x_offset = cocktail_shaker_rect.x - event.pos[0]
                     cocktail_shaker_y_offset = cocktail_shaker_rect.y - event.pos[1]
             if event.type == pygame.MOUSEMOTION:
                 if dragging and shaking:
+                    
+                    if total_dif > 2000:
+                        total_dif = 0
+                        temppos = 0
+                        shaking_complete = True
+                    else:
+                        difference_shaker = abs(temppos - pos[1])
+                        total_dif += difference_shaker
+                        temppos = pos[1]
+                        print(total_dif)
+
                     cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
                     cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
