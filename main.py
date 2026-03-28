@@ -10,6 +10,7 @@ if True:
     from platformdirs import user_data_dir
     from copy import deepcopy
     import shutil
+    import requests
 
     WINDOW_WIDTH = 1280
     WINDOW_HEIGHT = 720
@@ -598,7 +599,7 @@ if True:
     stock_screen_row_cords = [109, 196, 284, 371, 458]
     continue_screen_cords = [100, 235, 370, 505]
 
-    unlocked_ingredients = (
+    unlocked_ingredients = [
         {"name": "vodka", "price": 10, "owned": 0},
         {"name": "gin", "price": 15, "owned": 0},
         {"name": "orange juice", "price": 4, "owned": 0},
@@ -609,7 +610,7 @@ if True:
         {"name": "lime juice", "price": 2, "owned": 0},
         {"name": "mint", "price": 4, "owned": 0},
         {"name": "sugar syrup", "price": 9, "owned": 0},
-        {"name": "ice", "price": 1, "owned": 0})
+        {"name": "ice", "price": 1, "owned": 0}]
 
     guest1_rect = guest1_img.get_rect(topleft=(100,360))
     guest2_rect = guest1_img.get_rect(topleft=(guest1_rect.right + 70, 360))
@@ -1077,6 +1078,28 @@ if True:
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
             json.dump(save_data, f)
     
+#----------leaderboard logic---------
+
+if True:
+
+    base_api_url = "https://cocktail-game-leaderboard-api.onrender.com"
+
+    def initial_post():
+        name = username
+        customers_served = 0
+        best_cocktail_value = 0
+        response = requests.post(f"{base_api_url}/initial_post", json={"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
+
+    def update_post():
+        response = requests.post(f"{base_api_url}/initial_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": 15})
+        
+    def check_username_conflict(username):
+        response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
+        if response.json()["exists"]:
+            return True
+        else:
+            return False
+        
 #-------stock screen page calculations-------
 
 if True:
@@ -1843,6 +1866,8 @@ if True:
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now
         #----------button logic--------
 
+        error_message = ""
+
         if left_mouse_clicked and continue_button2_rect.collidepoint(pos):
             continue_button2_clicked = True
             continue_button2_clicktime = now
@@ -1852,10 +1877,15 @@ if True:
         
         if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
             continue_button2_clicktime = 0
-            username = current_username_string
-            write_username_file(username)
-            screen_displayed_now = "startscreen"
-            current_username_string = """"""
+            if len(current_username_string) == 0:
+                error_message = "enter something"
+            elif check_username_conflict(current_username_string):
+                error_message = "username already exists"
+            else:
+                username = current_username_string
+                write_username_file(username)
+                screen_displayed_now = "startscreen"
+                current_username_string = """"""
 
         #----------displaying----------
 
@@ -1869,6 +1899,8 @@ if True:
         screen.blit(username_text2, (504, 300))
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_big, 1, border_radius=10)
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_small, 1, border_radius=10)
+        error_text = pixel_font_letters.render(error_message, True, (255, 0, 0))
+        screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
 #-----------main loop-----------
 
