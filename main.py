@@ -598,7 +598,7 @@ if True:
     stock_screen_row_cords = [109, 196, 284, 371, 458]
     continue_screen_cords = [100, 235, 370, 505]
 
-    unlocked_ingredients = (
+    unlocked_ingredients = [
         {"name": "vodka", "price": 10, "owned": 0},
         {"name": "gin", "price": 15, "owned": 0},
         {"name": "orange juice", "price": 4, "owned": 0},
@@ -609,7 +609,7 @@ if True:
         {"name": "lime juice", "price": 2, "owned": 0},
         {"name": "mint", "price": 4, "owned": 0},
         {"name": "sugar syrup", "price": 9, "owned": 0},
-        {"name": "ice", "price": 1, "owned": 0})
+        {"name": "ice", "price": 1, "owned": 0}]
 
     guest1_rect = guest1_img.get_rect(topleft=(100,360))
     guest2_rect = guest1_img.get_rect(topleft=(guest1_rect.right + 70, 360))
