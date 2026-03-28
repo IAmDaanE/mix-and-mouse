@@ -197,9 +197,9 @@ if True:
     cocktail_layer_height = 15
     cocktail_glass_middle = 621
     shaking = False
-    drink_made = False
+    drink_made = 0
     newly_made_cocktail = []
-
+    shaking_complete = False
     starting_shaker_cords = [500, 500]
     current_shaker_cords = starting_shaker_cords.copy()
     dragging = False
@@ -560,7 +560,7 @@ if True:
     def drink_check(used_ing):
         stars_temp = 0
         temp_drink_info = []
-        building_score = {}
+        building_score = []
         succesful_making = False
         for recipe in all_recipes_in_game:
             recipe_ingredients = [ing["name"] for ing in recipe["makingprocess"].values()]
@@ -1375,7 +1375,8 @@ if True:
                 total_amount += current_made_cocktail[str(ingredient)]
             if total_amount == 20:
                 shaking = True
-                drink_made = True
+                if drink_made == 0:
+                    drink_made = 1
                 newly_made_cocktail = drink_check(current_made_cocktail)
 
         #---------displaying---------
@@ -1414,8 +1415,12 @@ if True:
             pygame.draw.rect(screen, (91, 91, 91), (cocktail_glass_middle - total_width / 2, WINDOW_HEIGHT - 40, total_width, total_height))
             pygame.draw.rect(screen, (151, 151, 151), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, total_width - gap * 2, total_height - gap * 2))
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
-    if drink_made:
-        drink_made = False
+            if shaking_complete:
+                screen_displayed_now = "cocktail_made_screen"
+
+    if drink_made == 1:
+        drink_made = 2
+        # drink_made needs to be set to 0 when you have created a drink
         currently_preparing_drink = drink_check(current_made_cocktail)
 
 
@@ -1564,6 +1569,8 @@ if True:
         error_text = pixel_font_letters.render(username_error_message, True, (255, 0, 0))
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
+    def display_cocktail_made_screen():
+        pass
 #-----------main loop-----------
 
 while running:
@@ -1650,7 +1657,8 @@ while running:
         display_guest_screen()
     elif screen_displayed_now == "username":
         display_create_username()
-
+    elif screen_displayed_now == "cocktail_made_screen":
+        display_cocktail_made_screen()
     #----------------------------------
 
     pygame.display.update()
