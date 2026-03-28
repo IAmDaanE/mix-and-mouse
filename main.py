@@ -196,7 +196,10 @@ if True:
     cocktail_glass_width = 198
     cocktail_layer_height = 15
     cocktail_glass_middle = 621
-    cocktail_done = False
+    shaking = False
+    drink_made = False
+    newly_made_cocktail = []
+
     starting_shaker_cords = [500, 500]
     current_shaker_cords = starting_shaker_cords.copy()
     dragging = False
@@ -554,18 +557,24 @@ if True:
         else:
             return sum(calc_list)
 
-    def drink_check(used_ing,):
-        building_score = []
+    def drink_check(used_ing):
+        stars_temp = 0
+        temp_drink_info = []
+        building_score = {}
+        succesful_making = False
         for recipe in all_recipes_in_game:
             recipe_ingredients = [ing["name"] for ing in recipe["makingprocess"].values()]
             
             if set(recipe_ingredients) == set(used_ing.keys()):
                 print("you succesfully made a " + recipe["name"])
+                succesful_making = True
 
                 if (recipe["name"]) not in unlocked_recipes:
                     unlocked_recipes.append(recipe["name"])
                     print("new recipe unlocked")
-                
+
+                temp_drink_info.append({"drink made": recipe["name"]})
+
                 for ing in recipe["makingprocess"].values():
                     name = ing["name"]
                     required = ing["amount"]
@@ -578,29 +587,42 @@ if True:
         
         match total_dif:
                 case 0:
-                    return 10
+                    stars_temp = 10
                 case 1 | 2 | 3:
-                    return 9
+                    stars_temp = 9
                 case 4 | 5:
-                    return 8
+                    stars_temp = 8
                 case 6 | 7:
-                    return 7
+                    stars_temp = 7
                 case 8 | 9 | 10:
-                    return 6
+                    stars_temp = 6
                 case 11 | 12 | 13:
-                    return 5
+                    stars_temp = 5
                 case 14 | 15 | 16 | 17:
-                    return 4
+                    stars_temp = 4
                 case 18 | 19 | 20:
-                    return 3
+                    stars_temp = 3
                 case 21 | 22 | 23:
-                    return 2
+                    stars_temp = 2
                 case 24 | 25 | 26:
-                    return 1
+                    stars_temp = 1
                 case 999999:
-                    return -1
+                    stars_temp = -1
                 case _:
-                    return 0
+                    stars_temp = 0
+        if succesful_making == False:
+            temp_drink_info.append({"sucesfull": False})
+        else:
+            temp_drink_info.append({"sucesfull": True})
+
+        if succesful_making == True:
+            temp_drink_info.append({"stars": stars_temp})
+
+        temp_drink_info.append({"preperation": used_ing})
+        
+        print(temp_drink_info)
+        succesful_making = False
+        return temp_drink_info
 
 #----------file saving----------
 
@@ -1270,7 +1292,7 @@ if True:
         stock_screen_row_counter = 0
 
     def display_cocktailmaker():
-        global back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, cocktail_done, cocktail_shaker_rect
+        global drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect
         #-------button logic---------
 
         if not transition_this_frame:
@@ -1290,7 +1312,7 @@ if True:
             current_cocktail_rects = []
             unlocked_ingredients = list(deepcopy(backup_ingredients))
             backup_ingredients.clear()
-            cocktail_done = False
+            shaking = False
             cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
 
         if cocktail_page_displayed != 0:
@@ -1310,11 +1332,11 @@ if True:
             col_check_rect_count += 1
 
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        if cocktail_done:
+        if shaking:
             if cocktail_shaker_rect.collidepoint(pos):
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
 
-        if not cocktail_done:
+        if not shaking:
             if left_mouse_clicked and add_ingredient_button_rect.collidepoint(pos) and selected_cocktail_ingredient["owned"] > 0:
                 ingredient_name = selected_cocktail_ingredient["name"]
                 do_add = False
@@ -1352,7 +1374,9 @@ if True:
             for ingredient in current_made_cocktail:
                 total_amount += current_made_cocktail[str(ingredient)]
             if total_amount == 20:
-                cocktail_done = True
+                shaking = True
+                drink_made = True
+                newly_made_cocktail = drink_check(current_made_cocktail)
 
         #---------displaying---------
 
@@ -1377,11 +1401,11 @@ if True:
             screen.blit(right_arrow_img, cocktail_right_arrow_rect)
         if selected_cocktail_ingredient_page == cocktail_page_displayed:
             pygame.draw.rect(screen, (0,0,0), cocktail_indicator_rect, 1)
-        if not cocktail_done:
+        if not shaking:
             screen.blit(cocktail_glass_img, (512, 356))
             for rect in current_cocktail_rects:
                 pygame.draw.rect(screen, rect["color"], rect["rect"])
-        if cocktail_done:
+        if shaking:
             gap = 4
             total_width = 300
             total_height = 30
@@ -1390,6 +1414,10 @@ if True:
             pygame.draw.rect(screen, (91, 91, 91), (cocktail_glass_middle - total_width / 2, WINDOW_HEIGHT - 40, total_width, total_height))
             pygame.draw.rect(screen, (151, 151, 151), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, total_width - gap * 2, total_height - gap * 2))
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
+    if drink_made:
+        drink_made = False
+        currently_preparing_drink = drink_check(current_made_cocktail)
+
 
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, customers_served, progress_rect
@@ -1559,7 +1587,7 @@ while running:
                     cocktail_shaker_x_offset = cocktail_shaker_rect.x - event.pos[0]
                     cocktail_shaker_y_offset = cocktail_shaker_rect.y - event.pos[1]
             if event.type == pygame.MOUSEMOTION:
-                if dragging and cocktail_done:
+                if dragging and shaking:
                     cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
                     cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
