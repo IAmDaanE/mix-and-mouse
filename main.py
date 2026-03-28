@@ -570,6 +570,7 @@ if True:
     normal_guest_timer_range = [3, 23]
     sped_up_guest_timer_range = [1, 2]
     current_username_string = """"""
+    username_error_message = ""
 
 #--------random rects and lists--------
 
@@ -1096,6 +1097,7 @@ if True:
     def check_username_conflict(username):
         response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
         if response.json()["exists"]:
+            print("CONFLICT")
             return True
         else:
             return False
@@ -1863,10 +1865,8 @@ if True:
         pygame.draw.rect(screen, (255, 0, 0), money_cheat_rect, 1)
 
     def display_create_username():
-        global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now
+        global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
         #----------button logic--------
-
-        error_message = ""
 
         if left_mouse_clicked and continue_button2_rect.collidepoint(pos):
             continue_button2_clicked = True
@@ -1878,9 +1878,9 @@ if True:
         if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
             continue_button2_clicktime = 0
             if len(current_username_string) == 0:
-                error_message = "enter something"
+                username_error_message = "enter something"
             elif check_username_conflict(current_username_string):
-                error_message = "username already exists"
+                username_error_message = "username already exists"
             else:
                 username = current_username_string
                 write_username_file(username)
@@ -1899,7 +1899,7 @@ if True:
         screen.blit(username_text2, (504, 300))
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_big, 1, border_radius=10)
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_small, 1, border_radius=10)
-        error_text = pixel_font_letters.render(error_message, True, (255, 0, 0))
+        error_text = pixel_font_letters.render(username_error_message, True, (255, 0, 0))
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
 #-----------main loop-----------
