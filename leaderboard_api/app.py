@@ -49,7 +49,7 @@ def top_5():
     conn.close()
     return jsonify(result)
 
-@app.route("/post", methods=["POST"])
+@app.route("/initial_post", methods=["POST"])
 def post_data():
     conn = get_db()
     cursor = conn.cursor()
@@ -61,6 +61,19 @@ def post_data():
     conn.commit()
     conn.close()
     return jsonify({"message": "score saved"}), 201
+
+@app.route("/update_post", methods=["POST"])
+def update_data():
+    conn = get_db()
+    cursor = conn.cursor()
+    data = request.json
+    name = data["name"]
+    customers_served = data["customers_served"]
+    best_cocktail_value = data["best_cocktail_value"]
+    cursor.execute("UPDATE scores SET customers_served = %s, best_cocktail_value = %s WHERE name = %s",(customers_served, best_cocktail_value, name))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "score saved"}), 200
 
 @app.route("/full")
 def full_database():
@@ -79,4 +92,3 @@ def best_recipe():
     response = cursor.fetchall()
     conn.close()
     return response
-
