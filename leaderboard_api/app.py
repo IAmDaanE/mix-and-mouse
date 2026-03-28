@@ -92,3 +92,13 @@ def best_recipe():
     response = cursor.fetchall()
     conn.close()
     return response
+
+@app.route("/check_conflict", methods=["POST"])
+def check_conflict():
+    conn = get_db()
+    cursor = conn.cursor()
+    name = request.json["name"]
+    cursor.execute("SELECT 1 FROM scores WHERE name = %s", (name,))
+    exists = cursor.fetchone() is not None
+    conn.close()
+    return jsonify({"exists": exists}), 200
