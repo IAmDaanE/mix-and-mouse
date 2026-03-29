@@ -215,6 +215,7 @@ if True:
     save_button_clicktime = 0
     save_exit_button_clicktime = 0
 
+
     settings_devmode_checkmark_rect = checkmark_img.get_rect(topleft=(147, 97))
     settings_soundon_checkmark_rect = checkmark_img.get_rect(topleft=(147, 133))
 
@@ -272,6 +273,8 @@ if True:
     username_error_message = ""
     total_dif = 0
     leaderboard_data = []
+    max_total_difference = 4000
+    shake_progress_rect_increaser = 292 / max_total_difference
 
 #--------random rects and lists--------
 
@@ -1667,7 +1670,7 @@ while running:
             if event.type == pygame.MOUSEMOTION:
                 if dragging and shaking:
                     
-                    if total_dif > 2000:
+                    if total_dif > MaxTotalDifference:
                         total_dif = 0
                         temppos = 0
                         shaking_complete = True
