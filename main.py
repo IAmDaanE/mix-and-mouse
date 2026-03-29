@@ -699,7 +699,7 @@ if True:
         saves_amount += 1
         
 
-    def  write_username_file(username):
+    def write_username_file(username):
         with open(username_txt_file, "w") as f:
             f.write(username)
 
@@ -766,7 +766,7 @@ if True:
             balance_text = save_detail_font_nums.render(f"${save['balance']}", True, (0,0,0))
             customers_served_text = save_detail_font_nums.render(f"guests: {save['customers_served']}", True, (0,0,0))
             screen.blit(last_save_text, (410, continue_screen_cords[save_counter] + 70))
-            screen.blit(balance_text, (700, continue_screen_cords[save_counter] + 12))
+            screen.blit(balance_text, (730, continue_screen_cords[save_counter] + 12))
             screen.blit(customers_served_text, (700, continue_screen_cords[save_counter] + 65))
             save_counter += 1
 
@@ -799,7 +799,7 @@ if True:
         response = requests.post(f"{base_api_url}/initial_post", json={"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
 
     def update_post():
-        response = requests.post(f"{base_api_url}/initial_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": 15})
+        response = requests.post(f"{base_api_url}/update_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": 15})
         
     def check_username_conflict(username):
         response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
@@ -1592,6 +1592,7 @@ if True:
                 if right_mouse_clicked and guest_rects_library[guest["rect_num"]].collidepoint(pos):
                     check_unlocks()
                     client_request_completed(guest["name"], 1)
+                    update_post()
 
         #----------displaying-----------
 
@@ -1634,6 +1635,7 @@ if True:
                 username_error_message = "username already exists"
             else:
                 username = current_username_string
+                initial_post()
                 write_username_file(username)
                 screen_displayed_now = "startscreen"
                 current_username_string = """"""
