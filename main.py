@@ -92,11 +92,6 @@ if True:
     cocktail_shaker_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_shaker.png").convert_alpha(), 2)
     cocktail_glass_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_glass.png").convert_alpha(), 1)
 
-#-----------recipes-------------
-
-
-    
-
 #------button variables---------
 
 if True:
@@ -208,6 +203,8 @@ if True:
     sped_up_guest_timer_range = [1, 2]
     current_username_string = """"""
     username_error_message = ""
+    total_dif = 0
+
 
 #--------random rects and lists--------
 
@@ -1419,11 +1416,12 @@ if True:
                 screen_displayed_now = "cocktail_made_screen"
                 shaking_complete = False
 
+    #WHATZEFAK IS DIT BRO
     if drink_made == 1:
         drink_made = 2
         # drink_made needs to be set to 0 when you have created a drink
         currently_preparing_drink = drink_check(current_made_cocktail)
-
+    #WHATZEFAK IS DIT BRO
 
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, customers_served, progress_rect
@@ -1572,8 +1570,9 @@ if True:
 
     def display_cocktail_made_screen():
         pass
+
 #-----------main loop-----------
-total_dif = 0
+
 while running:
     
     #---------event loop---------
@@ -1668,8 +1667,10 @@ while running:
     
     elif screen_displayed_now == "guest_screen":
         display_guest_screen()
+
     elif screen_displayed_now == "username":
         display_create_username()
+
     elif screen_displayed_now == "cocktail_made_screen":
         display_cocktail_made_screen()
     #----------------------------------
