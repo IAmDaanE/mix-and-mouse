@@ -713,6 +713,7 @@ if True:
     for folder in os.listdir(save_files_location):
         collision_rects_saves.append(pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[saves_amount], 500, 120))
         saves_amount += 1
+        
 
     def  write_username_file(username):
         with open(username_txt_file, "w") as f:
@@ -1490,11 +1491,6 @@ if True:
                 screen_displayed_now = "cocktail_made_screen"
                 shaking_complete = False
 
-    if drink_made == 1:
-        drink_made = 2
-        # drink_made needs to be set to 0 when you have created a drink
-        currently_preparing_drink = drink_check(current_made_cocktail)
-
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, customers_served, progress_rect
         #----------button logic---------
@@ -1650,6 +1646,7 @@ while running:
     #---------event loop---------
 
     if True:
+        
         new_ingredient_unlocked = False
         left_mouse_clicked = False
         right_mouse_clicked = False
@@ -1657,6 +1654,7 @@ while running:
         pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                regular_save()
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = event.pos
@@ -1697,6 +1695,11 @@ while running:
     #-----------updates--------------
 
     now = pygame.time.get_ticks()
+
+    if drink_made == 1:
+            drink_made = 2
+            # drink_made needs to be set to 0 when you have created a drink
+            currently_preparing_drink = drink_check(current_made_cocktail)
 
     #-----------debugging----------
 
