@@ -283,6 +283,7 @@ if True:
 
     stock_screen_row_cords = [109, 196, 284, 371, 458]
     continue_screen_cords = [100, 235, 370, 505]
+    leaderboard_row_cords = [520, 580, 640 ]
 
     unlocked_ingredients = [
         {"name": "vodka", "price": 10, "owned": 0},
@@ -723,23 +724,24 @@ if True:
 
     def new_save():
         global username
-        os.mkdir(f"{save_files_location}/{playthrough_name_text}")
-        basic_data = {"balance": balance, "customers_served": customers_served, "dev_mode": str(settings["dev_mode"]), "sound_on": str(settings["sound_on"]), "last_save": time.strftime("%m/%d/%Y")}
-        guest_data = {"key": "value"} #TWAN
-        unlocked_ingredients_data = unlocked_ingredients
-        settings_data = settings
-        unlocks_data = unlocks
-        save_data = {
-            **basic_data,
-            **guest_data,
-            "settings": settings_data,
-            "ingredients": unlocked_ingredients_data,
-            "unlocks": unlocks_data
-            }
-        with open(f"{save_files_location}/{playthrough_name_text}/data.json", "w") as f:
-            json.dump(save_data, f)
-        with open(username_txt_file, "r") as f:
-            username = f.read()
+        if playthrough_name_text != "data.json":
+            os.mkdir(f"{save_files_location}/{playthrough_name_text}")
+            basic_data = {"balance": balance, "customers_served": customers_served, "dev_mode": str(settings["dev_mode"]), "sound_on": str(settings["sound_on"]), "last_save": time.strftime("%m/%d/%Y")}
+            guest_data = {"key": "value"} #TWAN
+            unlocked_ingredients_data = unlocked_ingredients
+            settings_data = settings
+            unlocks_data = unlocks
+            save_data = {
+                **basic_data,
+                **guest_data,
+                "settings": settings_data,
+                "ingredients": unlocked_ingredients_data,
+                "unlocks": unlocks_data
+                }
+            with open(f"{save_files_location}/{playthrough_name_text}/data.json", "w") as f:
+                json.dump(save_data, f)
+            with open(username_txt_file, "r") as f:
+                username = f.read()
 
     def load_save():
         global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username
@@ -808,16 +810,34 @@ if True:
     
     def get_leaderboard():
         global leaderboard_data
-        leaderboard_data = requests.get(f"{base_api_url}/top3")
-        
+        response = requests.get(f"{base_api_url}/top3").json()
+        leaderboard_data = []
+        for row in response:
+            name = row["name"]
+            customers_served = row["customers_served"]
+            best_cocktail_value = row["best_cocktail_value"]
+            leaderboard_data.append({"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
+
+    get_leaderboard()
+
     def display_leaderboard():
         name_column_text = leaderboard_columns_font.render("name", True, (0,0,0))
         customers_served_column_text = leaderboard_columns_font.render("customers served", True, (0,0,0))
         best_cocktail_column_text = leaderboard_columns_font.render("best cocktail", True, (0,0,0))
         screen.blit(name_column_text, (493, 483))
-        screen.blit(customers_served_column_text, (630, 483))
-        screen.blit(best_cocktail_column_text, (843, 483))
-        
+        screen.blit(customers_served_column_text, (645, 483))
+        screen.blit(best_cocktail_column_text, (843, 483))        
+        row_counter = 0
+        if len(leaderboard_data) > 0:
+            for row in leaderboard_data:
+                name_text = leaderboard_items_font.render(str(row["name"]), True, (0,0,0))
+                customers_served_text = leaderboard_items_font.render(str(row["customers_served"]), True, (0,0,0))
+                best_cocktail_text = leaderboard_items_font.render(f"{row['best_cocktail_value']} $", True, (0,0,0))
+                screen.blit(name_text, (470, leaderboard_row_cords[row_counter]))
+                screen.blit(customers_served_text, (692, leaderboard_row_cords[row_counter]))
+                screen.blit(best_cocktail_text, (867, leaderboard_row_cords[row_counter]))
+                row_counter += 1
+
 #-------stock screen page calculations-------
 
 if True:
