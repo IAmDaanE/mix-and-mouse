@@ -23,45 +23,70 @@ if True:
     clock = pygame.time.Clock()
 
 #------loading in assets--------
+def convertAsset(pngName, scale):
+    return pygame.transform.scale_by(pygame.image.load(pngName).convert_alpha(), scale)
+
+continue_button_img = convertAsset("assets/continue_button.png", 1) 
+
 
 if True:
-    continue_button_img = pygame.transform.scale_by(pygame.image.load("assets/continue_button.png").convert_alpha(), 1)
-    continue_button2_img = pygame.transform.scale_by(pygame.image.load("assets/continue_button.png").convert_alpha(), 2)
-    new_button_img = pygame.transform.scale_by(pygame.image.load("assets/new_button.png").convert_alpha(), 1)
-    settings_button_img = pygame.transform.scale_by(pygame.image.load("assets/settings_button.png").convert_alpha(), 1)
-    exit_button_img = pygame.transform.scale_by(pygame.image.load("assets/exit_button.png").convert_alpha(), 1)
-    back_button_img = pygame.transform.scale_by(pygame.image.load("assets/back_button.png").convert_alpha(), 1)
-    plus_button_img = pygame.transform.scale_by(pygame.image.load("assets/plus_button.png").convert_alpha(), 1)
-    min_button_img = pygame.transform.scale_by(pygame.image.load("assets/min_button.png").convert_alpha(), 1)
-    buy_button_img = pygame.transform.scale_by(pygame.image.load("assets/buy_button.png").convert_alpha(), 1)
-    create_button_img = pygame.transform.scale_by(pygame.image.load("assets/create_button.png").convert_alpha(), 1)
-    save_button_img = pygame.transform.scale_by(pygame.image.load("assets/save_button.png").convert_alpha(), 1)
-    save_exit_button_img = pygame.transform.scale_by(pygame.image.load("assets/save_exit_button.png").convert_alpha(), 1)
+    continue_button2_img = convertAsset("assets/continue_button.png", 2)
+    new_button_img = convertAsset("assets/new_button.png", 1)
+    settings_button_img = convertAsset("assets/settings_button.png", 1)
+    exit_button_img = convertAsset("assets/exit_button.png", 1)
+    back_button_img = convertAsset("assets/back_button.png", 1)
+    plus_button_img = convertAsset("assets/plus_button.png", 1)
+    min_button_img = convertAsset("assets/min_button.png", 1)
+    buy_button_img = convertAsset("assets/buy_button.png", 1)
+    create_button_img = convertAsset("assets/create_button.png", 1)
+    save_button_img = convertAsset("assets/save_button.png", 1)
+    save_exit_button_img = convertAsset("assets/save_exit_button.png", 1)
 
-    continue_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/continue_button_clicked.png").convert_alpha(), 1)
-    continue_button2_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/continue_button_clicked.png").convert_alpha(), 2)
-    new_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/new_button_clicked.png").convert_alpha(), 1)
-    settings_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/settings_button_clicked.png").convert_alpha(), 1)
-    exit_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/exit_button_clicked.png").convert_alpha(), 1)
-    back_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/back_button_clicked.png").convert_alpha(), 1)
-    plus_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/plus_button_clicked.png").convert_alpha(), 1)
-    min_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/min_button_clicked.png").convert_alpha(), 1)
-    buy_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/buy_button_clicked.png").convert_alpha(), 1)
-    create_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/create_button_clicked.png").convert_alpha(), 1)
-    save_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/save_button_clicked.png").convert_alpha(), 1)
-    save_exit_button_clicked_img = pygame.transform.scale_by(pygame.image.load("assets/save_exit_button_clicked.png").convert_alpha(), 1)
+    continue_button_clicked_img = convertAsset("assets/continue_button_clicked.png", 1)
+    continue_button2_clicked_img = convertAsset("assets/continue_button_clicked.png", 2)
+    new_button_clicked_img = convertAsset("assets/new_button_clicked.png", 1)
+    settings_button_clicked_img = convertAsset("assets/settings_button_clicked.png", 1)
+    exit_button_clicked_img = convertAsset("assets/exit_button_clicked.png", 1)
+    back_button_clicked_img = convertAsset("assets/back_button_clicked.png", 1)
+    plus_button_clicked_img = convertAsset("assets/plus_button_clicked.png", 1)
+    min_button_clicked_img = convertAsset("assets/min_button_clicked.png", 1)
+    buy_button_clicked_img = convertAsset("assets/buy_button_clicked.png", 1)
+    create_button_clicked_img = convertAsset("assets/create_button_clicked.png", 1)
+    save_button_clicked_img = convertAsset("assets/save_button_clicked.png", 1)
+    save_exit_button_clicked_img = convertAsset("assets/save_exit_button_clicked.png", 1)
 
-    startscreen_background_img = pygame.transform.scale_by(pygame.image.load("assets/startscreen_background.png").convert_alpha(), 1)
-    settings_screen_background_img = pygame.transform.scale_by(pygame.image.load("assets/settings_screen_background.png").convert_alpha(), 1)
-    guest_screen_background_img = pygame.transform.scale_by(pygame.image.load("assets/guest_screen_background.png").convert_alpha(), 1)
-    stock_screen_background_img = pygame.transform.scale_by(pygame.image.load("assets/stock_screen_background.png").convert_alpha(), 1)
-    progress_screen_background_img = pygame.transform.scale_by(pygame.image.load("assets/progress_screen_background.png").convert_alpha(), 1)
-    cocktailmaker_background_img = pygame.transform.scale_by(pygame.image.load("assets/cocktailmaker_background.png").convert_alpha(), 1)
-    homescreen_background_img = pygame.transform.scale_by(pygame.image.load("assets/homescreen_background.png").convert_alpha(), 1)
+    startscreen_background_img = convertAsset("assets/startscreen_background.png", 1)
+    settings_screen_background_img = convertAsset("assets/settings_screen_background.png", 1)
+    guest_screen_background_img = convertAsset("assets/guest_screen_background.png", 1)
+    stock_screen_background_img = convertAsset("assets/stock_screen_background.png", 1)
+    progress_screen_background_img = convertAsset("assets/progress_screen_background.png", 1)
+    cocktailmaker_background_img = convertAsset("assets/cocktailmaker_background.png", 1)
+    homescreen_background_img = convertAsset("assets/homescreen_background.png", 1)
+    cocktail_stats_background_img = convertAsset("assets/cocktail_stats_background_bar.png", 1)
 
-    checkmark_img = pygame.transform.scale_by(pygame.image.load("assets/checkmark.png").convert_alpha(), 1)
-    right_arrow_img = pygame.transform.scale_by(pygame.image.load("assets/right_arrow.png").convert_alpha(), 1)
-    left_arrow_img = pygame.transform.scale_by(pygame.image.load("assets/left_arrow.png").convert_alpha(), 1)
+    checkmark_img = convertAsset("assets/checkmark.png", 1)
+    right_arrow_img = convertAsset("assets/right_arrow.png", 1)
+    left_arrow_img = convertAsset("assets/left_arrow.png", 1)
+
+    vodka_bar_img = convertAsset("assets/vodka_bar.png", 1)
+    orange_juice_bar_img = convertAsset("assets/orange juice_bar.png", 1)
+    champagne_bar_img = convertAsset("assets/vodka_bar.png", 1)
+    water_bar_img = convertAsset("assets/waterbottle_bar.png", 1)
+    whiskey_bar_img = convertAsset("assets/vodka_bar.png", 1)
+    gin_bar_img = convertAsset("assets/vodka_bar.png", 1)
+
+    guest1_img = convertAsset("assets/guest_1.png", 1)
+    guest2_img = convertAsset("assets/guest_2.png", 1)
+    guest3_img = convertAsset("assets/guest_3.png", 1)
+    guest4_img = convertAsset("assets/guest_4.png", 1)
+    guest5_img = convertAsset("assets/guest_5.png", 1)
+    guest6_img = convertAsset("assets/guest_6.png", 1)
+    guest7_img = convertAsset("assets/guest_7.png", 1)
+    guest8_img = convertAsset("assets/guest_8.png", 1)
+
+    stock_screen_row_img = convertAsset("assets/stock_screen_row.png", 1)
+    cocktail_shaker_img = convertAsset("assets/cocktail_shaker.png", 2)
+    cocktail_glass_img = convertAsset("assets/cocktail_glass.png", 1)
 
     default_font = pygame.font.SysFont('Calibri', 25)
     pixel_font_numbers = pygame.font.Font("assets/micro_5.ttf", 60)
@@ -70,28 +95,6 @@ if True:
     playthrough_text_font = pygame.font.Font("assets/Jersey10.ttf", 70)
     save_detail_font_date = pygame.font.Font("assets/Jersey10.ttf", 30)
     save_detail_font_nums = pygame.font.Font("assets/Jersey10.ttf", 40)
-
-    vodka_icon_img = pygame.transform.scale_by(pygame.image.load("assets/vodka_icon.png").convert_alpha(), 1)
-    orange_juice_icon_img = pygame.transform.scale_by(pygame.image.load("assets/orange_juice_icon.png").convert_alpha(), 1)
-    champagne_icon_img = pygame.transform.scale_by(pygame.image.load("assets/champagne_icon.png").convert_alpha(), 1)
-    water_icon_img = pygame.transform.scale_by(pygame.image.load("assets/water_icon.png").convert_alpha(), 1)
-    whiskey_icon_img = pygame.transform.scale_by(pygame.image.load("assets/whiskey_icon.png").convert_alpha(), 1)
-    gin_icon_img = pygame.transform.scale_by(pygame.image.load("assets/gin_icon.png").convert_alpha(), 1)
-
-    guest1_img = pygame.transform.scale_by(pygame.image.load("assets/guest_1.png").convert_alpha(), 1)
-    guest2_img = pygame.transform.scale_by(pygame.image.load("assets/guest_2.png").convert_alpha(), 1)
-    guest3_img = pygame.transform.scale_by(pygame.image.load("assets/guest_3.png").convert_alpha(), 1)
-    guest4_img = pygame.transform.scale_by(pygame.image.load("assets/guest_4.png").convert_alpha(), 1)
-    guest5_img = pygame.transform.scale_by(pygame.image.load("assets/guest_5.png").convert_alpha(), 1)
-    guest6_img = pygame.transform.scale_by(pygame.image.load("assets/guest_6.png").convert_alpha(), 1)
-    guest7_img = pygame.transform.scale_by(pygame.image.load("assets/guest_7.png").convert_alpha(), 1)
-    guest8_img = pygame.transform.scale_by(pygame.image.load("assets/guest_8.png").convert_alpha(), 1)
-    
-    stock_screen_row_img = pygame.transform.scale_by(pygame.image.load("assets/stock_screen_row.png").convert_alpha(), 1)
-
-    cocktail_shaker_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_shaker.png").convert_alpha(), 2)
-    cocktail_glass_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_glass.png").convert_alpha(), 1)
-
 #------button variables---------
 
 if True:
@@ -258,51 +261,51 @@ if True:
     guest_order5_rect = pygame.Rect(guest5_rect.x - 20, 332, 150, 100)
     guest_order6_rect = pygame.Rect(guest6_rect.x - 20, 332, 150, 100)
     
-    drink_icon_library = {  
-                            "vodka": vodka_icon_img,
-                            "gin": gin_icon_img,
-                            "orange juice": orange_juice_icon_img,
-                            "white rum": whiskey_icon_img,
-                            "cola": vodka_icon_img,
-                            "tonic water": water_icon_img,
-                            "soda water": water_icon_img,
-                            "lime juice": vodka_icon_img,
-                            "mint": vodka_icon_img,
-                            "sugar syrup": vodka_icon_img,
-                            "ice": water_icon_img,
-                            "dark rum": vodka_icon_img,
-                            "tequila": vodka_icon_img,
-                            "whiskey": vodka_icon_img,
-                            "triple sec": vodka_icon_img,
-                            "amaretto": vodka_icon_img,
-                            "kahlúa": vodka_icon_img,
-                            "baileys": vodka_icon_img,
-                            "champagne": vodka_icon_img,
-                            "prosecco": vodka_icon_img,
-                            "peach schnapps": vodka_icon_img,
-                            "blue curaçao": vodka_icon_img,
-                            "midori": vodka_icon_img,
-                            "absinthe": vodka_icon_img,
-                            "dry vermouth": vodka_icon_img,
-                            "sweet vermouth": vodka_icon_img,
-                            "campari": vodka_icon_img,
-                            "elderflower liqueur": vodka_icon_img,
-                            "pineapple juice": vodka_icon_img,
-                            "cranberry juice": vodka_icon_img,
-                            "lemon juice": vodka_icon_img,
-                            "grapefruit juice": vodka_icon_img,
-                            "apple juice": vodka_icon_img,
-                            "mango juice": vodka_icon_img,
-                            "passion fruit juice": vodka_icon_img,
-                            "peach juice": vodka_icon_img,
-                            "grenadine": vodka_icon_img,
-                            "coconut cream": vodka_icon_img,
-                            "ginger beer": vodka_icon_img,
-                            "egg white": vodka_icon_img,
-                            "cream": vodka_icon_img,
-                            "lime": vodka_icon_img,
-                            "mint": vodka_icon_img,
-                            "bitters": vodka_icon_img
+    drink_bar_library = {  
+                            "vodka": vodka_bar_img,
+                            "gin": gin_bar_img,
+                            "orange juice": orange_juice_bar_img,
+                            "white rum": whiskey_bar_img,
+                            "cola": vodka_bar_img,
+                            "tonic water": water_bar_img,
+                            "soda water": water_bar_img,
+                            "lime juice": vodka_bar_img,
+                            "mint": vodka_bar_img,
+                            "sugar syrup": vodka_bar_img,
+                            "ice": water_bar_img,
+                            "dark rum": vodka_bar_img,
+                            "tequila": vodka_bar_img,
+                            "whiskey": vodka_bar_img,
+                            "triple sec": vodka_bar_img,
+                            "amaretto": vodka_bar_img,
+                            "kahlúa": vodka_bar_img,
+                            "baileys": vodka_bar_img,
+                            "champagne": vodka_bar_img,
+                            "prosecco": vodka_bar_img,
+                            "peach schnapps": vodka_bar_img,
+                            "blue curaçao": vodka_bar_img,
+                            "midori": vodka_bar_img,
+                            "absinthe": vodka_bar_img,
+                            "dry vermouth": vodka_bar_img,
+                            "sweet vermouth": vodka_bar_img,
+                            "campari": vodka_bar_img,
+                            "elderflower liqueur": vodka_bar_img,
+                            "pineapple juice": vodka_bar_img,
+                            "cranberry juice": vodka_bar_img,
+                            "lemon juice": vodka_bar_img,
+                            "grapefruit juice": vodka_bar_img,
+                            "apple juice": vodka_bar_img,
+                            "mango juice": vodka_bar_img,
+                            "passion fruit juice": vodka_bar_img,
+                            "peach juice": vodka_bar_img,
+                            "grenadine": vodka_bar_img,
+                            "coconut cream": vodka_bar_img,
+                            "ginger beer": vodka_bar_img,
+                            "egg white": vodka_bar_img,
+                            "cream": vodka_bar_img,
+                            "lime": vodka_bar_img,
+                            "mint": vodka_bar_img,
+                            "bitters": vodka_bar_img
                             }
     
     guest_rects_library = { 1: guest1_rect,
@@ -1275,7 +1278,7 @@ if True:
         screen.blit(stock_amount_selected_text, (570, 547))
         for dict in stock_pages[stock_page_displayed]:
             screen.blit(stock_screen_row_img, (189, stock_screen_row_cords[stock_screen_row_counter]))
-            screen.blit(drink_icon_library[dict["name"]], (189, stock_screen_row_cords[stock_screen_row_counter]))
+            screen.blit(drink_bar_library[dict["name"]], (189, stock_screen_row_cords[stock_screen_row_counter]))
             name_text = pixel_font_letters.render(dict["name"], True, (0,0,0))
             screen.blit(name_text, (320, stock_screen_row_cords[stock_screen_row_counter] + 5))
             price_text = pixel_font_numbers.render(f"${dict['price']}", True, (0,0,0))
@@ -1379,7 +1382,7 @@ if True:
         screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button2_rect)
         rect_counter = 0
         for ingredient in cocktail_pages[cocktail_page_displayed]:
-            screen.blit(drink_icon_library[ingredient["name"]], cocktailmaker_ing_rects[rect_counter])
+            screen.blit(drink_bar_library[ingredient["name"]], cocktailmaker_ing_rects[rect_counter])
             owned_text_x = cocktailmaker_ing_rects[rect_counter].x + cocktailmaker_ing_rects[rect_counter].width / 2
             amount_owned_text = save_detail_font_date.render(str(ingredient["owned"]), True, (0,0,0))
             owned_text_x -= amount_owned_text.get_width() / 2
