@@ -271,7 +271,7 @@ if True:
     username_error_message = ""
     total_dif = 0
     leaderboard_data = []
-    max_total_difference = 4000
+    max_total_difference = 10000
     shake_progress_rect_increaser = 292 / max_total_difference
 
 #--------random rects and lists--------
@@ -699,8 +699,8 @@ if True:
     def rond_af_12(n):
         return int(math.ceil(n / 12) * 12)
 
-    save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}\save_files"
-    username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}\username.txt"
+    save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}/save_files"
+    username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}/username.txt"
 
     os.makedirs(save_files_location, exist_ok=True)
                 
@@ -1365,7 +1365,7 @@ if True:
         stock_screen_row_counter = 0
 
     def display_cocktailmaker():
-        global newly_made_cocktail, shaking_complete, drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect
+        global newly_made_cocktail, shaking_complete, drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif
         #-------button logic---------
 
         if not transition_this_frame:
@@ -1487,10 +1487,13 @@ if True:
             screen.blit(text, (WINDOW_WIDTH / 2 - text.get_width() / 2, 220))
             pygame.draw.rect(screen, (91, 91, 91), (cocktail_glass_middle - total_width / 2, WINDOW_HEIGHT - 40, total_width, total_height))
             pygame.draw.rect(screen, (151, 151, 151), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, total_width - gap * 2, total_height - gap * 2))
+            if total_dif != 0:
+                pygame.draw.rect(screen, (144, 0, 0), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, round(total_dif * shake_progress_rect_increaser), total_height - gap * 2))
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
             if shaking_complete:
                 screen_displayed_now = "cocktail_made_screen"
                 shaking_complete = False
+                total_dif = 0
 
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, customers_served, progress_rect
@@ -1668,7 +1671,7 @@ while running:
             if event.type == pygame.MOUSEMOTION:
                 if dragging and shaking:
                     
-                    if total_dif > MaxTotalDifference:
+                    if total_dif > max_total_difference:
                         total_dif = 0
                         temppos = 0
                         shaking_complete = True
