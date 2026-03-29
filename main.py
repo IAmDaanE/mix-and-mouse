@@ -22,6 +22,19 @@ if True:
     pygame.display.set_caption("cocktail game")
     clock = pygame.time.Clock()
 
+#-----converting tilesheets-----
+
+def slice_tilesheet(path, tile_width, tile_height):
+    sheet = pygame.image.load(path).convert_alpha()
+    sheet_width, sheet_height = sheet.get_size()
+    tiles = []
+    for y in range(0, sheet_height, tile_height):
+        for x in range(0, sheet_width, tile_width):
+            rect = pygame.Rect(x, y, tile_width, tile_height)
+            tile = sheet.subsurface(rect)
+            tiles.append(tile)
+    return tiles
+
 #------loading in assets--------
 def convertAsset(pngName, scale):
     return pygame.transform.scale_by(pygame.image.load(pngName).convert_alpha(), scale)
@@ -69,7 +82,7 @@ if True:
     left_arrow_img = convertAsset("assets/left_arrow.png", 1)
 
     vodka_bar_img = convertAsset("assets/vodka_bar.png", 1)
-    orange_juice_bar_img = convertAsset("assets/orange juice_bar.png", 1)
+    orange_juice_bar_img = convertAsset("assets/orange_juice_bar.png", 1)
     champagne_bar_img = convertAsset("assets/vodka_bar.png", 1)
     water_bar_img = convertAsset("assets/waterbottle_bar.png", 1)
     whiskey_bar_img = convertAsset("assets/vodka_bar.png", 1)
@@ -88,6 +101,12 @@ if True:
     cocktail_shaker_img = convertAsset("assets/cocktail_shaker.png", 2)
     cocktail_glass_img = convertAsset("assets/cocktail_glass.png", 1)
 
+    checkmark_img = pygame.transform.scale_by(pygame.image.load("assets/checkmark.png").convert_alpha(), 1)
+    right_arrow_img = pygame.transform.scale_by(pygame.image.load("assets/right_arrow.png").convert_alpha(), 1)
+    left_arrow_img = pygame.transform.scale_by(pygame.image.load("assets/left_arrow.png").convert_alpha(), 1)
+    stock_screen_row_img = pygame.transform.scale_by(pygame.image.load("assets/stock_screen_row.png").convert_alpha(), 1)
+
+
     default_font = pygame.font.SysFont('Calibri', 25)
     pixel_font_numbers = pygame.font.Font("assets/micro_5.ttf", 60)
     pixel_font_letters = pygame.font.Font("assets/Jersey10.ttf", 50)
@@ -96,6 +115,51 @@ if True:
     save_detail_font_date = pygame.font.Font("assets/Jersey10.ttf", 30)
     save_detail_font_nums = pygame.font.Font("assets/Jersey10.ttf", 40)
 #------button variables---------
+
+
+    guest1_img = pygame.transform.scale_by(pygame.image.load("assets/guest_1.png").convert_alpha(), 1)
+    guest2_img = pygame.transform.scale_by(pygame.image.load("assets/guest_2.png").convert_alpha(), 1)
+    guest3_img = pygame.transform.scale_by(pygame.image.load("assets/guest_3.png").convert_alpha(), 1)
+    guest4_img = pygame.transform.scale_by(pygame.image.load("assets/guest_4.png").convert_alpha(), 1)
+    guest5_img = pygame.transform.scale_by(pygame.image.load("assets/guest_5.png").convert_alpha(), 1)
+    guest6_img = pygame.transform.scale_by(pygame.image.load("assets/guest_6.png").convert_alpha(), 1)
+    guest7_img = pygame.transform.scale_by(pygame.image.load("assets/guest_7.png").convert_alpha(), 1)
+    guest8_img = pygame.transform.scale_by(pygame.image.load("assets/guest_8.png").convert_alpha(), 1)
+
+    cocktail_shaker_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_shaker.png").convert_alpha(), 2)
+    cocktail_glass_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_glass.png").convert_alpha(), 1)
+
+    ingredient_icons_list = slice_tilesheet("assets/ingredients_tilesheet.png", 66, 66)
+    glass_tags_list = slice_tilesheet("assets/tags_tilesheet.png", 66, 66)
+
+#----------assigning image names---------
+
+if True: 
+    #----ingredient icons-----
+    vodka_icon = ingredient_icons_list[0]
+    white_rum_icon = ingredient_icons_list[1]
+    dark_rum_icon = ingredient_icons_list[2]
+    cola_icon = ingredient_icons_list[3]
+    champagne_icon = ingredient_icons_list[4]
+    tequila_icon = ingredient_icons_list[5]
+    triple_sec_icon = ingredient_icons_list[6]
+    amaretto_icon = ingredient_icons_list[7]
+    kahlua_icon = ingredient_icons_list[8]
+    #no idea what this is
+    #no idea what this is
+    prosecco_icon = ingredient_icons_list[11]
+    schnapps_icon = ingredient_icons_list[12]
+    curacao_icon = ingredient_icons_list[13]
+    midori_icon = ingredient_icons_list[14]
+    absinthe_icon = ingredient_icons_list[15]
+    sweet_vermouth_icon = ingredient_icons_list[16]
+    dry_vermouth_icon = ingredient_icons_list[17]
+    campari_icon = ingredient_icons_list[18]
+    passionfruit_juice_icon = ingredient_icons_list[19]
+    #more to come
+    
+#-----------button variables-----------
+
 
 if True:
     continue_button_rect = continue_button_img.get_rect(topleft=(50, 20))
@@ -154,7 +218,7 @@ if True:
     settings_devmode_checkmark_rect = checkmark_img.get_rect(topleft=(147, 97))
     settings_soundon_checkmark_rect = checkmark_img.get_rect(topleft=(147, 133))
 
-#--------other variables--------
+#-----------other variables------------
 
 if True:
     click_duration = 80
@@ -206,6 +270,9 @@ if True:
     sped_up_guest_timer_range = [1, 2]
     current_username_string = """"""
     username_error_message = ""
+    total_dif = 0
+    leaderboard_data = []
+
 #--------random rects and lists--------
 
 if True:
@@ -261,6 +328,7 @@ if True:
     guest_order5_rect = pygame.Rect(guest5_rect.x - 20, 332, 150, 100)
     guest_order6_rect = pygame.Rect(guest6_rect.x - 20, 332, 150, 100)
     
+
     drink_bar_library = {  
                             "vodka": vodka_bar_img,
                             "gin": gin_bar_img,
@@ -306,7 +374,7 @@ if True:
                             "lime": vodka_bar_img,
                             "mint": vodka_bar_img,
                             "bitters": vodka_bar_img
-                            }
+                        }
     
     guest_rects_library = { 1: guest1_rect,
                             2: guest2_rect,
@@ -368,13 +436,13 @@ if True:
 
         # syrups & sweet
         "sugar syrup":          (180, 210, 140),
-        "grenadine":            (190, 10,  40),
+        "grenadine":            (190,  10,  40),
         "coconut cream":        (160, 210, 185),
 
         # sodas
-        "cola":                 (45,  20,  5),
+        "cola":                 (45,   20,   5),
         "tonic water":          (140, 190, 220),
-        "ginger beer":          (195, 160, 60),
+        "ginger beer":          (195, 160,  60),
         "soda water":           (130, 175, 210),
 
         # other
@@ -383,10 +451,10 @@ if True:
         "lime":                 (80,  165, 30),
         "mint":                 (30,  140, 40),
         "bitters":              (110, 40,  15),
-        "ice":                  (0,   0,   0)
+        "ice":                  (0,    0,   0) #PLACEHOLDER
     }
 
-#---------text formatting----------
+#-----------text formatting------------
 
 if True:
     def wrap_text_colored(segments, font, max_width):
@@ -438,7 +506,7 @@ if True:
         lines = wrap_text_colored(segments, font, max_width)
         return len(lines) * font.get_linesize()
 
-#---------guest logic----------
+#-------------guest logic-------------
 
 if True:
     pos_sentences = ["give me a ", "i want a ", "i need a ", "can i get a ", "could you give me a ", "would you do your job and give me a ", "immediately give me a ", "make a ", "i desire a ", "i would love a ", "i want to get drunk so give me a ",
@@ -621,7 +689,7 @@ if True:
         succesful_making = False
         return temp_drink_info
 
-#----------file saving----------
+#-------------file saving-------------
 
 if True:
     def rond_af_5(n):
@@ -732,7 +800,7 @@ if True:
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
             json.dump(save_data, f)
     
-#----------leaderboard logic---------
+#----------leaderboard logic----------
 
 if True:
 
@@ -754,6 +822,12 @@ if True:
             return True
         else:
             return False
+    
+    def get_leaderboard():
+        leaderboard_data = requests.get(f"{base_api_url}/top5")
+        
+    def display_leaderboard():
+        pass
         
 #-------stock screen page calculations-------
 
@@ -1568,8 +1642,9 @@ if True:
 
     def display_cocktail_made_screen():
         pass
-#-----------main loop-----------
-total_dif = 0
+
+#-------------main loop-----------
+
 while running:
     
     #---------event loop---------
@@ -1673,4 +1748,4 @@ while running:
     pygame.display.update()
     clock.tick(60)
 
-#--------BUG_FIXES:--------
+#-------------BUG_FIXES:-----------
