@@ -36,13 +36,12 @@ def slice_tilesheet(path, tile_width, tile_height):
     return tiles
 
 #------loading in assets--------
+
 def convertAsset(pngName, scale):
     return pygame.transform.scale_by(pygame.image.load(pngName).convert_alpha(), scale)
 
-continue_button_img = convertAsset("assets/continue_button.png", 1) 
-
-
 if True:
+    continue_button_img = convertAsset("assets/continue_button.png", 1) 
     continue_button2_img = convertAsset("assets/continue_button.png", 2)
     new_button_img = convertAsset("assets/new_button.png", 1)
     settings_button_img = convertAsset("assets/settings_button.png", 1)
@@ -159,7 +158,6 @@ if True:
     #more to come
     
 #-----------button variables-----------
-
 
 if True:
     continue_button_rect = continue_button_img.get_rect(topleft=(50, 20))
@@ -701,8 +699,8 @@ if True:
     def rond_af_12(n):
         return int(math.ceil(n / 12) * 12)
 
-    save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}/save_files"
-    username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}/username.txt"
+    save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}\save_files"
+    username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}\username.txt"
 
     os.makedirs(save_files_location, exist_ok=True)
                 
