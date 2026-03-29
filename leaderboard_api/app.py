@@ -24,7 +24,6 @@ def top_10():
     result = []
     for row in rows:
         result.append({
-            "id": row[0],
             "name": row[1],
             "customers_served": row[2],
             "best_cocktail_value": row[3]
@@ -41,7 +40,22 @@ def top_5():
     result = []
     for row in rows:
         result.append({
-            "id": row[0],
+            "name": row[1],
+            "customers_served": row[2],
+            "best_cocktail_value": row[3]
+        })
+    conn.close()
+    return jsonify(result)
+
+@app.route("/top3")
+def top_5():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 3")
+    rows = cursor.fetchall()
+    result = []
+    for row in rows:
+        result.append({
             "name": row[1],
             "customers_served": row[2],
             "best_cocktail_value": row[3]
