@@ -113,6 +113,8 @@ if True:
     playthrough_text_font = pygame.font.Font("assets/Jersey10.ttf", 70)
     save_detail_font_date = pygame.font.Font("assets/Jersey10.ttf", 30)
     save_detail_font_nums = pygame.font.Font("assets/Jersey10.ttf", 40)
+    leaderboard_columns_font = pygame.font.Font("assets/Jersey10.ttf", 20)
+
 #------button variables---------
 
 
@@ -214,8 +216,9 @@ if True:
     save_exit_button_clicktime = 0
 
 
-    settings_devmode_checkmark_rect = checkmark_img.get_rect(topleft=(147, 97))
-    settings_soundon_checkmark_rect = checkmark_img.get_rect(topleft=(147, 133))
+    settings_devmode_checkmark_rect = checkmark_img.get_rect(topleft=(146, 97))
+    settings_soundon_checkmark_rect = checkmark_img.get_rect(topleft=(146, 133))
+    settings_showleaderboard_checkmark_rect = checkmark_img.get_rect(topleft=(146, 168))
 
 #-----------other variables------------
 
@@ -224,7 +227,7 @@ if True:
     screen_switch_duration = 85
     running = True
     pos = (0,0)
-    settings = {"dev_mode": True, "sound_on": True}
+    settings = {"dev_mode": True, "sound_on": True, "show_leaderboard": True}
     guests = []
     guest_available_spots = []
     unlocked_ingredients = []
@@ -820,16 +823,21 @@ if True:
     def check_username_conflict(username):
         response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
         if response.json()["exists"]:
-            print("CONFLICT")
             return True
         else:
             return False
     
     def get_leaderboard():
-        leaderboard_data = requests.get(f"{base_api_url}/top5")
+        global leaderboard_data
+        leaderboard_data = requests.get(f"{base_api_url}/top3")
         
     def display_leaderboard():
-        pass
+        name_column_text = leaderboard_columns_font.render("name", True, (0,0,0))
+        customers_served_column_text = leaderboard_columns_font.render("customers served", True, (0,0,0))
+        best_cocktail_column_text = leaderboard_columns_font.render("best cocktail", True, (0,0,0))
+        screen.blit(name_column_text, (493, 483))
+        screen.blit(customers_served_column_text, (630, 483))
+        screen.blit(best_cocktail_column_text, (843, 483))
         
 #-------stock screen page calculations-------
 
@@ -980,15 +988,17 @@ if True:
         global back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame
         #---------button logic----------
 
-        if not transition_this_frame:
-            if left_mouse_clicked and back_button_rect.collidepoint(pos):
-                back_button_clicked = True
-                back_button_clicktime = now
-            
-            if left_mouse_clicked and settings_devmode_checkmark_rect.collidepoint(pos):
-                settings["dev_mode"] = not settings["dev_mode"]
-            if left_mouse_clicked and settings_soundon_checkmark_rect.collidepoint(pos):
-                settings["sound_on"] = not settings["sound_on"]
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
+        
+        if left_mouse_clicked and settings_devmode_checkmark_rect.collidepoint(pos):
+            settings["dev_mode"] = not settings["dev_mode"]
+        if left_mouse_clicked and settings_soundon_checkmark_rect.collidepoint(pos):
+            settings["sound_on"] = not settings["sound_on"]
+        if left_mouse_clicked and settings_showleaderboard_checkmark_rect.collidepoint(pos):
+            settings["show_leaderboard"] = not settings["show_leaderboard"]
+        
         if back_button_clicktime != 0 and back_button_clicktime <= now - click_duration:
             back_button_clicked = False
 
@@ -1007,6 +1017,8 @@ if True:
             screen.blit(checkmark_img, settings_devmode_checkmark_rect)
         if settings["sound_on"]:
             screen.blit(checkmark_img, settings_soundon_checkmark_rect)
+        if settings["show_leaderboard"]:
+            screen.blit(checkmark_img, settings_showleaderboard_checkmark_rect)
 
     def display_new_playthrough():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, create_button_clicked, create_button_clicktime, playthrough_name_text, playthrough_name_rendered_text, selected_continue_save_name
@@ -1260,6 +1272,8 @@ if True:
         username_text = save_detail_font_nums.render(username, True, (255,255,255))
         screen.blit(username_text, (WINDOW_WIDTH - 10 - username_text.get_width(), 10))
         pygame.draw.rect(screen, (100, 0, 0), progress_screen_button_rect, 1)
+        if settings["show_leaderboard"]:
+            display_leaderboard()
 
     def display_menu_screen():
         screen.fill((255,0,0))
