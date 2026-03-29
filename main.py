@@ -476,7 +476,7 @@ if True:
 
 if True:
     pos_sentences = ["give me a ", "i want a ", "i need a ", "can i get a ", "could you give me a ", "would you do your job and give me a ", "immediately give me a ", "make a ", "i desire a ", "i would love a ", "i want to get drunk so give me a ",
-                    "stop being a jackass and give me a ", "i will die if you dont give me a ", "just give me a ", "bring me a ", "i don't have a lot of time, i just want a "]
+                    "stop being a jackass and give me a ", "i will die if you dont give me a ", "just give me a ", "bring me a ", "i don't have a lot of time, i just want a ", "i just got circumsised give me a "]
 
     cur_menu = ["mojito", "margarita", "cosmopolitan"]
 
@@ -1455,12 +1455,10 @@ if True:
                 screen_displayed_now = "cocktail_made_screen"
                 shaking_complete = False
 
-    #WHATZEFAK IS DIT BRO
     if drink_made == 1:
         drink_made = 2
         # drink_made needs to be set to 0 when you have created a drink
         currently_preparing_drink = drink_check(current_made_cocktail)
-    #WHATZEFAK IS DIT BRO
 
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, customers_served, progress_rect
@@ -1706,10 +1704,8 @@ while running:
     
     elif screen_displayed_now == "guest_screen":
         display_guest_screen()
-
     elif screen_displayed_now == "username":
         display_create_username()
-
     elif screen_displayed_now == "cocktail_made_screen":
         display_cocktail_made_screen()
     #----------------------------------
