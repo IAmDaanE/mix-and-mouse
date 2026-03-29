@@ -48,7 +48,7 @@ def top_5():
     return jsonify(result)
 
 @app.route("/top3")
-def top_5():
+def top_3():
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM scores ORDER BY customers_served DESC LIMIT 3")
