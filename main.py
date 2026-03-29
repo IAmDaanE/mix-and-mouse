@@ -22,6 +22,19 @@ if True:
     pygame.display.set_caption("cocktail game")
     clock = pygame.time.Clock()
 
+#-----converting tilesheets-----
+
+def slice_tilesheet(path, tile_width, tile_height):
+    sheet = pygame.image.load(path).convert_alpha()
+    sheet_width, sheet_height = sheet.get_size()
+    tiles = []
+    for y in range(0, sheet_height, tile_height):
+        for x in range(0, sheet_width, tile_width):
+            rect = pygame.Rect(x, y, tile_width, tile_height)
+            tile = sheet.subsurface(rect)
+            tiles.append(tile)
+    return tiles
+
 #------loading in assets--------
 
 if True:
@@ -62,6 +75,7 @@ if True:
     checkmark_img = pygame.transform.scale_by(pygame.image.load("assets/checkmark.png").convert_alpha(), 1)
     right_arrow_img = pygame.transform.scale_by(pygame.image.load("assets/right_arrow.png").convert_alpha(), 1)
     left_arrow_img = pygame.transform.scale_by(pygame.image.load("assets/left_arrow.png").convert_alpha(), 1)
+    stock_screen_row_img = pygame.transform.scale_by(pygame.image.load("assets/stock_screen_row.png").convert_alpha(), 1)
 
     default_font = pygame.font.SysFont('Calibri', 25)
     pixel_font_numbers = pygame.font.Font("assets/micro_5.ttf", 60)
@@ -71,13 +85,6 @@ if True:
     save_detail_font_date = pygame.font.Font("assets/Jersey10.ttf", 30)
     save_detail_font_nums = pygame.font.Font("assets/Jersey10.ttf", 40)
 
-    vodka_icon_img = pygame.transform.scale_by(pygame.image.load("assets/vodka_icon.png").convert_alpha(), 1)
-    orange_juice_icon_img = pygame.transform.scale_by(pygame.image.load("assets/orange_juice_icon.png").convert_alpha(), 1)
-    champagne_icon_img = pygame.transform.scale_by(pygame.image.load("assets/champagne_icon.png").convert_alpha(), 1)
-    water_icon_img = pygame.transform.scale_by(pygame.image.load("assets/water_icon.png").convert_alpha(), 1)
-    whiskey_icon_img = pygame.transform.scale_by(pygame.image.load("assets/whiskey_icon.png").convert_alpha(), 1)
-    gin_icon_img = pygame.transform.scale_by(pygame.image.load("assets/gin_icon.png").convert_alpha(), 1)
-
     guest1_img = pygame.transform.scale_by(pygame.image.load("assets/guest_1.png").convert_alpha(), 1)
     guest2_img = pygame.transform.scale_by(pygame.image.load("assets/guest_2.png").convert_alpha(), 1)
     guest3_img = pygame.transform.scale_by(pygame.image.load("assets/guest_3.png").convert_alpha(), 1)
@@ -86,13 +93,40 @@ if True:
     guest6_img = pygame.transform.scale_by(pygame.image.load("assets/guest_6.png").convert_alpha(), 1)
     guest7_img = pygame.transform.scale_by(pygame.image.load("assets/guest_7.png").convert_alpha(), 1)
     guest8_img = pygame.transform.scale_by(pygame.image.load("assets/guest_8.png").convert_alpha(), 1)
-    
-    stock_screen_row_img = pygame.transform.scale_by(pygame.image.load("assets/stock_screen_row.png").convert_alpha(), 1)
 
     cocktail_shaker_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_shaker.png").convert_alpha(), 2)
     cocktail_glass_img = pygame.transform.scale_by(pygame.image.load("assets/cocktail_glass.png").convert_alpha(), 1)
 
-#------button variables---------
+    ingredient_icons_list = slice_tilesheet("assets/ingredients_tilesheet.png", 66, 66)
+    glass_tags_list = slice_tilesheet("assets/tags_tilesheet.png", 66, 66)
+
+#----------assigning image names---------
+
+if True: 
+    #----ingredient icons-----
+    vodka_icon = ingredient_icons_list[0]
+    white_rum_icon = ingredient_icons_list[1]
+    dark_rum_icon = ingredient_icons_list[2]
+    cola_icon = ingredient_icons_list[3]
+    champagne_icon = ingredient_icons_list[4]
+    tequila_icon = ingredient_icons_list[5]
+    triple_sec_icon = ingredient_icons_list[6]
+    amaretto_icon = ingredient_icons_list[7]
+    kahlua_icon = ingredient_icons_list[8]
+    #no idea what this is
+    #no idea what this is
+    prosecco_icon = ingredient_icons_list[11]
+    schnapps_icon = ingredient_icons_list[12]
+    curacao_icon = ingredient_icons_list[13]
+    midori_icon = ingredient_icons_list[14]
+    absinthe_icon = ingredient_icons_list[15]
+    sweet_vermouth_icon = ingredient_icons_list[16]
+    dry_vermouth_icon = ingredient_icons_list[17]
+    campari_icon = ingredient_icons_list[18]
+    passionfruit_juice_icon = ingredient_icons_list[19]
+    #more to come
+    
+#-----------button variables-----------
 
 if True:
     continue_button_rect = continue_button_img.get_rect(topleft=(50, 20))
@@ -151,7 +185,7 @@ if True:
     settings_devmode_checkmark_rect = checkmark_img.get_rect(topleft=(147, 97))
     settings_soundon_checkmark_rect = checkmark_img.get_rect(topleft=(147, 133))
 
-#--------other variables--------
+#-----------other variables------------
 
 if True:
     click_duration = 80
@@ -204,7 +238,7 @@ if True:
     current_username_string = """"""
     username_error_message = ""
     total_dif = 0
-
+    leaderboard_data = []
 
 #--------random rects and lists--------
 
@@ -262,50 +296,50 @@ if True:
     guest_order6_rect = pygame.Rect(guest6_rect.x - 20, 332, 150, 100)
     
     drink_icon_library = {  
-                            "vodka": vodka_icon_img,
-                            "gin": gin_icon_img,
-                            "orange juice": orange_juice_icon_img,
-                            "white rum": whiskey_icon_img,
-                            "cola": vodka_icon_img,
-                            "tonic water": water_icon_img,
-                            "soda water": water_icon_img,
-                            "lime juice": vodka_icon_img,
-                            "mint": vodka_icon_img,
-                            "sugar syrup": vodka_icon_img,
-                            "ice": water_icon_img,
-                            "dark rum": vodka_icon_img,
-                            "tequila": vodka_icon_img,
-                            "whiskey": vodka_icon_img,
-                            "triple sec": vodka_icon_img,
-                            "amaretto": vodka_icon_img,
-                            "kahlúa": vodka_icon_img,
-                            "baileys": vodka_icon_img,
-                            "champagne": vodka_icon_img,
-                            "prosecco": vodka_icon_img,
-                            "peach schnapps": vodka_icon_img,
-                            "blue curaçao": vodka_icon_img,
-                            "midori": vodka_icon_img,
-                            "absinthe": vodka_icon_img,
-                            "dry vermouth": vodka_icon_img,
-                            "sweet vermouth": vodka_icon_img,
-                            "campari": vodka_icon_img,
-                            "elderflower liqueur": vodka_icon_img,
-                            "pineapple juice": vodka_icon_img,
-                            "cranberry juice": vodka_icon_img,
-                            "lemon juice": vodka_icon_img,
-                            "grapefruit juice": vodka_icon_img,
-                            "apple juice": vodka_icon_img,
-                            "mango juice": vodka_icon_img,
-                            "passion fruit juice": vodka_icon_img,
-                            "peach juice": vodka_icon_img,
-                            "grenadine": vodka_icon_img,
-                            "coconut cream": vodka_icon_img,
-                            "ginger beer": vodka_icon_img,
-                            "egg white": vodka_icon_img,
-                            "cream": vodka_icon_img,
-                            "lime": vodka_icon_img,
-                            "mint": vodka_icon_img,
-                            "bitters": vodka_icon_img
+                            "vodka": vodka_icon,
+                            "gin": vodka_icon,
+                            "orange juice": vodka_icon,
+                            "white rum": vodka_icon,
+                            "cola": vodka_icon,
+                            "tonic water": vodka_icon,
+                            "soda water": vodka_icon,
+                            "lime juice": vodka_icon,
+                            "mint": vodka_icon,
+                            "sugar syrup": vodka_icon,
+                            "ice": vodka_icon,
+                            "dark rum": vodka_icon,
+                            "tequila": vodka_icon,
+                            "whiskey": vodka_icon,
+                            "triple sec": vodka_icon,
+                            "amaretto": vodka_icon,
+                            "kahlúa": vodka_icon,
+                            "baileys": vodka_icon,
+                            "champagne": vodka_icon,
+                            "prosecco": vodka_icon,
+                            "peach schnapps": vodka_icon,
+                            "blue curaçao": vodka_icon,
+                            "midori": vodka_icon,
+                            "absinthe": vodka_icon,
+                            "dry vermouth": vodka_icon,
+                            "sweet vermouth": vodka_icon,
+                            "campari": vodka_icon,
+                            "elderflower liqueur": vodka_icon,
+                            "pineapple juice": vodka_icon,
+                            "cranberry juice": vodka_icon,
+                            "lemon juice": vodka_icon,
+                            "grapefruit juice": vodka_icon,
+                            "apple juice": vodka_icon,
+                            "mango juice": vodka_icon,
+                            "passion fruit juice": vodka_icon,
+                            "peach juice": vodka_icon,
+                            "grenadine": vodka_icon,
+                            "coconut cream": vodka_icon,
+                            "ginger beer": vodka_icon,
+                            "egg white": vodka_icon,
+                            "cream": vodka_icon,
+                            "lime":vodka_icon,
+                            "mint": vodka_icon,
+                            "bitters": vodka_icon
                             }
     
     guest_rects_library = { 1: guest1_rect,
@@ -368,13 +402,13 @@ if True:
 
         # syrups & sweet
         "sugar syrup":          (180, 210, 140),
-        "grenadine":            (190, 10,  40),
+        "grenadine":            (190,  10,  40),
         "coconut cream":        (160, 210, 185),
 
         # sodas
-        "cola":                 (45,  20,  5),
+        "cola":                 (45,   20,   5),
         "tonic water":          (140, 190, 220),
-        "ginger beer":          (195, 160, 60),
+        "ginger beer":          (195, 160,  60),
         "soda water":           (130, 175, 210),
 
         # other
@@ -383,10 +417,10 @@ if True:
         "lime":                 (80,  165, 30),
         "mint":                 (30,  140, 40),
         "bitters":              (110, 40,  15),
-        "ice":                  (0,   0,   0)
+        "ice":                  (0,    0,   0) #PLACEHOLDER
     }
 
-#---------text formatting----------
+#-----------text formatting------------
 
 if True:
     def wrap_text_colored(segments, font, max_width):
@@ -438,7 +472,7 @@ if True:
         lines = wrap_text_colored(segments, font, max_width)
         return len(lines) * font.get_linesize()
 
-#---------guest logic----------
+#-------------guest logic-------------
 
 if True:
     pos_sentences = ["give me a ", "i want a ", "i need a ", "can i get a ", "could you give me a ", "would you do your job and give me a ", "immediately give me a ", "make a ", "i desire a ", "i would love a ", "i want to get drunk so give me a ",
@@ -621,7 +655,7 @@ if True:
         succesful_making = False
         return temp_drink_info
 
-#----------file saving----------
+#-------------file saving-------------
 
 if True:
     def rond_af_5(n):
@@ -732,7 +766,7 @@ if True:
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
             json.dump(save_data, f)
     
-#----------leaderboard logic---------
+#----------leaderboard logic----------
 
 if True:
 
@@ -750,10 +784,15 @@ if True:
     def check_username_conflict(username):
         response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
         if response.json()["exists"]:
-            print("CONFLICT")
             return True
         else:
             return False
+    
+    def get_leaderboard():
+        leaderboard_data = requests.get(f"{base_api_url}/top5")
+        
+    def display_leaderboard():
+        pass
         
 #-------stock screen page calculations-------
 
@@ -1571,7 +1610,7 @@ if True:
     def display_cocktail_made_screen():
         pass
 
-#-----------main loop-----------
+#-------------main loop-----------
 
 while running:
     
@@ -1678,4 +1717,4 @@ while running:
     pygame.display.update()
     clock.tick(60)
 
-#--------BUG_FIXES:--------
+#-------------BUG_FIXES:-----------
