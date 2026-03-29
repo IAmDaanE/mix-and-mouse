@@ -84,7 +84,9 @@ def update_data():
     name = data["name"]
     customers_served = data["customers_served"]
     best_cocktail_value = data["best_cocktail_value"]
-    cursor.execute("UPDATE scores SET customers_served = %s, best_cocktail_value = %s WHERE name = %s",(customers_served, best_cocktail_value, name))
+    cursor.execute(
+        "UPDATE scores SET customers_served = GREATEST(customers_served, %s), best_cocktail_value = GREATEST(best_cocktail_value, %s) WHERE name = %s",
+        (customers_served, best_cocktail_value, name))
     conn.commit()
     conn.close()
     return jsonify({"message": "score saved"}), 200
