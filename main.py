@@ -144,7 +144,7 @@ if True:
                             "grapefruit juice": ingredient_icons_list[25],
                             "apple juice": ingredient_icons_list[26],
                             "mango juice": ingredient_icons_list[28],
-                            "passion fruit juice": ingredient_icons_list[19],
+                            "passionfruit juice": ingredient_icons_list[19],
                             "peach juice": ingredient_icons_list[27],
                             "grenadine": ingredient_icons_list[31],
                             "coconut cream": ingredient_icons_list[32],
@@ -384,19 +384,19 @@ if True:
         "grapefruit juice":     (230, 100, 50),
         "apple juice":          (150, 190, 40),
         "mango juice":          (245, 140, 10),
-        "passion fruit juice":  (210, 100, 10),
+        "passionfruit juice":  (232, 175, 16),
         "peach juice":          (230, 130, 50),
 
         # syrups & sweet
         "sugar syrup":          (180, 210, 140),
         "grenadine":            (190,  10,  40),
-        "coconut cream":        (160, 210, 185),
+        "coconut cream":        (242, 230, 196),
 
         # sodas
         "cola":                 (45,   20,   5),
-        "tonic water":          (140, 190, 220),
+        "tonic water":          (224, 242, 220),
         "ginger beer":          (195, 160,  60),
-        "soda water":           (130, 175, 210),
+        "soda water":           (225, 247, 242),
 
         # other
         "egg white":            (200, 210, 160),
@@ -876,7 +876,7 @@ def check_unlocks():
         unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 0})
         unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 0})
         unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "passion fruit juice", "price": 10, "owned": 0})
+        unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 0})
     if not unlocks["group4"] and customers_served == 50:
         unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 0})
         unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 0})
