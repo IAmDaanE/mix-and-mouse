@@ -1625,7 +1625,7 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        screen.fill((255, 0, 255))
+        screen.blit(cocktail_stats_background_img, (213,120))
         test_text = pixel_font_letters.render(str(current_made_cocktail), True, (255, 255, 255))
         screen.blit(test_text, (200, 100))
 
