@@ -84,13 +84,6 @@ if True:
     cocktail_shaker_img = convert_asset("assets/cocktail_shaker.png", 2)
     cocktail_glass_img = convert_asset("assets/cocktail_glass.png", 1)
 
-    vodka_bar_img = convert_asset("assets/vodka_bar.png", 1)
-    orange_juice_bar_img = convert_asset("assets/orange_juice_bar.png", 1)
-    champagne_bar_img = convert_asset("assets/vodka_bar.png", 1)
-    water_bar_img = convert_asset("assets/waterbottle_bar.png", 1)
-    whiskey_bar_img = convert_asset("assets/vodka_bar.png", 1)
-    gin_bar_img = convert_asset("assets/vodka_bar.png", 1)
-
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
     guest3_img = convert_asset("assets/guest_3.png", 1)
@@ -116,28 +109,51 @@ if True:
 #----------assigning image names---------
 
 if True: 
-    #----ingredient icons-----
-    vodka_icon = ingredient_icons_list[0]
-    white_rum_icon = ingredient_icons_list[1]
-    dark_rum_icon = ingredient_icons_list[2]
-    cola_icon = ingredient_icons_list[3]
-    champagne_icon = ingredient_icons_list[4]
-    tequila_icon = ingredient_icons_list[5]
-    triple_sec_icon = ingredient_icons_list[6]
-    amaretto_icon = ingredient_icons_list[7]
-    kahlua_icon = ingredient_icons_list[8]
-    #no idea what this is
-    #no idea what this is
-    prosecco_icon = ingredient_icons_list[11]
-    schnapps_icon = ingredient_icons_list[12]
-    curacao_icon = ingredient_icons_list[13]
-    midori_icon = ingredient_icons_list[14]
-    absinthe_icon = ingredient_icons_list[15]
-    sweet_vermouth_icon = ingredient_icons_list[16]
-    dry_vermouth_icon = ingredient_icons_list[17]
-    campari_icon = ingredient_icons_list[18]
-    passionfruit_juice_icon = ingredient_icons_list[19]
-    #more to come
+    drink_bar_library = {
+                            "vodka": ingredient_icons_list[0],
+                            "gin": ingredient_icons_list[40],
+                            "orange juice": ingredient_icons_list[20],
+                            "white rum": ingredient_icons_list[1],
+                            "cola": ingredient_icons_list[3],
+                            "tonic water": ingredient_icons_list[33],
+                            "soda water": ingredient_icons_list[34],
+                            "lime juice": ingredient_icons_list[23],
+                            "mint": ingredient_icons_list[38],
+                            "sugar syrup": ingredient_icons_list[30],
+                            "ice": ingredient_icons_list[37],
+                            "dark rum": ingredient_icons_list[2],
+                            "tequila": ingredient_icons_list[5],
+                            "whiskey": ingredient_icons_list[41],
+                            "triple sec": ingredient_icons_list[6],
+                            "amaretto": ingredient_icons_list[7],
+                            "kahlúa": ingredient_icons_list[8],
+                            "baileys": ingredient_icons_list[10],
+                            "champagne": ingredient_icons_list[4],
+                            "prosecco": ingredient_icons_list[11],
+                            "peach schnapps": ingredient_icons_list[12],
+                            "blue curaçao": ingredient_icons_list[13],
+                            "midori": ingredient_icons_list[14],
+                            "absinthe": ingredient_icons_list[15],
+                            "dry vermouth": ingredient_icons_list[17],
+                            "sweet vermouth": ingredient_icons_list[16],
+                            "campari": ingredient_icons_list[18],
+                            "elderflower liqueur": ingredient_icons_list[9],
+                            "pineapple juice": ingredient_icons_list[21],
+                            "cranberry juice": ingredient_icons_list[22],
+                            "lemon juice": ingredient_icons_list[24],
+                            "grapefruit juice": ingredient_icons_list[25],
+                            "apple juice": ingredient_icons_list[26],
+                            "mango juice": ingredient_icons_list[28],
+                            "passion fruit juice": ingredient_icons_list[19],
+                            "peach juice": ingredient_icons_list[27],
+                            "grenadine": ingredient_icons_list[31],
+                            "coconut cream": ingredient_icons_list[32],
+                            "ginger beer": ingredient_icons_list[36],
+                            "egg white": ingredient_icons_list[35],
+                            "cream": ingredient_icons_list[42],
+                            "lime": ingredient_icons_list[29],
+                            "bitters": ingredient_icons_list[39]
+                        }
     
 #-----------button variables-----------
 
@@ -312,54 +328,6 @@ if True:
     guest_order4_rect = pygame.Rect(guest4_rect.x - 20, 332, 150, 100)
     guest_order5_rect = pygame.Rect(guest5_rect.x - 20, 332, 150, 100)
     guest_order6_rect = pygame.Rect(guest6_rect.x - 20, 332, 150, 100)
-    
-
-    drink_bar_library = {  
-                            "vodka": vodka_bar_img,
-                            "gin": gin_bar_img,
-                            "orange juice": orange_juice_bar_img,
-                            "white rum": whiskey_bar_img,
-                            "cola": vodka_bar_img,
-                            "tonic water": water_bar_img,
-                            "soda water": water_bar_img,
-                            "lime juice": vodka_bar_img,
-                            "mint": vodka_bar_img,
-                            "sugar syrup": vodka_bar_img,
-                            "ice": water_bar_img,
-                            "dark rum": vodka_bar_img,
-                            "tequila": vodka_bar_img,
-                            "whiskey": vodka_bar_img,
-                            "triple sec": vodka_bar_img,
-                            "amaretto": vodka_bar_img,
-                            "kahlúa": vodka_bar_img,
-                            "baileys": vodka_bar_img,
-                            "champagne": vodka_bar_img,
-                            "prosecco": vodka_bar_img,
-                            "peach schnapps": vodka_bar_img,
-                            "blue curaçao": vodka_bar_img,
-                            "midori": vodka_bar_img,
-                            "absinthe": vodka_bar_img,
-                            "dry vermouth": vodka_bar_img,
-                            "sweet vermouth": vodka_bar_img,
-                            "campari": vodka_bar_img,
-                            "elderflower liqueur": vodka_bar_img,
-                            "pineapple juice": vodka_bar_img,
-                            "cranberry juice": vodka_bar_img,
-                            "lemon juice": vodka_bar_img,
-                            "grapefruit juice": vodka_bar_img,
-                            "apple juice": vodka_bar_img,
-                            "mango juice": vodka_bar_img,
-                            "passion fruit juice": vodka_bar_img,
-                            "peach juice": vodka_bar_img,
-                            "grenadine": vodka_bar_img,
-                            "coconut cream": vodka_bar_img,
-                            "ginger beer": vodka_bar_img,
-                            "egg white": vodka_bar_img,
-                            "cream": vodka_bar_img,
-                            "lime": vodka_bar_img,
-                            "mint": vodka_bar_img,
-                            "bitters": vodka_bar_img
-                        }
     
     guest_rects_library = { 1: guest1_rect,
                             2: guest2_rect,
