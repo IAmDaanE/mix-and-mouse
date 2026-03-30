@@ -22,7 +22,10 @@ if True:
     pygame.display.set_caption("cocktail game")
     clock = pygame.time.Clock()
 
-#-----converting tilesheets-----
+#------loading in assets--------
+
+def convert_asset(pngName, scale):
+    return pygame.transform.scale_by(pygame.image.load(pngName).convert_alpha(), scale)
 
 def slice_tilesheet(path, tile_width, tile_height):
     sheet = pygame.image.load(path).convert_alpha()
@@ -34,11 +37,6 @@ def slice_tilesheet(path, tile_width, tile_height):
             tile = sheet.subsurface(rect)
             tiles.append(tile)
     return tiles
-
-#------loading in assets--------
-
-def convert_asset(pngName, scale):
-    return pygame.transform.scale_by(pygame.image.load(pngName).convert_alpha(), scale)
 
 if True:
     continue_button_img = convert_asset("assets/continue_button.png", 1) 
@@ -74,8 +72,8 @@ if True:
     progress_screen_background_img = convert_asset("assets/progress_screen_background.png", 1)
     cocktailmaker_background_img = convert_asset("assets/cocktailmaker_background.png", 1)
     homescreen_background_img = convert_asset("assets/homescreen_background.png", 1)
-    cocktail_stats_background_img = convert_asset("assets/cocktail_stats_background_bar.png", 1)
     menu_screen_background_img = convert_asset("assets/menu_screen_background.png", 1)
+    cocktail_made_background_img = convert_asset("assets/cocktail_made_background.png", 1)
 
     checkmark_img = convert_asset("assets/checkmark.png", 1)
     right_arrow_img = convert_asset("assets/right_arrow.png", 1)
@@ -144,7 +142,7 @@ if True:
                             "grapefruit juice": ingredient_icons_list[25],
                             "apple juice": ingredient_icons_list[26],
                             "mango juice": ingredient_icons_list[28],
-                            "passion fruit juice": ingredient_icons_list[19],
+                            "passionfruit juice": ingredient_icons_list[19],
                             "peach juice": ingredient_icons_list[27],
                             "grenadine": ingredient_icons_list[31],
                             "coconut cream": ingredient_icons_list[32],
@@ -384,7 +382,7 @@ if True:
         "grapefruit juice":     (230, 100, 50),
         "apple juice":          (150, 190, 40),
         "mango juice":          (245, 140, 10),
-        "passion fruit juice":  (232, 175, 16),
+        "passionfruit juice":  (232, 175, 16),
         "peach juice":          (230, 130, 50),
 
         # syrups & sweet
@@ -876,7 +874,7 @@ def check_unlocks():
         unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 0})
         unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 0})
         unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "passion fruit juice", "price": 10, "owned": 0})
+        unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 0})
     if not unlocks["group4"] and customers_served == 50:
         unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 0})
         unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 0})
