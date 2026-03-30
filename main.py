@@ -72,8 +72,8 @@ if True:
     progress_screen_background_img = convert_asset("assets/progress_screen_background.png", 1)
     cocktailmaker_background_img = convert_asset("assets/cocktailmaker_background.png", 1)
     homescreen_background_img = convert_asset("assets/homescreen_background.png", 1)
-    cocktail_stats_background_img = convert_asset("assets/cocktail_stats_background_bar.png", 1)
     menu_screen_background_img = convert_asset("assets/menu_screen_background.png", 1)
+    cocktail_made_background_img = convert_asset("assets/cocktail_made_background.png", 1)
 
     checkmark_img = convert_asset("assets/checkmark.png", 1)
     right_arrow_img = convert_asset("assets/right_arrow.png", 1)
@@ -1623,7 +1623,7 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        screen.blit(cocktail_stats_background_img, (213,120))
+        screen.blit(cocktail_made_background_img, (213,120))
         test_text = pixel_font_letters.render(str(current_made_cocktail), True, (255, 255, 255))
         screen.blit(test_text, (200, 100))
 
