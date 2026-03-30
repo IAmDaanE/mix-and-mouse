@@ -1434,7 +1434,7 @@ if True:
                 shaking = True
                 if drink_made == 0:
                     drink_made = 1
-                newly_made_cocktail = drink_check(current_made_cocktail)
+                
 
         #---------displaying---------
 
@@ -1626,8 +1626,21 @@ if True:
 
     def display_cocktail_made_screen():
         screen.blit(cocktail_stats_background_img, (213,120))
-        test_text = pixel_font_letters.render(str(current_made_cocktail), True, (255, 255, 255))
-        screen.blit(test_text, (200, 100))
+        for item in currently_preparing_drink:
+            if "stars" in item:
+                stars_text = pixel_font_letters.render((str(item['stars'])), True, (255, 255, 255))
+
+        for item in currently_preparing_drink:
+            if "preperation" in item:
+                prep = item["preperation"]
+                ingredients_str = ", ".join(f"{k}: {v}" for k, v in prep.items())
+                ingredients_text = pixel_font_letters.render(ingredients_str, True, (255, 255, 255)
+        )
+
+        screen.blit(stars_text, (740, 520))
+        screen.blit(ingredients_text ,(230, 400))
+        print(currently_preparing_drink)
+        
 
 #-------------main loop-----------
 
@@ -1732,8 +1745,10 @@ while running:
     
     elif screen_displayed_now == "guest_screen":
         display_guest_screen()
+
     elif screen_displayed_now == "username":
         display_create_username()
+
     elif screen_displayed_now == "cocktail_made_screen":
         display_cocktail_made_screen()
     #----------------------------------
