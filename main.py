@@ -75,6 +75,7 @@ if True:
     cocktailmaker_background_img = convert_asset("assets/cocktailmaker_background.png", 1)
     homescreen_background_img = convert_asset("assets/homescreen_background.png", 1)
     cocktail_stats_background_img = convert_asset("assets/cocktail_stats_background_bar.png", 1)
+    menu_screen_background_img = convert_asset("assets/menu_screen_background.png", 1)
 
     checkmark_img = convert_asset("assets/checkmark.png", 1)
     right_arrow_img = convert_asset("assets/right_arrow.png", 1)
@@ -935,19 +936,18 @@ def check_unlocks():
 if True:
 
     def display_startscreen():
-        global continue_button_clicked, continue_button_clicktime, pos, settings_button_clicked, exit_button_clicked, settings_button_clicktime, exit_button_clicktime, screen_displayed_now, running, transition_this_frame, new_button_clicked, new_button_clicktime, save_details, playthrough_name_text
+        global continue_button_clicked, continue_button_clicktime, pos, settings_button_clicked, exit_button_clicked, settings_button_clicktime, exit_button_clicktime, screen_displayed_now, running, new_button_clicked, new_button_clicktime, save_details, playthrough_name_text
         #---------button logic----------
         
-        if not transition_this_frame:
-            if left_mouse_clicked and continue_button_rect.collidepoint(pos):
-                continue_button_clicked = True
-                continue_button_clicktime = now
-            if left_mouse_clicked and exit_button_rect.collidepoint(pos):
-                exit_button_clicked = True
-                exit_button_clicktime = now
-            if left_mouse_clicked and new_button_rect.collidepoint(pos):
-                new_button_clicked = True
-                new_button_clicktime = now
+        if left_mouse_clicked and continue_button_rect.collidepoint(pos):
+            continue_button_clicked = True
+            continue_button_clicktime = now
+        if left_mouse_clicked and exit_button_rect.collidepoint(pos):
+            exit_button_clicked = True
+            exit_button_clicktime = now
+        if left_mouse_clicked and new_button_rect.collidepoint(pos):
+            new_button_clicked = True
+            new_button_clicktime = now
             
         if continue_button_clicktime != 0 and continue_button_clicktime <= now - click_duration:
             continue_button_clicked = False
@@ -958,7 +958,6 @@ if True:
 
         if continue_button_clicktime != 0 and continue_button_clicktime <= now - screen_switch_duration:
             continue_button_clicktime = 0
-            transition_this_frame = True
             continue_button_clicktime = 0
             for folder in os.listdir(save_files_location):
                     with open(f"{save_files_location}/{folder}/data.json", "r") as f:
@@ -973,7 +972,6 @@ if True:
         if new_button_clicktime != 0 and new_button_clicktime <= now - screen_switch_duration:
             new_button_clicktime = 0
             screen_displayed_now = "new_screen"
-            transition_this_frame = True
             playthrough_name_text = ""
 
         #----------displaying-----------
@@ -984,7 +982,7 @@ if True:
         screen.blit(new_button_clicked_img if new_button_clicked else new_button_img, new_button_rect)
 
     def display_settings_screen():
-        global back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame
+        global back_button_clicktime, back_button_clicked, screen_displayed_now, settings
         #---------button logic----------
 
         if left_mouse_clicked and back_button_rect.collidepoint(pos):
@@ -1004,7 +1002,6 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "homescreen"
-            transition_this_frame = True
             back_button_clicktime = 0
 
 
@@ -1020,13 +1017,12 @@ if True:
             screen.blit(checkmark_img, settings_showleaderboard_checkmark_rect)
 
     def display_new_playthrough():
-        global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, create_button_clicked, create_button_clicktime, playthrough_name_text, playthrough_name_rendered_text, selected_continue_save_name
+        global back_button_clicked, back_button_clicktime, screen_displayed_now, create_button_clicked, create_button_clicktime, playthrough_name_text, playthrough_name_rendered_text, selected_continue_save_name
         #----------button logic--------
 
-        if not transition_this_frame:
-            if left_mouse_clicked and back_button_rect.collidepoint(pos):
-                back_button_clicked = True
-                back_button_clicktime = now
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
 
         if left_mouse_clicked and create_button_rect.collidepoint(pos):
             create_button_clicked = True
@@ -1040,12 +1036,10 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "startscreen"
-            transition_this_frame = True
         
         if create_button_clicktime != 0 and create_button_clicktime <= now - screen_switch_duration:
             create_button_clicktime = 0
             if check_valid_dir_input():
-                transition_this_frame = True
                 with os.scandir(save_files_location) as entries:
                     folder_count = sum(1 for entry in entries if entry.is_dir())
                 print(folder_count)
@@ -1077,14 +1071,13 @@ if True:
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_small, 1, border_radius=10)
 
     def display_continue_playthrough():
-        global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, continue_button2_clicktime, continue_button2_clicked, selected_continue_save, selected_continue_save_name, new_ingredient_unlocked
+        global back_button_clicked, back_button_clicktime, screen_displayed_now, continue_button2_clicktime, continue_button2_clicked, selected_continue_save, selected_continue_save_name, new_ingredient_unlocked
         
         #----------button logic--------
 
-        if not transition_this_frame:
-            if left_mouse_clicked and back_button_rect.collidepoint(pos):
-                back_button_clicked = True
-                back_button_clicktime = now
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
 
         if left_mouse_clicked and continue_button2_rect.collidepoint(pos):
             continue_button2_clicked = True
@@ -1105,7 +1098,6 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "startscreen"
-            transition_this_frame = True
             back_button_clicktime = 0
         if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
             continue_button2_clicktime = 0
@@ -1140,13 +1132,12 @@ if True:
         display_save_details()
 
     def display_overwrite_playthrough():
-        global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, continue_button2_clicked, continue_button2_clicktime, overwrite_indicator_rect, selected_overwrite_save
+        global back_button_clicked, back_button_clicktime, screen_displayed_now, continue_button2_clicked, continue_button2_clicktime, overwrite_indicator_rect, selected_overwrite_save
         #----------button logic--------
 
-        if not transition_this_frame:
-            if left_mouse_clicked and back_button_rect.collidepoint(pos):
-                back_button_clicked = True
-                back_button_clicktime = now
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
 
         if back_button_clicktime != 0 and back_button_clicktime <= now - click_duration:
             back_button_clicked = False
@@ -1167,7 +1158,6 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "startscreen"
-            transition_this_frame = True
             back_button_clicktime = 0
 
         rect_counter = 0
@@ -1195,7 +1185,7 @@ if True:
         display_save_details()
 
     def display_homescreen():
-        global screen_displayed_now, progress_rect, selected_cocktail_ingredient, selected_cocktail_ingredient_page, backup_ingredients, transition_this_frame, running, settings_button_clicked, settings_button_clicktime, save_button_clicked, save_button_clicktime, save_exit_button_clicked, save_exit_button_clicktime
+        global screen_displayed_now, progress_rect, selected_cocktail_ingredient, selected_cocktail_ingredient_page, backup_ingredients, running, settings_button_clicked, settings_button_clicktime, save_button_clicked, save_button_clicktime, save_exit_button_clicked, save_exit_button_clicktime
         #--------button variables--------
 
         if left_mouse_clicked and stock_screen_button_rect.collidepoint(pos):
@@ -1259,7 +1249,6 @@ if True:
         if settings_button_clicktime != 0 and settings_button_clicktime <= now - screen_switch_duration:
             settings_button_clicktime = 0
             screen_displayed_now = "settings"
-            transition_this_frame = True
             settings_button_clicktime = 0
 
         #----------displaying----------
@@ -1275,10 +1264,30 @@ if True:
             display_leaderboard()
 
     def display_menu_screen():
-        screen.fill((255,0,0))
+        global back_button_clicktime, back_button_clicked, screen_displayed_now
+        #---------button logic----------
+
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
+        
+        if back_button_clicktime != 0 and back_button_clicktime <= now - click_duration:
+            back_button_clicked = False
+
+        if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
+            back_button_clicktime = 0
+            screen_displayed_now = "homescreen"
+            back_button_clicktime = 0
+
+        #----------displaying-----------
+
+        screen.blit(menu_screen_background_img, (0,0))
+        screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
 
     def display_stock_screen(): 
-        global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, plus_button_clicked, plus_button_clicktime, min_button_clicked, min_button_clicktime, stock_screen_row_counter, stock_page_displayed, selected_stock_ingredient, selected_stock_ingredient_page, buy_button_clicked, buy_button_clicktime, stock_amount_selected, balance
+        global back_button_clicked, back_button_clicktime, screen_displayed_now, plus_button_clicked, plus_button_clicktime, min_button_clicked, min_button_clicktime, stock_screen_row_counter, stock_page_displayed, selected_stock_ingredient, selected_stock_ingredient_page, buy_button_clicked, buy_button_clicktime, stock_amount_selected, balance
         
         #---------button logic---------
         
@@ -1343,7 +1352,6 @@ if True:
         
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             screen_displayed_now = "homescreen"
-            transition_this_frame = True
             back_button_clicktime = 0
 
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -1378,13 +1386,12 @@ if True:
         stock_screen_row_counter = 0
 
     def display_cocktailmaker():
-        global newly_made_cocktail, shaking_complete, drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, transition_this_frame, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif
+        global newly_made_cocktail, shaking_complete, drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif
         #-------button logic---------
 
-        if not transition_this_frame:
-            if left_mouse_clicked and back_button2_rect.collidepoint(pos):
-                back_button_clicked = True
-                back_button_clicktime = now
+        if left_mouse_clicked and back_button2_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
 
         if back_button_clicktime != 0 and back_button_clicktime <= now - click_duration:
             back_button_clicked = False
@@ -1392,7 +1399,6 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "homescreen"
-            transition_this_frame = True
             back_button_clicktime = 0
             current_made_cocktail = {}
             current_cocktail_rects = []
@@ -1509,13 +1515,12 @@ if True:
                 total_dif = 0
 
     def display_progress_screen():
-        global back_button_clicked, back_button_clicktime, screen_displayed_now, transition_this_frame, customers_served, progress_rect
+        global back_button_clicked, back_button_clicktime, screen_displayed_now, customers_served, progress_rect
         #----------button logic---------
 
-        if not transition_this_frame:
-            if left_mouse_clicked and back_button_rect.collidepoint(pos):
-                back_button_clicked = True
-                back_button_clicktime = now
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
 
         if back_button_clicktime != 0 and back_button_clicktime <= now - click_duration:
             back_button_clicked = False
@@ -1523,7 +1528,6 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "homescreen"
-            transition_this_frame = True
 
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
@@ -1537,7 +1541,7 @@ if True:
         screen.fill((255,0,0))
 
     def display_guest_screen():
-        global screen_displayed_now, settings, transition_this_frame, guests, temp_guest_spawn_wait, temp_guest_timer, back_button_clicked, back_button_clicktime, balance
+        global screen_displayed_now, settings, guests, temp_guest_spawn_wait, temp_guest_timer, back_button_clicked, back_button_clicktime, balance
         #---------button logic----------
 
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -1552,7 +1556,6 @@ if True:
         if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
             back_button_clicktime = 0
             screen_displayed_now = "homescreen"
-            transition_this_frame = True
             back_button_clicktime = 0
 
         money_cheat_rect = pygame.Rect(500, 200, 50, 50)
@@ -1669,7 +1672,6 @@ while running:
         new_ingredient_unlocked = False
         left_mouse_clicked = False
         right_mouse_clicked = False
-        transition_this_frame = False
         pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
