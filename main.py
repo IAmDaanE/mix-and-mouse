@@ -633,7 +633,6 @@ if True:
                     building_score.append(abs(used - required))
 
         total_dif = calculate_stars(building_score)
-        print("your total difference is " + str(total_dif))
         
         match total_dif:
                 case 0:
@@ -1042,7 +1041,6 @@ if True:
             if check_valid_dir_input():
                 with os.scandir(save_files_location) as entries:
                     folder_count = sum(1 for entry in entries if entry.is_dir())
-                print(folder_count)
                 if folder_count == 4:
                     screen_displayed_now = "overwrite_screen"
                     for folder in os.listdir(save_files_location):
@@ -1054,7 +1052,6 @@ if True:
                     selected_continue_save_name = playthrough_name_text
                     new_save()
                     playthrough_name_text = ""
-                print(folder_count)
 
         #----------displaying----------
         
@@ -1406,7 +1403,6 @@ if True:
             backup_ingredients.clear()
             shaking = False
             cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
-
         if cocktail_page_displayed != 0:
             if left_mouse_clicked and cocktail_left_arrow_rect.collidepoint(pos):
                 cocktail_page_displayed -= 1
@@ -1513,6 +1509,7 @@ if True:
                 screen_displayed_now = "cocktail_made_screen"
                 shaking_complete = False
                 total_dif = 0
+                shaking = False
 
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, customers_served, progress_rect
@@ -1659,7 +1656,9 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        pass
+        screen.fill((255, 0, 255))
+        test_text = pixel_font_letters.render(str(current_made_cocktail), True, (255, 255, 255))
+        screen.blit(test_text, (200, 100))
 
 #-------------main loop-----------
 
@@ -1677,29 +1676,30 @@ while running:
             if event.type == pygame.QUIT:
                 regular_save()
                 running = False
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = event.pos
                 left_mouse_clicked = True
                 if cocktail_shaker_rect.collidepoint(pos):
                     dragging = True
-                    temppos = pos[1]
+                    temppos = pos
                     cocktail_shaker_x_offset = cocktail_shaker_rect.x - event.pos[0]
                     cocktail_shaker_y_offset = cocktail_shaker_rect.y - event.pos[1]
+
             if event.type == pygame.MOUSEMOTION:
                 if dragging and shaking:
-                    
-                    if total_dif > max_total_difference:
-                        total_dif = 0
+                    if total_dif >= max_total_difference:
                         temppos = 0
                         shaking_complete = True
                     else:
-                        difference_shaker = abs(temppos - pos[1])
-                        total_dif += difference_shaker
-                        temppos = pos[1]
-                        print(total_dif)
+                        difference_shaker_x = abs(temppos[0] - pos[0])
+                        difference_shaker_y = abs(temppos[1] - pos[1])
+                        total_dif += difference_shaker_y
+                        total_dif += difference_shaker_x
+                        temppos = pos
+                        cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
+                        cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
 
-                    cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
-                    cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 dragging = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
