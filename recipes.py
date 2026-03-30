@@ -316,11 +316,11 @@ all_recipes_in_game = [
             "ing4": {"name": "sugar syrup", "amount": 2}
         }},
 
-        {"name": "passionfruit mojito",
+        {"name": "passion fruit mojito",
         "price": 10,
         "makingprocess": {
             "ing1": {"name": "white rum", "amount": 5},
-            "ing2": {"name": "passionfruit juice", "amount": 4},
+            "ing2": {"name": "passion fruit juice", "amount": 4},
             "ing3": {"name": "lime juice", "amount": 3},
             "ing4": {"name": "sugar syrup", "amount": 2},
             "ing5": {"name": "soda water", "amount": 4},
@@ -351,7 +351,7 @@ all_recipes_in_game = [
         "makingprocess": {
             "ing1": {"name": "tequila", "amount": 6},
             "ing2": {"name": "mango juice", "amount": 7},
-            "ing3": {"name": "passionfruit juice", "amount": 5},
+            "ing3": {"name": "passion fruit juice", "amount": 5},
             "ing4": {"name": "grenadine", "amount": 2},
             "ing5": {"name": "ice", "amount": 2}
         }},
