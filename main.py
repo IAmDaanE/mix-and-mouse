@@ -1259,6 +1259,7 @@ if True:
         pygame.draw.rect(screen, (100, 0, 0), progress_screen_button_rect, 1)
         if settings["show_leaderboard"]:
             display_leaderboard()
+            pygame.draw.line(screen, (0, 0, 0), (468, 516), (935, 516), 2)
 
     def display_menu_screen():
         global back_button_clicktime, back_button_clicked, screen_displayed_now
@@ -1443,7 +1444,7 @@ if True:
                     if len(current_cocktail_rects) == 0:
                         current_cocktail_rects.append({
                             "name": ingredient_name,
-                            "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 1, cocktail_glass_bottom - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
+                            "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 2, cocktail_glass_bottom - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
                             "color": ingredient_color_library[ingredient_name]
                         })
                     else:
@@ -1453,7 +1454,7 @@ if True:
                         else:
                             current_cocktail_rects.append({
                                 "name": ingredient_name,
-                                "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 1, current_cocktail_rects[-1]["rect"].y - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
+                                "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 2, current_cocktail_rects[-1]["rect"].y - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
                                 "color": ingredient_color_library[ingredient_name]
                             })
         
