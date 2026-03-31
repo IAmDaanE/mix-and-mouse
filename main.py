@@ -296,7 +296,7 @@ if True:
     for i in range(9):
         unlocks[f"group{i}"] = False
     
-    personal_recipes = [{"name": "screwdriver", "stars": 6, "price": 34, "preparation": {"vodka": 6, "ice": 2, "lime juice": 12}}]
+    personal_recipes = [{"name": "screwdriver", "stars": 6, "price": 34, "preparation": {"vodka": 6, "ice": 2, "lime juice": 12}, "image": random.choice(glasses_list)}]
                                                             
     stock_indicator_rect = pygame.Rect(stock_screen_row1_rect.x - stock_indicator_gap, stock_screen_row1_rect.y - stock_indicator_gap, stock_screen_row_img.get_width() + stock_indicator_gap * 2, stock_screen_row_img.get_height() + stock_indicator_gap * 2)
     cocktail_indicator_rect = pygame.Rect(cocktailmaker_ing_rects[0].x - cocktail_indicator_gap, cocktailmaker_ing_rects[0].y - cocktail_indicator_gap, cocktailmaker_ing_rects[0].width + 2 * cocktail_indicator_gap, cocktailmaker_ing_rects[0].height + 2 * cocktail_indicator_gap)
@@ -943,7 +943,7 @@ def update_recipe_book():
             new_recipe = False
             break
     if new_recipe:
-        personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"]})
+        personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"], "image": random.choice(glasses_list)})
     calculate_recipe_pages()
 
 #---------display functions----------
@@ -1571,7 +1571,7 @@ if True:
             screen.blit(name_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 5))
             stars_text = save_detail_font_nums.render(f"{recipe['stars'] / 2} stars", True, (255,255,255))
             screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 160))
-            screen.blit(pygame.transform.scale_by(random.choice(glasses_list), 3.5), (recipe_book_cords[recipe_counter][0] - 30, recipe_book_cords[recipe_counter][1] - 45))
+            screen.blit(pygame.transform.scale_by(recipe["image"], 3.5), (recipe_book_cords[recipe_counter][0] - 30, recipe_book_cords[recipe_counter][1] - 45))
             step_y = recipe_book_cords[recipe_counter][1] + 25
             for ingredient, amount in recipe["preparation"].items():
                 step_text = save_detail_font_nums.render(f"{ingredient:<30}{amount}", True, (255,255,255))
