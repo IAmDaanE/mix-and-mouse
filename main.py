@@ -274,6 +274,7 @@ if True:
     max_total_difference = 10000
     shake_progress_rect_increaser = 292 / max_total_difference
     personal_recipes = []
+    successfully_made_drink = False
 
 #--------random rects and lists--------
 
@@ -283,6 +284,8 @@ if True:
     stock_screen_row3_rect = stock_screen_row_img.get_rect(topleft=(189, 284))
     stock_screen_row4_rect = stock_screen_row_img.get_rect(topleft=(189, 371))
     stock_screen_row5_rect = stock_screen_row_img.get_rect(topleft=(189, 458))
+
+    made_drink_window_rect = cocktail_made_background_img.get_rect(topleft=(213, 120))
 
     cocktailmaker_ing_spacing = 24
 
@@ -580,13 +583,14 @@ if True:
         stars_temp = 0
         temp_drink_info = {}
         building_score = []
-        succesful_making = False
+        temp_succes = False
         for recipe in all_recipes_in_game:
             recipe_ingredients = [ing["name"] for ing in recipe["makingprocess"].values()]
             
             if set(recipe_ingredients) == set(used_ing.keys()):
                 print("you succesfully made a " + recipe["name"])
-                succesful_making = True
+                temp_drink_info['successful'] = True
+                temp_succes = True
 
                 temp_drink_info["drink made"] = recipe["name"]
 
@@ -624,18 +628,14 @@ if True:
                     stars_temp = -1
                 case _:
                     stars_temp = 0
-        if succesful_making == False:
-            temp_drink_info["succesful"] = False
-        else:
-            temp_drink_info["succesful"] = True
 
-        if succesful_making == True:
+        if temp_succes == True:
             temp_drink_info["stars"] = stars_temp
 
         temp_drink_info["preparation"] = used_ing
         
         
-        succesful_making = False
+        temp_succes = False
         return temp_drink_info
 
 #-------------file saving-------------
@@ -905,6 +905,7 @@ def update_recipe_book():
             break
     personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"]})
     print(personal_recipes)
+    print(currently_preparing_drink)
 
 #---------display functions----------
 
@@ -1440,6 +1441,7 @@ if True:
                 total_amount += current_made_cocktail[str(ingredient)]
             if total_amount == 20:
                 shaking = True
+                total_amount = 0
 
                 
 
@@ -1582,7 +1584,7 @@ if True:
 
         #----------displaying-----------
 
-        screen.blit(guest_screen_background_img, (0,0))
+        screen.blit(guest_screen_background_img,  (0,0))
         screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
         for guest in guests:
             if guest["clicked"]:
@@ -1642,17 +1644,23 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        screen.blit(cocktail_made_background_img, (213,120))
-        stars_text = pixel_font_letters.render("sum ting wong", True, (255, 255, 255))
-        if "stars" in currently_preparing_drink:
-            stars_text = pixel_font_letters.render(str(currently_preparing_drink['stars']), True, (255, 255, 255))
+        global screen_displayed_now, made_drink_window_rect, shaking
+        screen.blit(cocktail_made_background_img, made_drink_window_rect)
+        successfully_made_drink = currently_preparing_drink.get("successful", False)
+        stars_text = pixel_font_letters.render(str(currently_preparing_drink.get('stars', 0)) + "/10", True,(255, 255, 255))
+        if successfully_made_drink:
+            name_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
+        else:
+            name_text = pixel_font_letters.render("unsuccessful drink",True,(255, 255, 255))
 
-            prep = currently_preparing_drink["preparation"]
-            ingredients_str = ", ".join(f"{k}: {v}" for k, v in prep.items())
-            ingredients_text = pixel_font_letters.render(ingredients_str, True, (255, 255, 255))
+        if left_mouse_clicked and not made_drink_window_rect.collidepoint(pos):
+            shaking = False
+            screen_displayed_now = "cocktailmaker"
 
-        screen.blit(stars_text, (740, 520))
-        screen.blit(ingredients_text ,(230, 400))
+
+        screen.blit(stars_text, (600, 520))
+        screen.blit(name_text, (600, 420))
+        
 
 #-------------main loop-----------
 
@@ -1661,6 +1669,9 @@ while running:
     #---------event loop---------
 
     if True:
+        print("shaking:" + str(shaking))
+        if not screen_displayed_now == "cocktail_made_screen":
+            successfully_made_drink = False
         new_ingredient_unlocked = False
         left_mouse_clicked = False
         right_mouse_clicked = False
@@ -1685,7 +1696,10 @@ while running:
                         temppos = 0
                         shaking_complete = True
                         currently_preparing_drink = drink_check(current_made_cocktail)
-                        if currently_preparing_drink["succesful"]:
+                        current_made_cocktail = {}
+                        current_cocktail_rects = []
+                        successfully_made_drink = currently_preparing_drink.get("successful", False)
+                        if successfully_made_drink == True:
                             update_recipe_book()
                     else:
                         difference_shaker_x = abs(temppos[0] - pos[0])
