@@ -103,6 +103,7 @@ if True:
 
     ingredient_icons_list = slice_tilesheet("assets/ingredients_tilesheet.png", 66, 66)
     glass_tags_list = slice_tilesheet("assets/tags_tilesheet.png", 66, 66)
+    glasses_list = slice_tilesheet("assets/glasses_tilesheet", 66, 66)
 
 #----------assigning image names---------
 
@@ -1639,7 +1640,6 @@ if True:
         screen.blit(ingredients_text ,(230, 400))
         print(currently_preparing_drink)
         
-
 #-------------main loop-----------
 
 while running:
