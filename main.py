@@ -182,6 +182,8 @@ if True:
     add_ingredient_button_rect = pygame.Rect(510, 355, 223, 314)
     cocktail_shaker_og_rect = cocktail_shaker_img.get_rect(topleft=(621 - cocktail_shaker_img.get_width() / 2, WINDOW_HEIGHT - 51 - cocktail_shaker_img.get_height()))
     cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
+    recipes_left_arrow_rect = left_arrow_img.get_rect(topleft=(516, 636))
+    recipes_right_arrow_rect = left_arrow_img.get_rect(topleft=(720, 636))
 
     continue_button_clicked = False
     continue_button2_clicked = False
@@ -256,7 +258,7 @@ if True:
     cocktail_layer_height = 15
     cocktail_glass_middle = 621
     shaking = False
-
+    displaying_recipe_book = False
     newly_made_cocktail = []
     shaking_complete = False
     starting_shaker_cords = [500, 500]
@@ -271,6 +273,7 @@ if True:
     leaderboard_data = []
     max_total_difference = 10000
     shake_progress_rect_increaser = 292 / max_total_difference
+    personal_recipes = []
 
 #--------random rects and lists--------
 
@@ -299,7 +302,8 @@ if True:
 
     stock_screen_row_cords = [109, 196, 284, 371, 458]
     continue_screen_cords = [100, 235, 370, 505]
-    leaderboard_row_cords = [520, 580, 640 ]
+    leaderboard_row_cords = [520, 580, 640]
+    recipe_book_rects = [(18, 37, 612, 268), (18 + 612 + 18, 37, 612, 268), (18, 37 + 268 + 37, 612, 268), (18 + 612 + 18, 37 + 268+ 37, 612, 268)]
 
     unlocked_ingredients = [
         {"name": "vodka", "price": 10, "owned": 0},
@@ -562,9 +566,7 @@ if True:
 
 #----------rating + recognition logic----------
 
-if True:
-    unlocked_recipes = []
-    
+if True:    
     def add_to_menu(drink):
         cur_menu.append(drink)
 
@@ -576,7 +578,7 @@ if True:
 
     def drink_check(used_ing):
         stars_temp = 0
-        temp_drink_info = []
+        temp_drink_info = {}
         building_score = []
         succesful_making = False
         for recipe in all_recipes_in_game:
@@ -586,11 +588,7 @@ if True:
                 print("you succesfully made a " + recipe["name"])
                 succesful_making = True
 
-                if (recipe["name"]) not in unlocked_recipes:
-                    unlocked_recipes.append(recipe["name"])
-                    print("new recipe unlocked")
-
-                temp_drink_info.append({"drink made": recipe["name"]})
+                temp_drink_info["drink made"] = recipe["name"]
 
                 for ing in recipe["makingprocess"].values():
                     name = ing["name"]
@@ -627,14 +625,14 @@ if True:
                 case _:
                     stars_temp = 0
         if succesful_making == False:
-            temp_drink_info.append({"sucesfull": False})
+            temp_drink_info["succesful"] = False
         else:
-            temp_drink_info.append({"sucesfull": True})
+            temp_drink_info["succesful"] = True
 
         if succesful_making == True:
-            temp_drink_info.append({"stars": stars_temp})
+            temp_drink_info["stars"] = stars_temp
 
-        temp_drink_info.append({"preperation": used_ing})
+        temp_drink_info["preparation"] = used_ing
         
         
         succesful_making = False
@@ -896,6 +894,17 @@ def check_unlocks():
         unlocked_ingredients.append({"name": "sweet vermouth", "price": 10, "owned": 0})
     if not unlocks["group8"] and customers_served == 200:
         unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 0})
+
+#---------recipe book system---------
+
+def update_recipe_book():
+    for recipe in personal_recipes:
+        if currently_preparing_drink["drink made"] == recipe["name"]:
+            if currently_preparing_drink["stars"] > recipe["stars"]:
+                recipe["preparation"] = currently_preparing_drink["preparation"]
+            break
+    personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"]})
+    print(personal_recipes)
 
 #---------display functions----------
 
@@ -1502,7 +1511,17 @@ if True:
         pygame.draw.rect(screen, (137,0,0), progress_rect)
 
     def display_recipe_book():
-        screen.fill((255,0,0))
+        #global 
+        #---------button logic----------
+
+        #----------displaying-----------
+        screen.fill((48, 96, 130))
+        for i in range(4):
+            pygame.draw.rect(screen, (0,0,0), recipe_book_rects[i], 2)
+        screen.blit(left_arrow_img, recipes_left_arrow_rect)
+        screen.blit(right_arrow_img, recipes_right_arrow_rect)
+        page_text = playthrough_name_font.render("14/21", True, (255,255,255))
+        screen.blit(page_text, (WINDOW_WIDTH / 2 - page_text.get_width() / 2, WINDOW_HEIGHT - page_text.get_height() - 20))
 
     def display_guest_screen():
         global screen_displayed_now, settings, guests, temp_guest_spawn_wait, temp_guest_timer, back_button_clicked, back_button_clicktime, balance
@@ -1525,7 +1544,7 @@ if True:
         money_cheat_rect = pygame.Rect(500, 200, 50, 50)
 
         if settings["dev_mode"] and right_mouse_clicked and money_cheat_rect.collidepoint(pos):
-            balance += 100
+            balance += 3000
 
         #--------guest timer-------------
 
@@ -1624,21 +1643,17 @@ if True:
 
     def display_cocktail_made_screen():
         screen.blit(cocktail_made_background_img, (213,120))
-        for item in currently_preparing_drink:
-            if "stars" in item:
-                stars_text = pixel_font_letters.render((str(item['stars'])), True, (255, 255, 255))
+        stars_text = pixel_font_letters.render("sum ting wong", True, (255, 255, 255))
+        if "stars" in currently_preparing_drink:
+            stars_text = pixel_font_letters.render(str(currently_preparing_drink['stars']), True, (255, 255, 255))
 
-        for item in currently_preparing_drink:
-            if "preperation" in item:
-                prep = item["preperation"]
-                ingredients_str = ", ".join(f"{k}: {v}" for k, v in prep.items())
-                ingredients_text = pixel_font_letters.render(ingredients_str, True, (255, 255, 255)
-        )
+            prep = currently_preparing_drink["preparation"]
+            ingredients_str = ", ".join(f"{k}: {v}" for k, v in prep.items())
+            ingredients_text = pixel_font_letters.render(ingredients_str, True, (255, 255, 255))
 
         screen.blit(stars_text, (740, 520))
         screen.blit(ingredients_text ,(230, 400))
-        print(currently_preparing_drink)
-        
+
 #-------------main loop-----------
 
 while running:
@@ -1646,7 +1661,6 @@ while running:
     #---------event loop---------
 
     if True:
-        
         new_ingredient_unlocked = False
         left_mouse_clicked = False
         right_mouse_clicked = False
@@ -1671,6 +1685,8 @@ while running:
                         temppos = 0
                         shaking_complete = True
                         currently_preparing_drink = drink_check(current_made_cocktail)
+                        if currently_preparing_drink["succesful"]:
+                            update_recipe_book()
                     else:
                         difference_shaker_x = abs(temppos[0] - pos[0])
                         difference_shaker_y = abs(temppos[1] - pos[1])
@@ -1692,24 +1708,24 @@ while running:
                 if event.key == pygame.K_BACKSPACE:
                     playthrough_name_text = playthrough_name_text[:-1]
                     current_username_string = current_username_string[:-1]
-    
+                if event.key == pygame.K_TAB and screen_displayed_now != "username" and screen_displayed_now != "continue_screen" and screen_displayed_now != "overwrite_screen" and screen_displayed_now != "new_screen" and screen_displayed_now != "startscreen":
+                    displaying_recipe_book = not displaying_recipe_book
+
     #-----------updates--------------
 
     now = pygame.time.get_ticks()
 
-
-
     #-----------debugging----------
 
-    #print(cocktailmaker_ing_rects[11].right)
+    #print(displaying_recipe_book)
 
     #--------screen selection--------
 
-    if screen_displayed_now == "homescreen":
-        display_homescreen()
+    if screen_displayed_now == "username":
+            display_create_username()
 
     elif screen_displayed_now == "continue_screen":
-        display_continue_playthrough()
+            display_continue_playthrough()
 
     elif screen_displayed_now == "overwrite_screen":
         display_overwrite_playthrough()
@@ -1719,33 +1735,37 @@ while running:
 
     elif screen_displayed_now == "startscreen":
         display_startscreen()
+    else:
+        if displaying_recipe_book:
+            display_recipe_book()
+        else:
+            if screen_displayed_now == "homescreen":
+                display_homescreen()
 
-    elif screen_displayed_now == "settings":
-        display_settings_screen()
-        
-    elif screen_displayed_now == "menu_screen":
-        display_menu_screen()
+            elif screen_displayed_now == "settings":
+                display_settings_screen()
+                
+            elif screen_displayed_now == "menu_screen":
+                display_menu_screen()
 
-    elif screen_displayed_now == "stock_screen":
-        display_stock_screen()
-    
-    elif screen_displayed_now == "cocktailmaker":
-        display_cocktailmaker()
+            elif screen_displayed_now == "stock_screen":
+                display_stock_screen()
+            
+            elif screen_displayed_now == "cocktailmaker":
+                display_cocktailmaker()
 
-    elif screen_displayed_now == "progress_screen":
-        display_progress_screen()
-    
-    elif screen_displayed_now == "recipe_book":
-        display_recipe_book()
-    
-    elif screen_displayed_now == "guest_screen":
-        display_guest_screen()
+            elif screen_displayed_now == "progress_screen":
+                display_progress_screen()
+            
+            elif screen_displayed_now == "recipe_book":
+                display_recipe_book()
+            
+            elif screen_displayed_now == "guest_screen":
+                display_guest_screen()
 
-    elif screen_displayed_now == "username":
-        display_create_username()
+            elif screen_displayed_now == "cocktail_made_screen":
+                display_cocktail_made_screen()
 
-    elif screen_displayed_now == "cocktail_made_screen":
-        display_cocktail_made_screen()
     #----------------------------------
 
     pygame.display.update()
