@@ -231,6 +231,7 @@ if True:
     locked_ingredients = []
     stock_page_displayed = 0
     cocktail_page_displayed = 0
+    recipe_page_displayed = 0
     stock_screen_row_counter = 0
     customers_served = 0
     new_ingredient_unlocked = False
@@ -274,6 +275,7 @@ if True:
     max_total_difference = 10000
     shake_progress_rect_increaser = 292 / max_total_difference
     personal_recipes = []
+    recipe_book_pages = []
     successfully_made_drink = False
 
 #--------random rects and lists--------
@@ -296,6 +298,8 @@ if True:
 
     for i in range(9):
         unlocks[f"group{i}"] = False
+    
+    personal_recipes = [{"name": "screwdriver", "stars": 6, "price": 34, "preparation": {"vodka": 6, "ice": 2, "lime juice": 12}}]
                                                             
     stock_indicator_rect = pygame.Rect(stock_screen_row1_rect.x - stock_indicator_gap, stock_screen_row1_rect.y - stock_indicator_gap, stock_screen_row_img.get_width() + stock_indicator_gap * 2, stock_screen_row_img.get_height() + stock_indicator_gap * 2)
     cocktail_indicator_rect = pygame.Rect(cocktailmaker_ing_rects[0].x - cocktail_indicator_gap, cocktailmaker_ing_rects[0].y - cocktail_indicator_gap, cocktailmaker_ing_rects[0].width + 2 * cocktail_indicator_gap, cocktailmaker_ing_rects[0].height + 2 * cocktail_indicator_gap)
@@ -307,6 +311,7 @@ if True:
     continue_screen_cords = [100, 235, 370, 505]
     leaderboard_row_cords = [520, 580, 640]
     recipe_book_rects = [(18, 37, 612, 268), (18 + 612 + 18, 37, 612, 268), (18, 37 + 268 + 37, 612, 268), (18 + 612 + 18, 37 + 268+ 37, 612, 268)]
+    recipe_book_cords = [[18, 37], [18 + 612 + 18, 37], [18, 37 + 268 + 37], [18 + 612 + 18, 37 + 268+ 37]]
 
     unlocked_ingredients = [
         {"name": "vodka", "price": 10, "owned": 0},
@@ -647,6 +652,9 @@ if True:
     def rond_af_12(n):
         return int(math.ceil(n / 12) * 12)
 
+    def rond_af_4(n):
+        return int(math.ceil(n / 4) * 4)
+
     save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}/save_files"
     username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}/username.txt"
 
@@ -709,7 +717,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -720,9 +728,14 @@ if True:
             guests = raw_unloaded_data["guests"]
             guest_available_spots = raw_unloaded_data["guest_available_spots"]
             first_save_done = raw_unloaded_data["first_save_done"]
+            personal_recipes = raw_unloaded_data["recipes"]
+            print(raw_unloaded_data["recipes"])
+
+
         calculate_stock_pages()
         with open(username_txt_file, "r") as f:
             username = f.read()
+        calculate_recipe_pages()
     
     def display_save_details():
         save_counter = 0
@@ -746,7 +759,8 @@ if True:
             **guest_data,
             "unlocks": unlocks_data,
             "ingredients": unlocked_ingredients_data,
-            "settings": settings_data
+            "settings": settings_data,
+            "recipes": personal_recipes
             }
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
             json.dump(save_data, f)
@@ -851,6 +865,28 @@ if True:
         selected_cocktail_ingredient = cocktail_pages[0][0]
         selected_cocktail_ingredient_page = 0
 
+#-------recipe book page calculations------
+
+if True:
+    def calculate_recipe_pages():
+        recipe_book_pages.clear()
+        num_of_pages = rond_af_4(len(personal_recipes)) // 4
+        recipes_left = len(personal_recipes)
+        recipe_counter = 0
+        for i in range(num_of_pages):
+            recipe_book_pages.append([])
+        for page in recipe_book_pages:
+                    if recipes_left >= 4:
+                        recipes_left -= 4
+                        for i in range(12):
+                            page.append(personal_recipes[recipe_counter])
+                            recipe_counter += 1
+                    else:
+                        for i in range(recipes_left):
+                            page.append(personal_recipes[recipe_counter])
+                            recipe_counter += 1
+    calculate_recipe_pages()
+
 #----------progression system---------
 
 def check_unlocks():
@@ -898,14 +934,17 @@ def check_unlocks():
 #---------recipe book system---------
 
 def update_recipe_book():
+    new_recipe = True
     for recipe in personal_recipes:
         if currently_preparing_drink["drink made"] == recipe["name"]:
             if currently_preparing_drink["stars"] > recipe["stars"]:
                 recipe["preparation"] = currently_preparing_drink["preparation"]
+                recipe["stars"] = currently_preparing_drink["stars"]
+            new_recipe = False
             break
-    personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"]})
-    print(personal_recipes)
-    print(currently_preparing_drink)
+    if new_recipe:
+        personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"]})
+    calculate_recipe_pages()
 
 #---------display functions----------
 
@@ -1513,16 +1552,41 @@ if True:
         pygame.draw.rect(screen, (137,0,0), progress_rect)
 
     def display_recipe_book():
-        #global 
+        global recipe_page_displayed 
         #---------button logic----------
+
+        if left_mouse_clicked and recipes_left_arrow_rect.collidepoint(pos):
+            if recipe_page_displayed != 0:
+                recipe_page_displayed -= 1
+
+        if left_mouse_clicked and recipes_right_arrow_rect.collidepoint(pos):
+            if recipe_page_displayed != len(recipe_book_pages) - 1:
+                recipe_page_displayed += 1
 
         #----------displaying-----------
         screen.fill((48, 96, 130))
-        for i in range(4):
+        recipe_counter = 0
+        
+        for recipe in recipe_book_pages[recipe_page_displayed]:
+            name_text = save_detail_font_nums.render(recipe["name"], True, (255,255,255))
+            screen.blit(name_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 5))
+            stars_text = save_detail_font_nums.render(f"{recipe['stars'] / 2} stars", True, (255,255,255))
+            screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 160))
+            screen.blit(pygame.transform.scale_by(random.choice(glasses_list), 3.5), (recipe_book_cords[recipe_counter][0] - 30, recipe_book_cords[recipe_counter][1] - 45))
+            step_y = recipe_book_cords[recipe_counter][1] + 25
+            for ingredient, amount in recipe["preparation"].items():
+                step_text = save_detail_font_nums.render(f"{ingredient:<30}{amount}", True, (255,255,255))
+                screen.blit(step_text, (recipe_book_cords[recipe_counter][0] + 200, step_y))
+                step_y += 35
+            recipe_counter += 1
+        
+        for i in range(len(recipe_book_pages[recipe_page_displayed])):
             pygame.draw.rect(screen, (0,0,0), recipe_book_rects[i], 2)
-        screen.blit(left_arrow_img, recipes_left_arrow_rect)
-        screen.blit(right_arrow_img, recipes_right_arrow_rect)
-        page_text = playthrough_name_font.render("14/21", True, (255,255,255))
+        if recipe_page_displayed != 0:
+            screen.blit(left_arrow_img, recipes_left_arrow_rect)
+        if recipe_page_displayed != len(recipe_book_pages) - 1:
+            screen.blit(right_arrow_img, recipes_right_arrow_rect)
+        page_text = playthrough_name_font.render(f"{recipe_page_displayed + 1}/{len(recipe_book_pages)}", True, (255,255,255))
         screen.blit(page_text, (WINDOW_WIDTH / 2 - page_text.get_width() / 2, WINDOW_HEIGHT - page_text.get_height() - 20))
 
     def display_guest_screen():
@@ -1730,8 +1794,6 @@ while running:
     now = pygame.time.get_ticks()
 
     #-----------debugging----------
-
-    #print(displaying_recipe_book)
 
     #--------screen selection--------
 
