@@ -299,7 +299,7 @@ if True:
     for i in range(9):
         unlocks[f"group{i}"] = False
     
-    personal_recipes = [{"name": "screwdriver", "stars": 6, "price": 34, "preparation": {"vodka": 6, "ice": 2, "lime juice": 12}, "image_num": random.randint(0, 80)}]
+    personal_recipes = [{"name": "screwdriver", "stars": 6, "price": 34, "preparation": {"vodka": 6, "ice": 2, "orange juice": 12}, "image_num": random.randint(0, 80)}]
                                                             
     stock_indicator_rect = pygame.Rect(stock_screen_row1_rect.x - stock_indicator_gap, stock_screen_row1_rect.y - stock_indicator_gap, stock_screen_row_img.get_width() + stock_indicator_gap * 2, stock_screen_row_img.get_height() + stock_indicator_gap * 2)
     cocktail_indicator_rect = pygame.Rect(cocktailmaker_ing_rects[0].x - cocktail_indicator_gap, cocktailmaker_ing_rects[0].y - cocktail_indicator_gap, cocktailmaker_ing_rects[0].width + 2 * cocktail_indicator_gap, cocktailmaker_ing_rects[0].height + 2 * cocktail_indicator_gap)
