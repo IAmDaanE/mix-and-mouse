@@ -717,7 +717,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -729,10 +729,13 @@ if True:
             guest_available_spots = raw_unloaded_data["guest_available_spots"]
             first_save_done = raw_unloaded_data["first_save_done"]
             personal_recipes = raw_unloaded_data["recipes"]
+            print(raw_unloaded_data["recipes"])
+
 
         calculate_stock_pages()
         with open(username_txt_file, "r") as f:
             username = f.read()
+        calculate_recipe_pages()
     
     def display_save_details():
         save_counter = 0
@@ -941,7 +944,6 @@ def update_recipe_book():
             break
     if new_recipe:
         personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"]})
-    print(personal_recipes)
     calculate_recipe_pages()
 
 #---------display functions----------
@@ -1565,10 +1567,16 @@ if True:
         recipe_counter = 0
         
         for recipe in recipe_book_pages[recipe_page_displayed]:
-            name_text = pixel_font_letters.render(recipe["name"], True, (255,255,255))
+            name_text = save_detail_font_nums.render(recipe["name"], True, (255,255,255))
             screen.blit(name_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 5))
-            stars_text = pixel_font_letters.render(str((recipe['stars'] / 2) % recipe['stars'] / 2), True, (255,255,255))
-            screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 40))
+            stars_text = save_detail_font_nums.render(f"{recipe['stars'] / 2} stars", True, (255,255,255))
+            screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 160))
+            screen.blit(pygame.transform.scale_by(random.choice(glasses_list), 3.5), (recipe_book_cords[recipe_counter][0] - 30, recipe_book_cords[recipe_counter][1] - 45))
+            step_y = recipe_book_cords[recipe_counter][1] + 25
+            for ingredient, amount in recipe["preparation"].items():
+                step_text = save_detail_font_nums.render(f"{ingredient:<30}{amount}", True, (255,255,255))
+                screen.blit(step_text, (recipe_book_cords[recipe_counter][0] + 200, step_y))
+                step_y += 35
             recipe_counter += 1
         
         for i in range(len(recipe_book_pages[recipe_page_displayed])):
@@ -1709,7 +1717,7 @@ if True:
             ingredients_text = pixel_font_letters.render(ingredients_str, True, (255, 255, 255))
 
         screen.blit(stars_text, (740, 520))
-        screen.blit(ingredients_text ,(230, 400))
+        screen.blit(ingredients_text, (230, 400))
 
 #-------------main loop-----------
 
@@ -1773,8 +1781,6 @@ while running:
     now = pygame.time.get_ticks()
 
     #-----------debugging----------
-
-    #print(recipe_book_pages)
 
     #--------screen selection--------
 
