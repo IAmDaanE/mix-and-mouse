@@ -103,7 +103,7 @@ if True:
 
     ingredient_icons_list = slice_tilesheet("assets/ingredients_tilesheet.png", 66, 66)
     glass_tags_list = slice_tilesheet("assets/tags_tilesheet.png", 66, 66)
-    glasses_list = slice_tilesheet("assets/glasses_tilesheet", 66, 66)
+    glasses_list = slice_tilesheet("assets/glasses_tilesheet.png", 66, 66)
 
 #----------assigning image names---------
 
@@ -256,7 +256,7 @@ if True:
     cocktail_layer_height = 15
     cocktail_glass_middle = 621
     shaking = False
-    drink_made = 0
+
     newly_made_cocktail = []
     shaking_complete = False
     starting_shaker_cords = [500, 500]
@@ -1351,7 +1351,7 @@ if True:
         stock_screen_row_counter = 0
 
     def display_cocktailmaker():
-        global newly_made_cocktail, shaking_complete, drink_made, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif
+        global newly_made_cocktail, shaking_complete, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif
         #-------button logic---------
 
         if left_mouse_clicked and back_button2_rect.collidepoint(pos):
@@ -1431,8 +1431,7 @@ if True:
                 total_amount += current_made_cocktail[str(ingredient)]
             if total_amount == 20:
                 shaking = True
-                if drink_made == 0:
-                    drink_made = 1
+
                 
 
         #---------displaying---------
@@ -1671,6 +1670,7 @@ while running:
                     if total_dif >= max_total_difference:
                         temppos = 0
                         shaking_complete = True
+                        currently_preparing_drink = drink_check(current_made_cocktail)
                     else:
                         difference_shaker_x = abs(temppos[0] - pos[0])
                         difference_shaker_y = abs(temppos[1] - pos[1])
@@ -1697,10 +1697,7 @@ while running:
 
     now = pygame.time.get_ticks()
 
-    if drink_made == 1:
-            drink_made = 2
-            # drink_made needs to be set to 0 when you have created a drink
-            currently_preparing_drink = drink_check(current_made_cocktail)
+
 
     #-----------debugging----------
 
