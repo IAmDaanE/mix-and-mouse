@@ -64,6 +64,7 @@ if True:
     create_button_clicked_img = convert_asset("assets/create_button_clicked.png", 1)
     save_button_clicked_img = convert_asset("assets/save_button_clicked.png", 1)
     save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
+    make_button_clicked_img = convert_asset("assets/make_button_clicked_bar.png", 2)
 
     startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
     settings_screen_background_img = convert_asset("assets/settings_screen_background.png", 1)
@@ -74,6 +75,7 @@ if True:
     homescreen_background_img = convert_asset("assets/homescreen_background.png", 1)
     menu_screen_background_img = convert_asset("assets/menu_screen_background.png", 1)
     cocktail_made_background_img = convert_asset("assets/cocktail_made_background.png", 1)
+    coktail_exterior_customizer_background_img = convert_asset("assets/cocktail_design_maker_bar.png",1)
 
     checkmark_img = convert_asset("assets/checkmark.png", 1)
     right_arrow_img = convert_asset("assets/right_arrow.png", 1)
@@ -83,6 +85,7 @@ if True:
     cocktail_glass_img = convert_asset("assets/cocktail_glass.png", 1)
     ice_layer_small_img = convert_asset("assets/ice_layer_small.png", 1)
     ice_layer_big_img = convert_asset("assets/ice_layer_big.png", 1)
+    make_button_img = convert_asset("assets/make_button_bar.png", 2)
 
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
@@ -186,6 +189,7 @@ if True:
     cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
     recipes_left_arrow_rect = left_arrow_img.get_rect(topleft=(516, 636))
     recipes_right_arrow_rect = left_arrow_img.get_rect(topleft=(720, 636))
+    make_button_rect = make_button_img.get_rect(topleft=(300, 636))
 
     continue_button_clicked = False
     continue_button2_clicked = False
@@ -200,7 +204,9 @@ if True:
     create_button_clicked = False
     save_button_clicked = False
     save_exit_button_clicked = False
+    make_button_clicked = False
 
+    make_button_clicktime = 0
     continue_button_clicktime = 0
     continue_button2_clicktime = 0
     new_button_clicktime = 0
@@ -279,6 +285,8 @@ if True:
     personal_recipes = []
     recipe_book_pages = []
     successfully_made_drink = False
+    unlocked_drinks = []
+
 
 #--------random rects and lists--------
 
@@ -600,6 +608,9 @@ if True:
                 temp_succes = True
 
                 temp_drink_info["drink made"] = recipe["name"]
+
+                if not recipe["name"] in unlocked_drinks:
+                    temp_drink_info['new drink'] = True
 
                 for ing in recipe["makingprocess"].values():
                     name = ing["name"]
@@ -1742,7 +1753,30 @@ if True:
 
         screen.blit(stars_text, (600, 520))
         screen.blit(name_text, (600, 420))
+    
+    def display_cokctail_exterior_maker():
+        global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img
         
+        if left_mouse_clicked and make_button_rect.collidepoint(pos):
+            make_button_clicked = True
+            make_button_clicktime = now
+
+        if make_button_clicktime != 0 and make_button_clicktime <= now - click_duration:
+            make_button_clicked = False
+
+        if make_button_clicktime != 0 and make_button_clicktime <= now - screen_switch_duration:
+            make_button_clicktime = 0
+            screen_displayed_now = "cocktail_made_screen"
+            make_button_clicktime = 0
+            shaking_complete = True
+
+
+        name2_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
+       
+        
+        screen.blit(coktail_exterior_customizer_background_img, (0,0))
+        screen.blit(name2_text, (300, 100))
+        screen.blit(make_button_clicked_img if make_button_clicked else make_button_img, make_button_rect)
 #-------------main loop-----------
 
 while running:
@@ -1750,6 +1784,8 @@ while running:
     #---------event loop---------
 
     if True:
+        
+        
         if not screen_displayed_now == "cocktail_made_screen":
             successfully_made_drink = False
         new_ingredient_unlocked = False
@@ -1773,9 +1809,15 @@ while running:
             if event.type == pygame.MOUSEMOTION:
                 if dragging and shaking:
                     if total_dif >= max_total_difference:
-                        temppos = 0
-                        shaking_complete = True
+                        temppos = (0,0)
                         currently_preparing_drink = drink_check(current_made_cocktail)
+                        
+                        if currently_preparing_drink.get('new drink', False) == False:
+                            shaking_complete = True
+                        else:
+                            screen_displayed_now = "cocktail_exterior_maker"
+                        total_dif = 0
+                        
                         current_made_cocktail = {}
                         current_cocktail_rects = []
                         successfully_made_drink = currently_preparing_drink.get("successful", False)
@@ -1857,6 +1899,10 @@ while running:
 
             elif screen_displayed_now == "cocktail_made_screen":
                 display_cocktail_made_screen()
+
+            elif screen_displayed_now == "cocktail_exterior_maker":
+                display_cokctail_exterior_maker()
+
 
     #----------------------------------
 
