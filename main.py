@@ -81,6 +81,8 @@ if True:
     stock_screen_row_img = convert_asset("assets/stock_screen_row.png", 1)
     cocktail_shaker_img = convert_asset("assets/cocktail_shaker.png", 2)
     cocktail_glass_img = convert_asset("assets/cocktail_glass.png", 1)
+    ice_layer_small_img = convert_asset("assets/ice_layer_small.png", 1)
+    ice_layer_big_img = convert_asset("assets/ice_layer_big.png", 1)
 
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
@@ -256,7 +258,7 @@ if True:
     current_cocktail_rects = []
     cocktail_glass_bottom = WINDOW_HEIGHT - 64
     cocktail_glass_width = 198
-    cocktail_layer_height = 15
+    cocktail_layer_height = 16
     cocktail_glass_middle = 621
     shaking = False
     displaying_recipe_book = False
@@ -1335,19 +1337,19 @@ if True:
             selected_stock_ingredient = stock_pages[stock_page_displayed][0]
             selected_stock_ingredient_page = stock_page_displayed
             stock_indicator_rect.y = stock_screen_row1_rect.y - stock_indicator_gap
-        if left_mouse_clicked and stock_screen_row2_rect.collidepoint(pos):
+        if left_mouse_clicked and stock_screen_row2_rect.collidepoint(pos) and len(stock_pages[stock_page_displayed]) > 1:
             selected_stock_ingredient = stock_pages[stock_page_displayed][1]
             selected_stock_ingredient_page = stock_page_displayed
             stock_indicator_rect.y = stock_screen_row2_rect.y - stock_indicator_gap
-        if left_mouse_clicked and stock_screen_row3_rect.collidepoint(pos):
+        if left_mouse_clicked and stock_screen_row3_rect.collidepoint(pos) and len(stock_pages[stock_page_displayed]) > 2:
             selected_stock_ingredient = stock_pages[stock_page_displayed][2]
             selected_stock_ingredient_page = stock_page_displayed
             stock_indicator_rect.y = stock_screen_row3_rect.y - stock_indicator_gap
-        if left_mouse_clicked and stock_screen_row4_rect.collidepoint(pos):
+        if left_mouse_clicked and stock_screen_row4_rect.collidepoint(pos) and len(stock_pages[stock_page_displayed]) > 3:
             selected_stock_ingredient = stock_pages[stock_page_displayed][3]
             selected_stock_ingredient_page = stock_page_displayed
             stock_indicator_rect.y = stock_screen_row4_rect.y - stock_indicator_gap
-        if left_mouse_clicked and stock_screen_row5_rect.collidepoint(pos):
+        if left_mouse_clicked and stock_screen_row5_rect.collidepoint(pos) and len(stock_pages[stock_page_displayed]) > 4:
             selected_stock_ingredient = stock_pages[stock_page_displayed][4]
             selected_stock_ingredient_page = stock_page_displayed
             stock_indicator_rect.y = stock_screen_row5_rect.y - stock_indicator_gap
@@ -1400,7 +1402,7 @@ if True:
         stock_screen_row_counter = 0
 
     def display_cocktailmaker():
-        global newly_made_cocktail, shaking_complete, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif
+        global newly_made_cocktail, shaking_complete, back_button_clicktime, back_button_clicked, screen_displayed_now, settings, cocktail_page_displayed, selected_cocktail_ingredient_page, selected_cocktail_ingredient, current_made_cocktail, unlocked_ingredients, current_cocktail_rects, shaking, cocktail_shaker_rect, total_dif, current_shaker_cords
         #-------button logic---------
 
         if left_mouse_clicked and back_button2_rect.collidepoint(pos):
@@ -1458,21 +1460,23 @@ if True:
                         do_add = True
                 if do_add:
                     if len(current_cocktail_rects) == 0:
-                        current_cocktail_rects.append({
-                            "name": ingredient_name,
-                            "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 2, cocktail_glass_bottom - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
-                            "color": ingredient_color_library[ingredient_name]
-                        })
-                    else:
-                        if current_cocktail_rects[-1]["name"] == ingredient_name:
-                            current_cocktail_rects[-1]["rect"].height += cocktail_layer_height
-                            current_cocktail_rects[-1]["rect"].y -= cocktail_layer_height
-                        else:
+                        if ingredient_name != "ice":
                             current_cocktail_rects.append({
                                 "name": ingredient_name,
-                                "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 2, current_cocktail_rects[-1]["rect"].y - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
+                                "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 2, cocktail_glass_bottom - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
                                 "color": ingredient_color_library[ingredient_name]
                             })
+                    else:
+                        if ingredient_name != "ice":
+                            if current_cocktail_rects[-1]["name"] == ingredient_name:
+                                current_cocktail_rects[-1]["rect"].height += cocktail_layer_height
+                                current_cocktail_rects[-1]["rect"].y -= cocktail_layer_height
+                            else:
+                                current_cocktail_rects.append({
+                                    "name": ingredient_name,
+                                    "rect": pygame.Rect(cocktail_glass_middle - cocktail_glass_width / 2 + 2, current_cocktail_rects[-1]["rect"].y - cocktail_layer_height, cocktail_glass_width, cocktail_layer_height),
+                                    "color": ingredient_color_library[ingredient_name]
+                                })
         
         if len(current_made_cocktail) > 0:
             total_amount = 0
@@ -1511,6 +1515,17 @@ if True:
             screen.blit(cocktail_glass_img, (512, 356))
             for rect in current_cocktail_rects:
                 pygame.draw.rect(screen, rect["color"], rect["rect"])
+            if "ice" in current_made_cocktail:
+                if current_made_cocktail["ice"] == 1:
+                    if len(current_cocktail_rects) > 0:
+                        screen.blit(ice_layer_small_img, (cocktail_glass_middle - ice_layer_small_img.get_width() / 2 + 2, current_cocktail_rects[-1]["rect"].y - ice_layer_small_img.get_height()))
+                    else:
+                        screen.blit(ice_layer_small_img, (cocktail_glass_middle - ice_layer_small_img.get_width() / 2 + 2, cocktail_glass_bottom - ice_layer_small_img.get_height()))
+                else:
+                    if len(current_cocktail_rects) > 0:
+                        screen.blit(ice_layer_big_img, (cocktail_glass_middle - ice_layer_big_img.get_width() / 2 + 2, current_cocktail_rects[-1]["rect"].y - ice_layer_big_img.get_height()))
+                    else:
+                        screen.blit(ice_layer_big_img, (cocktail_glass_middle - ice_layer_big_img.get_width() / 2 + 2, cocktail_glass_bottom - ice_layer_big_img.get_height()))
         if shaking:
             gap = 4
             total_width = 300
@@ -1524,6 +1539,8 @@ if True:
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
             if shaking_complete:
                 screen_displayed_now = "cocktail_made_screen"
+                backup_ingredients.clear()
+                current_shaker_cords = starting_shaker_cords
                 shaking_complete = False
                 total_dif = 0
                 shaking = False
@@ -1721,6 +1738,7 @@ if True:
             shaking = False
             screen_displayed_now = "cocktailmaker"
 
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         screen.blit(stars_text, (600, 520))
         screen.blit(name_text, (600, 420))
@@ -1784,7 +1802,7 @@ while running:
                 if event.key == pygame.K_BACKSPACE:
                     playthrough_name_text = playthrough_name_text[:-1]
                     current_username_string = current_username_string[:-1]
-                if event.key == pygame.K_TAB and screen_displayed_now != "username" and screen_displayed_now != "continue_screen" and screen_displayed_now != "overwrite_screen" and screen_displayed_now != "new_screen" and screen_displayed_now != "startscreen":
+                if event.key == pygame.K_TAB and screen_displayed_now != "username" and screen_displayed_now != "continue_screen" and screen_displayed_now != "overwrite_screen" and screen_displayed_now != "new_screen" and screen_displayed_now != "startscreen" and screen_displayed_now != "cocktail_made_screen":
                     displaying_recipe_book = not displaying_recipe_book
 
     #-----------updates--------------
