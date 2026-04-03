@@ -159,101 +159,101 @@ if True:
                             "bitters": ingredient_icons_list[39]
                         }
     glass_tags_bar_library = {
-                            "1.1": glass_tags_list[1],
-                            "1.2": glass_tags_list[2],
-                            "1.3": glass_tags_list[3],
-                            "2.1": glass_tags_list[4],
-                            "2.2": glass_tags_list[5],
-                            "2.3": glass_tags_list[6],
-                            "3.1": glass_tags_list[7],
-                            "3.2": glass_tags_list[8],
-                            "3.3": glass_tags_list[9],
-                            "4.1": glass_tags_list[10],
-                            "4.2": glass_tags_list[11],
-                            "4.3": glass_tags_list[12],
+                            1: glass_tags_list[0],
+                            2: glass_tags_list[1],
+                            3: glass_tags_list[2],
+                            4: glass_tags_list[3],
+                            5: glass_tags_list[4],
+                            6: glass_tags_list[5],
+                            7: glass_tags_list[6],
+                            8: glass_tags_list[7],
+                            9: glass_tags_list[8],
+                            10: glass_tags_list[9],
+                            11: glass_tags_list[10],
+                            12: glass_tags_list[11],
                         }
     glasses_bar_library = {
-                            "1.1": glasses_list[1],
-                            "1.2": glasses_list[2],
-                            "1.3": glasses_list[3],
-                            "2.1": glasses_list[4],
-                            "2.2": glasses_list[5],
-                            "2.3": glasses_list[6],
-                            "3.1": glasses_list[7],
-                            "3.2": glasses_list[8],
-                            "3.3": glasses_list[9],
-                            "4.1": glasses_list[10],
-                            "4.2": glasses_list[11],
-                            "4.3": glasses_list[12],
-                            "5.1": glasses_list[13],
-                            "5.2": glasses_list[14],
-                            "5.3": glasses_list[15],
-                            "6.1": glasses_list[16],
-                            "6.2": glasses_list[17],
-                            "6.3": glasses_list[18],
-                            "7.1": glasses_list[19],
-                            "7.2": glasses_list[20],
-                            "7.3": glasses_list[21],
-                            "8.1": glasses_list[22],
-                            "8.2": glasses_list[23],
-                            "8.3": glasses_list[24],
-                            "9.1": glasses_list[25],
-                            "9.2": glasses_list[26],
-                            "9.3": glasses_list[27],
-                            "10.1": glasses_list[28],
-                            "10.2": glasses_list[29],
-                            "10.3": glasses_list[30],
-                            "11.1": glasses_list[31],
-                            "11.2": glasses_list[32],
-                            "11.3": glasses_list[33],
-                            "12.1": glasses_list[34],
-                            "12.2": glasses_list[35],
-                            "12.3": glasses_list[36],
-                            "13.1": glasses_list[37],
-                            "13.2": glasses_list[38],
-                            "13.3": glasses_list[39],
-                            "14.1": glasses_list[40],
-                            "14.2": glasses_list[41],
-                            "14.3": glasses_list[42],
-                            "15.1": glasses_list[43],
-                            "15.2": glasses_list[44],
-                            "15.3": glasses_list[45],
-                            "16.1": glasses_list[46],
-                            "16.2": glasses_list[47],
-                            "16.3": glasses_list[48],
-                            "17.1": glasses_list[49],
-                            "17.2": glasses_list[50],
-                            "17.3": glasses_list[51],
-                            "18.1": glasses_list[52],
-                            "18.2": glasses_list[53],
-                            "18.3": glasses_list[54],
-                            "19.1": glasses_list[55],
-                            "19.2": glasses_list[56],
-                            "19.3": glasses_list[57],
-                            "20.1": glasses_list[58],
-                            "20.2": glasses_list[59],
-                            "20.3": glasses_list[60],
-                            "21.1": glasses_list[61],
-                            "21.2": glasses_list[62],
-                            "21.3": glasses_list[63],
-                            "22.1": glasses_list[64],
-                            "22.2": glasses_list[65],
-                            "22.3": glasses_list[66],
-                            "23.1": glasses_list[67],
-                            "23.2": glasses_list[68],
-                            "23.3": glasses_list[69],
-                            "24.1": glasses_list[70],
-                            "24.2": glasses_list[71],
-                            "24.3": glasses_list[72],
-                            "25.1": glasses_list[73],
-                            "25.2": glasses_list[74],
-                            "25.3": glasses_list[75],
-                            "26.1": glasses_list[76],
-                            "26.2": glasses_list[77],
-                            "26.3": glasses_list[78],
-                            "27.1": glasses_list[79],
-                            "27.2": glasses_list[80],
-                            "27.3": glasses_list[81]
+                            "1.1": glasses_list[0],
+                            "1.2": glasses_list[1],
+                            "1.3": glasses_list[2],
+                            "2.1": glasses_list[3],
+                            "2.2": glasses_list[4],
+                            "2.3": glasses_list[5],
+                            "3.1": glasses_list[6],
+                            "3.2": glasses_list[7],
+                            "3.3": glasses_list[8],
+                            "4.1": glasses_list[9],
+                            "4.2": glasses_list[10],
+                            "4.3": glasses_list[11],
+                            "5.1": glasses_list[12],
+                            "5.2": glasses_list[13],
+                            "5.3": glasses_list[14],
+                            "6.1": glasses_list[15],
+                            "6.2": glasses_list[16],
+                            "6.3": glasses_list[17],
+                            "7.1": glasses_list[18],
+                            "7.2": glasses_list[19],
+                            "7.3": glasses_list[20],
+                            "8.1": glasses_list[21],
+                            "8.2": glasses_list[22],
+                            "8.3": glasses_list[23],
+                            "9.1": glasses_list[24],
+                            "9.2": glasses_list[25],
+                            "9.3": glasses_list[26],
+                            "10.1": glasses_list[27],
+                            "10.2": glasses_list[28],
+                            "10.3": glasses_list[29],
+                            "11.1": glasses_list[30],
+                            "11.2": glasses_list[31],
+                            "11.3": glasses_list[32],
+                            "12.1": glasses_list[33],
+                            "12.2": glasses_list[34],
+                            "12.3": glasses_list[35],
+                            "13.1": glasses_list[36],
+                            "13.2": glasses_list[37],
+                            "13.3": glasses_list[38],
+                            "14.1": glasses_list[39],
+                            "14.2": glasses_list[40],
+                            "14.3": glasses_list[41],
+                            "15.1": glasses_list[42],
+                            "15.2": glasses_list[43],
+                            "15.3": glasses_list[44],
+                            "16.1": glasses_list[45],
+                            "16.2": glasses_list[46],
+                            "16.3": glasses_list[47],
+                            "17.1": glasses_list[48],
+                            "17.2": glasses_list[49],
+                            "17.3": glasses_list[50],
+                            "18.1": glasses_list[51],
+                            "18.2": glasses_list[52],
+                            "18.3": glasses_list[53],
+                            "19.1": glasses_list[54],
+                            "19.2": glasses_list[55],
+                            "19.3": glasses_list[56],
+                            "20.1": glasses_list[57],
+                            "20.2": glasses_list[58],
+                            "20.3": glasses_list[59],
+                            "21.1": glasses_list[60],
+                            "21.2": glasses_list[61],
+                            "21.3": glasses_list[62],
+                            "22.1": glasses_list[63],
+                            "22.2": glasses_list[64],
+                            "22.3": glasses_list[65],
+                            "23.1": glasses_list[66],
+                            "23.2": glasses_list[67],
+                            "23.3": glasses_list[68],
+                            "24.1": glasses_list[69],
+                            "24.2": glasses_list[70],
+                            "24.3": glasses_list[71],
+                            "25.1": glasses_list[72],
+                            "25.2": glasses_list[73],
+                            "25.3": glasses_list[74],
+                            "26.1": glasses_list[75],
+                            "26.2": glasses_list[76],
+                            "26.3": glasses_list[77],
+                            "27.1": glasses_list[78],
+                            "27.2": glasses_list[79],
+                            "27.3": glasses_list[80]
                         }
     
 
@@ -278,6 +278,16 @@ if True:
     stock_left_arrow_rect = left_arrow_img.get_rect(topleft=(58, WINDOW_HEIGHT / 2 - left_arrow_img.get_height() / 2))
     cocktail_right_arrow_rect = right_arrow_img.get_rect(topleft=(1142 + 25*2, 56))
     cocktail_left_arrow_rect = left_arrow_img.get_rect(topleft=(24 + 27, 56))
+
+    color_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 106))
+    color_left_arrow_rect = left_arrow_img.get_rect(topleft=(1129, 106))
+
+    glass_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 325))
+    glass_left_arrow_rect = left_arrow_img.get_rect(topleft=(1129, 325))
+
+    tags_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 544))
+    tags_left_arrow_rect = left_arrow_img.get_rect(topleft=(1129, 544))
+
     buy_button_rect = buy_button_img.get_rect(topleft=(840, 544))
     create_button_rect = create_button_img.get_rect(topleft=(WINDOW_WIDTH / 2 - create_button_img.get_width() / 2, 500))
     save_button_rect = save_button_img.get_rect(topleft=(20, 20))
@@ -385,7 +395,10 @@ if True:
     recipe_book_pages = []
     successfully_made_drink = False
     unlocked_drinks = []
-
+    cur_photo = "1.1"
+    color_pointer = 1
+    glass_pointer = 1
+    cur_tag = 1
 
 #--------random rects and lists--------
 
@@ -1854,8 +1867,9 @@ if True:
         screen.blit(name_text, (600, 420))
     
     def display_cokctail_exterior_maker():
-        global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img
-        
+        global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag
+
+        # ----------------make--------------------
         if left_mouse_clicked and make_button_rect.collidepoint(pos):
             make_button_clicked = True
             make_button_clicktime = now
@@ -1869,13 +1883,59 @@ if True:
             make_button_clicktime = 0
             shaking_complete = True
 
+        # ----------------glass_right--------------------
+        if left_mouse_clicked and glass_left_arrow_rect.collidepoint(pos):
+            if glass_pointer >= 3:
+                glass_pointer = 1
+            else:
+                glass_pointer += 1
+        # ----------------glass_left--------------------
+        if left_mouse_clicked and glass_right_arrow_rect.collidepoint(pos):
+            if glass_pointer <= 1:
+                glass_pointer = 3
+            else:
+                glass_pointer -= 1
+        # ----------------color_right--------------------
+        if left_mouse_clicked and color_left_arrow_rect.collidepoint(pos):
+            if color_pointer >= 27:
+                color_pointer = 1
+            else:
+                color_pointer += 1
+        # ----------------color_left--------------------
+        if left_mouse_clicked and color_right_arrow_rect.collidepoint(pos):
+            if color_pointer <= 1:
+                color_pointer = 27
+            else:
+                color_pointer -= 1
+        # ----------------tags_right--------------------
+        if left_mouse_clicked and tags_left_arrow_rect.collidepoint(pos):
+            if cur_tag >= 12:
+                cur_tag = 1
+            cur_tag += 1
+        # ----------------tags_left--------------------
+        if left_mouse_clicked and tags_right_arrow_rect.collidepoint(pos):
+            if cur_tag <= 1:
+                cur_tag = 12
+            cur_tag -= 1
 
+        cur_photo = str(color_pointer) + "." + str(glass_pointer)
         name2_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
        
         
         screen.blit(coktail_exterior_customizer_background_img, (0,0))
         screen.blit(name2_text, (300, 100))
         screen.blit(make_button_clicked_img if make_button_clicked else make_button_img, make_button_rect)
+
+        screen.blit(right_arrow_img, glass_left_arrow_rect)
+        screen.blit(right_arrow_img, tags_left_arrow_rect)
+        screen.blit(right_arrow_img, color_left_arrow_rect)
+
+        screen.blit(left_arrow_img, glass_right_arrow_rect)
+        screen.blit(left_arrow_img, tags_right_arrow_rect)
+        screen.blit(left_arrow_img, color_right_arrow_rect)
+
+        screen.blit(glasses_bar_library[cur_photo], (200, 200))
+        screen.blit(glass_tags_bar_library[cur_tag], (200, 200))
 #-------------main loop-----------
 
 while running:
