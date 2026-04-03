@@ -256,8 +256,6 @@ if True:
                             "27.3": glasses_list[80]
                         }
     
-
-    
 #-----------button variables-----------
 
 if True:
@@ -298,7 +296,7 @@ if True:
     cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
     recipes_left_arrow_rect = left_arrow_img.get_rect(topleft=(516, 636))
     recipes_right_arrow_rect = left_arrow_img.get_rect(topleft=(720, 636))
-    make_button_rect = make_button_img.get_rect(topleft=(300, 636))
+    make_button_rect = make_button_img.get_rect(topleft=(322, 636))
 
     continue_button_clicked = False
     continue_button2_clicked = False
@@ -1920,7 +1918,6 @@ if True:
 
         cur_photo = str(color_pointer) + "." + str(glass_pointer)
         name2_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
-       
         
         screen.blit(coktail_exterior_customizer_background_img, (0,0))
         screen.blit(name2_text, (300, 100))
@@ -1934,8 +1931,9 @@ if True:
         screen.blit(left_arrow_img, tags_right_arrow_rect)
         screen.blit(left_arrow_img, color_right_arrow_rect)
 
-        screen.blit(glasses_bar_library[cur_photo], (200, 200))
-        screen.blit(glass_tags_bar_library[cur_tag], (200, 200))
+        screen.blit(pygame.transform.scale_by(glasses_bar_library[cur_photo], 6), (200, 125))
+        screen.blit(pygame.transform.scale_by(glass_tags_bar_library[cur_tag], 6), (200, 125))
+
 #-------------main loop-----------
 
 while running:
