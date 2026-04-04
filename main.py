@@ -845,7 +845,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, glass_tags_bar_library
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -857,14 +857,13 @@ if True:
             guest_available_spots = raw_unloaded_data["guest_available_spots"]
             first_save_done = raw_unloaded_data["first_save_done"]
             personal_recipes = raw_unloaded_data["recipes"]
-            glass_tags_bar_library = raw_unloaded_data["recipe_icons_tags"]
-            drink_pic_lib = raw_unloaded_data["recipe_icons_glasses"]
-            print(raw_unloaded_data["recipes"])
-
-        calculate_stock_pages()
+            drink_pic_lib = raw_unloaded_data["recipe_icons"]
+            unlocked_drinks = raw_unloaded_data["unlocked_drinks"]
         with open(username_txt_file, "r") as f:
             username = f.read()
         calculate_recipe_pages()
+        calculate_cocktail_pages()
+        calculate_stock_pages()
     
     def display_save_details():
         save_counter = 0
@@ -890,9 +889,10 @@ if True:
             "ingredients": unlocked_ingredients_data,
             "settings": settings_data,
             "recipes": personal_recipes,
-            "recipe_icons_tags": glass_tags_bar_library,
-            "recipe_icons_glasses": drink_pic_lib
+            "recipe_icons": drink_pic_lib,
+            "unlocked_drinks": unlocked_drinks
             }
+        
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
             json.dump(save_data, f)
         update_post()
@@ -1616,8 +1616,6 @@ if True:
                 shaking = True
                 total_amount = 0
 
-                
-
         #---------displaying---------
 
         screen.blit(cocktailmaker_background_img, (0,0))
@@ -1681,7 +1679,7 @@ if True:
                 if successfully_made_drink == True:
                     update_recipe_book()
                     successfully_made_drink = False
-                if currently_preparing_drink["new drink"] == False:
+                if currently_preparing_drink.get("new drink", False) == False:
                     screen_displayed_now = "cocktail_made_screen"
                 else:
                     screen_displayed_now = "cocktail_exterior_maker"
@@ -1873,28 +1871,29 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        global screen_displayed_now, made_drink_window_rect, shaking, drink_tag, drink_glass_color
+        global screen_displayed_now, made_drink_window_rect, shaking, drink_tag, drink_glass_color, backup_ingredients
         screen.blit(cocktail_made_background_img, made_drink_window_rect)
         successfully_made_drink = currently_preparing_drink.get("successful", False)
         stars_text = pixel_font_letters.render(str(currently_preparing_drink.get('stars', 0)) + "/10", True,(255, 255, 255))
 
         if successfully_made_drink:
             name_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
+            drink_tag = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["tag"]
+            drink_glass_color = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["glass_color"]
         else:
             name_text = pixel_font_letters.render("unsuccessful drink",True,(255, 255, 255))
-        
-        drink_tag = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["tag"]
-        drink_glass_color = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["glass_color"]
 
         if left_mouse_clicked and not made_drink_window_rect.collidepoint(pos):
             screen_displayed_now = "cocktailmaker"
-
+            backup_ingredients = list(deepcopy(unlocked_ingredients))
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
-        screen.blit(stars_text, (600, 520))
         screen.blit(name_text, (600, 420))
-        screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 6), (442, 0))
-        screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 6), (442, 0))
+
+        if successfully_made_drink:
+            screen.blit(stars_text, (600, 520))
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 6), (442, 0))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 6), (442, 0))
     
     def display_cokctail_exterior_maker():
         global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag, currently_preparing_drink, cur_photo
@@ -2031,6 +2030,8 @@ while running:
     now = pygame.time.get_ticks()
 
     #-----------debugging----------
+
+    print(unlocked_ingredients)
 
     #--------screen selection--------
 
