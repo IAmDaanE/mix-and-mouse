@@ -397,6 +397,9 @@ if True:
     color_pointer = 1
     glass_pointer = 1
     cur_tag = 1
+    drink_pic_lib = {}
+    drink_tag = 1
+    drink_glass_color = "1.1"
 
 #--------random rects and lists--------
 
@@ -1848,7 +1851,7 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        global screen_displayed_now, made_drink_window_rect, shaking
+        global screen_displayed_now, made_drink_window_rect, shaking, drink_tag, drink_glass_color
         screen.blit(cocktail_made_background_img, made_drink_window_rect)
         successfully_made_drink = currently_preparing_drink.get("successful", False)
         stars_text = pixel_font_letters.render(str(currently_preparing_drink.get('stars', 0)) + "/10", True,(255, 255, 255))
@@ -1856,6 +1859,10 @@ if True:
             name_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
         else:
             name_text = pixel_font_letters.render("unsuccessful drink",True,(255, 255, 255))
+        
+        
+        drink_tag = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["tag"]
+        drink_glass_color = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["glass_color"]
 
         if left_mouse_clicked and not made_drink_window_rect.collidepoint(pos):
             screen_displayed_now = "cocktailmaker"
@@ -1864,23 +1871,14 @@ if True:
 
         screen.blit(stars_text, (600, 520))
         screen.blit(name_text, (600, 420))
+        screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 6), (442, 0))
+        screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 6), (442, 0))
     
     def display_cokctail_exterior_maker():
-        global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag
+        global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag, currently_preparing_drink, cur_photo
 
-        # ----------------make--------------------
-        if left_mouse_clicked and make_button_rect.collidepoint(pos):
-            make_button_clicked = True
-            make_button_clicktime = now
+        cur_photo = str(color_pointer) + "." + str(glass_pointer)
 
-        if make_button_clicktime != 0 and make_button_clicktime <= now - click_duration:
-            make_button_clicked = False
-
-        if make_button_clicktime != 0 and make_button_clicktime <= now - screen_switch_duration:
-            make_button_clicktime = 0
-            screen_displayed_now = "cocktail_made_screen"
-            make_button_clicktime = 0
-            shaking_complete = True
 
         # ----------------glass_right--------------------
         if left_mouse_clicked and glass_left_arrow_rect.collidepoint(pos):
@@ -1917,7 +1915,22 @@ if True:
                 cur_tag = 12
             cur_tag -= 1
 
-        cur_photo = str(color_pointer) + "." + str(glass_pointer)
+        # ----------------make--------------------
+        if left_mouse_clicked and make_button_rect.collidepoint(pos):
+            make_button_clicked = True
+            make_button_clicktime = now
+
+        if make_button_clicktime != 0 and make_button_clicktime <= now - click_duration:
+            make_button_clicked = False
+
+        if make_button_clicktime != 0 and make_button_clicktime <= now - screen_switch_duration:
+            make_button_clicktime = 0
+            screen_displayed_now = "cocktail_made_screen"
+            make_button_clicktime = 0
+            shaking_complete = True
+            drink_pic_lib.update({str(currently_preparing_drink.get('drink made', '')): {"glass_color": str(cur_photo), "tag": str(cur_tag)}})
+
+        
         name2_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
         
         screen.blit(coktail_exterior_customizer_background_img, (0,0))
