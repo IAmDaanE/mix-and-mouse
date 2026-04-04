@@ -278,13 +278,13 @@ if True:
     cocktail_left_arrow_rect = left_arrow_img.get_rect(topleft=(24 + 27, 56))
 
     color_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 106))
-    color_left_arrow_rect = left_arrow_img.get_rect(topleft=(1129, 106))
+    color_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 106))
 
     glass_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 325))
-    glass_left_arrow_rect = left_arrow_img.get_rect(topleft=(1129, 325))
+    glass_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 325))
 
     tags_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 544))
-    tags_left_arrow_rect = left_arrow_img.get_rect(topleft=(1129, 544))
+    tags_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 544))
 
     buy_button_rect = buy_button_img.get_rect(topleft=(840, 544))
     create_button_rect = create_button_img.get_rect(topleft=(WINDOW_WIDTH / 2 - create_button_img.get_width() / 2, 500))
