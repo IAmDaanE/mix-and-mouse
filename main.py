@@ -721,6 +721,7 @@ if True:
 
                 if not recipe["name"] in unlocked_drinks:
                     temp_drink_info['new drink'] = True
+                    unlocked_drinks.append(recipe["name"])
 
                 for ing in recipe["makingprocess"].values():
                     name = ing["name"]
@@ -1659,12 +1660,13 @@ if True:
                 pygame.draw.rect(screen, (144, 0, 0), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, round(total_dif * shake_progress_rect_increaser), total_height - gap * 2))
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
             if shaking_complete:
-                screen_displayed_now = "cocktail_made_screen"
-                backup_ingredients.clear()
-                current_shaker_cords = starting_shaker_cords
-                shaking_complete = False
-                total_dif = 0
-                shaking = False
+                if currently_preparing_drink.get('new drink', False) == False:
+                    screen_displayed_now = "cocktail_made_screen"
+                    backup_ingredients.clear()
+                    current_shaker_cords = starting_shaker_cords
+                    shaking_complete = False
+                    total_dif = 0
+                    shaking = False
 
     def display_progress_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, customers_served, progress_rect
@@ -1856,7 +1858,6 @@ if True:
             name_text = pixel_font_letters.render("unsuccessful drink",True,(255, 255, 255))
 
         if left_mouse_clicked and not made_drink_window_rect.collidepoint(pos):
-            shaking = False
             screen_displayed_now = "cocktailmaker"
 
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -1943,8 +1944,8 @@ while running:
     if True:
         
         
-        if not screen_displayed_now == "cocktail_made_screen":
-            successfully_made_drink = False
+        
+        
         new_ingredient_unlocked = False
         left_mouse_clicked = False
         right_mouse_clicked = False
@@ -1968,18 +1969,19 @@ while running:
                     if total_dif >= max_total_difference:
                         temppos = (0,0)
                         currently_preparing_drink = drink_check(current_made_cocktail)
-                        
-                        if currently_preparing_drink.get('new drink', False) == False:
-                            shaking_complete = True
-                        else:
+                        shaking_complete = True
+                        if currently_preparing_drink.get('new drink', False) == True:
                             screen_displayed_now = "cocktail_exterior_maker"
-                        total_dif = 0
+                            shaking_complete = False
+                            total_dif = 0
+                            shaking = False
                         
                         current_made_cocktail = {}
                         current_cocktail_rects = []
                         successfully_made_drink = currently_preparing_drink.get("successful", False)
                         if successfully_made_drink == True:
                             update_recipe_book()
+                            successfully_made_drink = False
                     else:
                         difference_shaker_x = abs(temppos[0] - pos[0])
                         difference_shaker_y = abs(temppos[1] - pos[1])
