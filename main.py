@@ -173,6 +173,30 @@ if True:
                             10: glass_tags_list[9],
                             11: glass_tags_list[10],
                             12: glass_tags_list[11],
+                            13: glass_tags_list[12],
+                            14: glass_tags_list[13],
+                            15: glass_tags_list[14],
+                            16: glass_tags_list[15],
+                            17: glass_tags_list[16],
+                            18: glass_tags_list[17],
+                            19: glass_tags_list[18],
+                            20: glass_tags_list[19],
+                            21: glass_tags_list[20],
+                            22: glass_tags_list[21],
+                            23: glass_tags_list[22],
+                            24: glass_tags_list[23],
+                            25: glass_tags_list[24],
+                            26: glass_tags_list[25],
+                            27: glass_tags_list[26],
+                            28: glass_tags_list[27],
+                            29: glass_tags_list[28],
+                            30: glass_tags_list[29],
+                            31: glass_tags_list[30],
+                            32: glass_tags_list[31],
+                            33: glass_tags_list[32],
+                            34: glass_tags_list[33],
+                            35: glass_tags_list[34],
+                            36: glass_tags_list[35],
                         }
     glasses_bar_library = {
                             "1.1": glasses_list[0],
@@ -1935,14 +1959,14 @@ if True:
 
         # ----------------tags_right--------------------
         if left_mouse_clicked and tags_left_arrow_rect.collidepoint(pos):
-            if cur_tag >= 12:
+            if cur_tag >= 36:
                 cur_tag = 1
             cur_tag += 1
 
         # ----------------tags_left--------------------
         if left_mouse_clicked and tags_right_arrow_rect.collidepoint(pos):
             if cur_tag <= 1:
-                cur_tag = 12
+                cur_tag = 36
             cur_tag -= 1
 
         # ----------------make--------------------
