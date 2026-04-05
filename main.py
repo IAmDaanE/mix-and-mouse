@@ -64,6 +64,7 @@ if True:
     create_button_clicked_img = convert_asset("assets/create_button_clicked.png", 1)
     save_button_clicked_img = convert_asset("assets/save_button_clicked.png", 1)
     save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
+    make_button_img = convert_asset("assets/make_button_bar.png", 2)
     make_button_clicked_img = convert_asset("assets/make_button_clicked_bar.png", 2)
 
     startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
@@ -85,7 +86,7 @@ if True:
     cocktail_glass_img = convert_asset("assets/cocktail_glass.png", 1)
     ice_layer_small_img = convert_asset("assets/ice_layer_small.png", 1)
     ice_layer_big_img = convert_asset("assets/ice_layer_big.png", 1)
-    make_button_img = convert_asset("assets/make_button_bar.png", 2)
+    star_img = convert_asset("assets/star.png", 1)
 
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
@@ -105,6 +106,7 @@ if True:
     save_detail_font_nums = pygame.font.Font("assets/Jersey10.ttf", 40)
     leaderboard_columns_font = pygame.font.Font("assets/Jersey10.ttf", 20)
     leaderboard_items_font = pygame.font.Font("assets/Jersey10.ttf", 25)
+    recipe_steps_font = pygame.font.Font("assets/Jersey10.ttf", 32)
 
     ingredient_icons_list = slice_tilesheet("assets/ingredients_tilesheet.png", 66, 66)
     glass_tags_list = slice_tilesheet("assets/tags_tilesheet.png", 66, 66)
@@ -1010,7 +1012,7 @@ if True:
         for page in recipe_book_pages:
                     if recipes_left >= 4:
                         recipes_left -= 4
-                        for i in range(12):
+                        for i in range(4):
                             page.append(personal_recipes[recipe_counter])
                             recipe_counter += 1
                     else:
@@ -1708,7 +1710,7 @@ if True:
         pygame.draw.rect(screen, (137,0,0), progress_rect)
 
     def display_recipe_book():
-        global recipe_page_displayed 
+        global recipe_page_displayed
         #---------button logic----------
 
         if left_mouse_clicked and recipes_left_arrow_rect.collidepoint(pos):
@@ -1725,27 +1727,30 @@ if True:
         
         for recipe in recipe_book_pages[recipe_page_displayed]:
             #recipe name
-            name_text = save_detail_font_nums.render(recipe["name"], True, (255,255,255))
-            screen.blit(name_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 5))
+            name_text = save_detail_font_nums.render(recipe["name"], True, (0,0,0))
+            screen.blit(name_text, (recipe_book_cords[recipe_counter][0] + (recipe_book_rects[0][2] / 2 - name_text.get_width() / 2), recipe_book_cords[recipe_counter][1] + 5))
             #recipe stars
-            stars_text = save_detail_font_nums.render(f"{recipe['stars'] / 2} stars", True, (255,255,255))
-            screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 200, recipe_book_cords[recipe_counter][1] + 160))
+            screen.blit(star_img, (recipe_book_cords[recipe_counter][0] + 25, recipe_book_cords[recipe_counter][1] + 15))
+            stars_text = save_detail_font_nums.render(f'{int(recipe["stars"] / 2) if recipe["stars"] / 2 == int(recipe["stars"] / 2) else recipe["stars"] / 2}', True, (0,0,0))
+            screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 50, recipe_book_cords[recipe_counter][1] + 4))
             #recipe ingredients
-            step_y = recipe_book_cords[recipe_counter][1] + 25
+            step_y = recipe_book_cords[recipe_counter][1] + 46
             for ingredient, amount in recipe["preparation"].items():
-                step_text = save_detail_font_nums.render(f"{ingredient:<30}{amount}", True, (255,255,255))
-                screen.blit(step_text, (recipe_book_cords[recipe_counter][0] + 200, step_y))
-                step_y += 35
+                step_text_name = recipe_steps_font.render(f"{ingredient}", True, (255,255,255))
+                screen.blit(step_text_name, (recipe_book_cords[recipe_counter][0] + 200, step_y))
+                step_text_amount = recipe_steps_font.render(f"{amount}", True, (255,255,255))
+                screen.blit(step_text_amount, (recipe_book_cords[recipe_counter][0] + 550, step_y))
+                step_y += 28
             #recipe image
             drink_tag = drink_pic_lib[str(recipe["name"])]["tag"]
             drink_glass_color = drink_pic_lib[str(recipe["name"])]["glass_color"]
-            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 2.5), (recipe_book_cords[recipe_counter][0] + 10, recipe_book_cords[recipe_counter][1] + 30))
-            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 2.5), (recipe_book_cords[recipe_counter][0] + 10, recipe_book_cords[recipe_counter][1] + 30))
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 3), (recipe_book_cords[recipe_counter][0] - 1, recipe_book_cords[recipe_counter][1] - 4))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 3), (recipe_book_cords[recipe_counter][0] - 1, recipe_book_cords[recipe_counter][1] - 4))
             #counter
             recipe_counter += 1
-        
+
         for i in range(len(recipe_book_pages[recipe_page_displayed])):
-            pygame.draw.rect(screen, (0,0,0), recipe_book_rects[i], 2)
+            pygame.draw.rect(screen, (0,0,0), recipe_book_rects[i], 2, border_radius=5)
         if recipe_page_displayed != 0:
             screen.blit(left_arrow_img, recipes_left_arrow_rect)
         if recipe_page_displayed != len(recipe_book_pages) - 1:
@@ -2031,7 +2036,7 @@ while running:
 
     #-----------debugging----------
 
-    print(unlocked_ingredients)
+    #print(unlocked_ingredients)
 
     #--------screen selection--------
 
