@@ -448,7 +448,7 @@ if True:
     for i in range(9):
         unlocks[f"group{i}"] = False
     
-    personal_recipes = []
+    personal_recipes = [{'name': 'screwdriver', 'stars': 7, 'price': 55, 'preparation': {'vodka': 9, 'orange juice': 9, 'ice': 2}, 'image_num': 74}]
                                                             
     stock_indicator_rect = pygame.Rect(stock_screen_row1_rect.x - stock_indicator_gap, stock_screen_row1_rect.y - stock_indicator_gap, stock_screen_row_img.get_width() + stock_indicator_gap * 2, stock_screen_row_img.get_height() + stock_indicator_gap * 2)
     cocktail_indicator_rect = pygame.Rect(cocktailmaker_ing_rects[0].x - cocktail_indicator_gap, cocktailmaker_ing_rects[0].y - cocktail_indicator_gap, cocktailmaker_ing_rects[0].width + 2 * cocktail_indicator_gap, cocktailmaker_ing_rects[0].height + 2 * cocktail_indicator_gap)
@@ -461,6 +461,7 @@ if True:
     leaderboard_row_cords = [520, 580, 640]
     recipe_book_rects = [(18, 37, 612, 268), (18 + 612 + 18, 37, 612, 268), (18, 37 + 268 + 37, 612, 268), (18 + 612 + 18, 37 + 268 + 37, 612, 268)]
     recipe_book_cords = [[18, 37], [18 + 612 + 18, 37], [18, 37 + 268 + 37], [18 + 612 + 18, 37 + 268+ 37]]
+    menu_cords = [[20, 20], [650, 20], [20, 369], [650, 369]]
 
     unlocked_ingredients = [
         {"name": "vodka", "price": 10, "owned": 0},
@@ -474,20 +475,22 @@ if True:
         {"name": "mint", "price": 4, "owned": 0},
         {"name": "sugar syrup", "price": 9, "owned": 0},
         {"name": "ice", "price": 1, "owned": 0}]
+    
+    guest_rect_y = 319
 
-    guest1_rect = guest1_img.get_rect(topleft=(100,360))
-    guest2_rect = guest1_img.get_rect(topleft=(guest1_rect.right + 70, 360))
-    guest3_rect = guest1_img.get_rect(topleft=(guest2_rect.right + 70, 360))
-    guest4_rect = guest1_img.get_rect(topleft=(guest3_rect.right + 70, 360))
-    guest5_rect = guest1_img.get_rect(topleft=(guest4_rect.right + 70, 360))
-    guest6_rect = guest1_img.get_rect(topleft=(guest5_rect.right + 70, 360))
+    guest1_rect = guest1_img.get_rect(topleft=(100,guest_rect_y))
+    guest2_rect = guest1_img.get_rect(topleft=(guest1_rect.right + 70, guest_rect_y))
+    guest3_rect = guest1_img.get_rect(topleft=(guest2_rect.right + 70, guest_rect_y))
+    guest4_rect = guest1_img.get_rect(topleft=(guest3_rect.right + 70, guest_rect_y))
+    guest5_rect = guest1_img.get_rect(topleft=(guest4_rect.right + 70, guest_rect_y))
+    guest6_rect = guest1_img.get_rect(topleft=(guest5_rect.right + 70, guest_rect_y))
 
-    guest_order1_rect = pygame.Rect(guest1_rect.x - 20, 332, 150, 100)
-    guest_order2_rect = pygame.Rect(guest2_rect.x - 20, 332, 150, 100)
-    guest_order3_rect = pygame.Rect(guest3_rect.x - 20, 332, 150, 100)
-    guest_order4_rect = pygame.Rect(guest4_rect.x - 20, 332, 150, 100)
-    guest_order5_rect = pygame.Rect(guest5_rect.x - 20, 332, 150, 100)
-    guest_order6_rect = pygame.Rect(guest6_rect.x - 20, 332, 150, 100)
+    guest_order1_rect = pygame.Rect(guest1_rect.x - 20, guest_rect_y - 28, 150, 100)
+    guest_order2_rect = pygame.Rect(guest2_rect.x - 20, guest_rect_y - 28, 150, 100)
+    guest_order3_rect = pygame.Rect(guest3_rect.x - 20, guest_rect_y - 28, 150, 100)
+    guest_order4_rect = pygame.Rect(guest4_rect.x - 20, guest_rect_y - 28, 150, 100)
+    guest_order5_rect = pygame.Rect(guest5_rect.x - 20, guest_rect_y - 28, 150, 100)
+    guest_order6_rect = pygame.Rect(guest6_rect.x - 20, guest_rect_y - 28, 150, 100)
     
     guest_rects_library = { 1: guest1_rect,
                             2: guest2_rect,
@@ -625,7 +628,7 @@ if True:
     pos_sentences = ["give me a ", "i want a ", "i need a ", "can i get a ", "could you give me a ", "would you do your job and give me a ", "immediately give me a ", "make a ", "i desire a ", "i would love a ", "i want to get drunk so give me a ",
                     "stop being a jackass and give me a ", "i will die if you dont give me a ", "just give me a ", "bring me a ", "i don't have a lot of time, i just want a ", "i just got circumsised give me a "]
 
-    cur_menu = ["mojito", "margarita", "cosmopolitan"]
+    cur_menu = ["screwdriver"]
 
     positions = [
         1, 
@@ -723,7 +726,7 @@ if True:
 
 #----------rating + recognition logic----------
 
-if True:    
+if True:
     def add_to_menu(drink):
         cur_menu.append(drink)
 
@@ -1047,47 +1050,84 @@ if True:
 
 #----------progression system---------
 
-def check_unlocks():
-    if not unlocks["group1"] and customers_served == 5:
-        unlocked_ingredients.append({"name": "tequila", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "ginger beer", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "grenadine", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "lemon juice", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "lime", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "apple juice", "price": 10, "owned": 0})
-    if not unlocks["group2"] and customers_served == 15:
-        unlocked_ingredients.append({"name": "triple sec", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "cranberry juice", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "pineapple juice", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "dark rum", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "mango juice", "price": 10, "owned": 0})
-    if not unlocks["group3"] and customers_served == 30:
-        unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 0})
-    if not unlocks["group4"] and customers_served == 50:
-        unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "baileys", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "grapefruit juice", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "bitters", "price": 10, "owned": 0})
-    if not unlocks["group5"] and customers_served == 75:
-        unlocked_ingredients.append({"name": "prosecco", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "peach schnapps", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "peach juice", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "elderflower liqueur", "price": 10, "owned": 0})
-    if not unlocks["group6"] and customers_served == 110:
-        unlocked_ingredients.append({"name": "blue curaçao", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "midori", "price": 10, "owned": 0})
-    if not unlocks["group7"] and customers_served == 150:
-        unlocked_ingredients.append({"name": "campari", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "dry vermouth", "price": 10, "owned": 0})
-        unlocked_ingredients.append({"name": "sweet vermouth", "price": 10, "owned": 0})
-    if not unlocks["group8"] and customers_served == 200:
-        unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 0})
+if True:
+    def check_unlocks():
+        if not unlocks["group1"] and customers_served == 5:
+            unlocked_ingredients.append({"name": "tequila", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "ginger beer", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "grenadine", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "lemon juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "lime", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "apple juice", "price": 10, "owned": 0})
+        if not unlocks["group2"] and customers_served == 15:
+            unlocked_ingredients.append({"name": "triple sec", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "cranberry juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "pineapple juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "dark rum", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "mango juice", "price": 10, "owned": 0})
+        if not unlocks["group3"] and customers_served == 30:
+            unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 0})
+        if not unlocks["group4"] and customers_served == 50:
+            unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "baileys", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "grapefruit juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "bitters", "price": 10, "owned": 0})
+        if not unlocks["group5"] and customers_served == 75:
+            unlocked_ingredients.append({"name": "prosecco", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "peach schnapps", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "peach juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 10, "owned": 0})
+        if not unlocks["group6"] and customers_served == 110:
+            unlocked_ingredients.append({"name": "blue curaçao", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "midori", "price": 10, "owned": 0})
+        if not unlocks["group7"] and customers_served == 150:
+            unlocked_ingredients.append({"name": "campari", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "dry vermouth", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "sweet vermouth", "price": 10, "owned": 0})
+        if not unlocks["group8"] and customers_served == 200:
+            unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 0})
+
+    def cheat_unlocks():
+            global unlocked_ingredients
+            unlocked_ingredients.clear()
+            unlocked_ingredients.append({"name": "tequila", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "ginger beer", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "grenadine", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "lemon juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "lime", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "apple juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "triple sec", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "cranberry juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "pineapple juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "dark rum", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "mango juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "baileys", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "grapefruit juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "bitters", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "prosecco", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "peach schnapps", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "peach juice", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "blue curaçao", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "midori", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "campari", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "dry vermouth", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "sweet vermouth", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 300})
 
 #---------recipe book system---------
 
@@ -1457,6 +1497,13 @@ if True:
 
         screen.blit(menu_screen_background_img, (0,0))
         screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
+        for i, recipe in enumerate(cur_menu):
+            name_text = save_detail_font_nums.render(recipe, True, (255,255,255))
+            screen.blit(name_text, (menu_cords[i][0] + (610 / 2 - name_text.get_width() / 2), menu_cords[i][1] + 10))
+            drink_tag = drink_pic_lib[recipe]["tag"]
+            drink_glass_color = drink_pic_lib[recipe]["glass_color"]
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 5), (menu_cords[i][0] - 40, menu_cords[i][1] - 50))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 5), (menu_cords[i][0] - 40, menu_cords[i][1] - 50))
 
     def display_stock_screen(): 
         global back_button_clicked, back_button_clicktime, screen_displayed_now, plus_button_clicked, plus_button_clicktime, min_button_clicked, min_button_clicktime, stock_screen_row_counter, stock_page_displayed, selected_stock_ingredient, selected_stock_ingredient_page, buy_button_clicked, buy_button_clicktime, stock_amount_selected, balance
@@ -1746,7 +1793,7 @@ if True:
                 recipe_page_displayed += 1
 
         #----------displaying-----------
-        screen.fill((48, 96, 130))
+        screen.fill((62, 39, 35))
         recipe_counter = 0
         
         for recipe in recipe_book_pages[recipe_page_displayed]:
@@ -1800,10 +1847,11 @@ if True:
             screen_displayed_now = "homescreen"
             back_button_clicktime = 0
 
-        money_cheat_rect = pygame.Rect(500, 200, 50, 50)
+        money_cheat_rect = pygame.Rect(500, 20, 50, 50)
 
         if settings["dev_mode"] and right_mouse_clicked and money_cheat_rect.collidepoint(pos):
-            balance += 3000
+            balance += 10000
+
 
         #--------guest timer-------------
 
@@ -1854,7 +1902,7 @@ if True:
                 draw_text_centered(
                     screen,
                     segments,
-                    default_font,
+                    leaderboard_items_font,
                     custom_order_rect
                 )
             screen.blit(guest_images_library[guest["image_num"]], guest_rects_library[guest["rect_num"]])
@@ -2014,9 +2062,9 @@ while running:
         pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                regular_save()
+                if screen_displayed_now != "startscreen" and screen_displayed_now != "continue_screen" and screen_displayed_now != "new_screen" and screen_displayed_now != "overwrite_screen" and screen_displayed_now != "username":
+                    regular_save()
                 running = False
-
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = event.pos
                 left_mouse_clicked = True
@@ -2060,7 +2108,7 @@ while running:
 
     #-----------debugging----------
 
-    #print(unlocked_ingredients)
+    print(personal_recipes)
 
     #--------screen selection--------
 
