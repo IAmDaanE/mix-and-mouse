@@ -51,6 +51,7 @@ if True:
     create_button_img = convert_asset("assets/create_button.png", 1)
     save_button_img = convert_asset("assets/save_button.png", 1)
     save_exit_button_img = convert_asset("assets/save_exit_button.png", 1)
+    make_button_img = convert_asset("assets/make_button_bar.png", 2)
 
     continue_button_clicked_img = convert_asset("assets/continue_button_clicked.png", 1)
     continue_button2_clicked_img = convert_asset("assets/continue_button_clicked.png", 2)
@@ -64,7 +65,6 @@ if True:
     create_button_clicked_img = convert_asset("assets/create_button_clicked.png", 1)
     save_button_clicked_img = convert_asset("assets/save_button_clicked.png", 1)
     save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
-    make_button_img = convert_asset("assets/make_button_bar.png", 2)
     make_button_clicked_img = convert_asset("assets/make_button_clicked_bar.png", 2)
 
     startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
@@ -87,6 +87,7 @@ if True:
     ice_layer_small_img = convert_asset("assets/ice_layer_small.png", 1)
     ice_layer_big_img = convert_asset("assets/ice_layer_big.png", 1)
     star_img = convert_asset("assets/star.png", 1)
+    smudge_img = convert_asset("assets/smudge.png", 1)
 
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
@@ -403,8 +404,6 @@ if True:
     displaying_recipe_book = False
     newly_made_cocktail = []
     shaking_complete = False
-    starting_shaker_cords = [500, 500]
-    current_shaker_cords = starting_shaker_cords.copy()
     dragging = False
     unlocks = {}
     normal_guest_timer_range = [3, 23]
@@ -426,6 +425,10 @@ if True:
     drink_pic_lib = {}
     drink_tag = 1
     drink_glass_color = "1.1"
+    stashed_cocktails = []
+    cocktail_available_spots = [0,1,2,3,4,5,6,7]
+    current_dragging_cocktail = -1
+    dragging_cocktail = False
 
 #--------random rects and lists--------
 
@@ -436,7 +439,7 @@ if True:
     stock_screen_row4_rect = stock_screen_row_img.get_rect(topleft=(189, 371))
     stock_screen_row5_rect = stock_screen_row_img.get_rect(topleft=(189, 458))
 
-    made_drink_window_rect = cocktail_made_background_img.get_rect(topleft=(213, 120))
+    cocktail_made_window_rect = cocktail_made_background_img.get_rect(topleft=(213, 120))
 
     cocktailmaker_ing_spacing = 24
 
@@ -444,6 +447,14 @@ if True:
     for i in range(12):
         x = 27 + cocktailmaker_ing_spacing * 2 + 35 + i * (66 + cocktailmaker_ing_spacing)
         cocktailmaker_ing_rects.append(pygame.Rect(x, 56, 66, 66))
+
+    og_stashed_cocktail_rects = []
+    stashed_cocktail_spacing = 62
+    stashed_cocktail_rect_width = 66
+    for i in range(8):
+        x = 141 + stashed_cocktail_spacing + i * (stashed_cocktail_rect_width + stashed_cocktail_spacing)
+        og_stashed_cocktail_rects.append(pygame.Rect(x, 557, 66, 66))
+    stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
 
     for i in range(9):
         unlocks[f"group{i}"] = False
@@ -874,7 +885,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -888,6 +899,8 @@ if True:
             personal_recipes = raw_unloaded_data["recipes"]
             drink_pic_lib = raw_unloaded_data["recipe_icons"]
             unlocked_drinks = raw_unloaded_data["unlocked_drinks"]
+            stashed_cocktails = raw_unloaded_data["stashed_cocktails"]
+            cocktail_available_spots = raw_unloaded_data["cocktail_available_spots"]
         with open(username_txt_file, "r") as f:
             username = f.read()
         calculate_recipe_pages()
@@ -919,7 +932,9 @@ if True:
             "settings": settings_data,
             "recipes": personal_recipes,
             "recipe_icons": drink_pic_lib,
-            "unlocked_drinks": unlocked_drinks
+            "unlocked_drinks": unlocked_drinks,
+            "stashed_cocktails": stashed_cocktails,
+            "cocktail_available_spots": cocktail_available_spots
             }
         
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
@@ -1094,8 +1109,20 @@ if True:
             unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 0})
 
     def cheat_unlocks():
-            global unlocked_ingredients
+            global unlocked_ingredients, customers_served
+            customers_served = 400
             unlocked_ingredients.clear()
+            unlocked_ingredients.append({"name": "vodka", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "gin", "price": 15, "owned": 300})
+            unlocked_ingredients.append({"name": "orange juice", "price": 4, "owned": 300})
+            unlocked_ingredients.append({"name": "white rum", "price": 6, "owned": 300})
+            unlocked_ingredients.append({"name": "cola", "price": 3, "owned": 300})
+            unlocked_ingredients.append({"name": "tonic water", "price": 7, "owned": 300})
+            unlocked_ingredients.append({"name": "soda water", "price": 4, "owned": 300})
+            unlocked_ingredients.append({"name": "lime juice", "price": 2, "owned": 300})
+            unlocked_ingredients.append({"name": "mint", "price": 4, "owned": 300})
+            unlocked_ingredients.append({"name": "sugar syrup", "price": 9, "owned": 300})
+            unlocked_ingredients.append({"name": "ice", "price": 1, "owned": 300})
             unlocked_ingredients.append({"name": "tequila", "price": 10, "owned": 300})
             unlocked_ingredients.append({"name": "ginger beer", "price": 10, "owned": 300})
             unlocked_ingredients.append({"name": "grenadine", "price": 10, "owned": 300})
@@ -1143,6 +1170,19 @@ def update_recipe_book():
     if new_recipe:
         personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"], "image_num": random.randint(0, 80)})
     calculate_recipe_pages()
+
+#------stashed cocktail system-------
+
+if True:
+    def stash_cocktail():
+        pos_num = random.choice(cocktail_available_spots)
+        stashed_cocktails.append({"name": currently_preparing_drink["drink made"], "num": pos_num, "stars": currently_preparing_drink["stars"]})
+        cocktail_available_spots.remove(pos_num)
+
+    def stash_smudge():
+        pos_num = random.choice(cocktail_available_spots)
+        stashed_cocktails.append({"name": "smudge", "num": pos_num, "stars": currently_preparing_drink["stars"]})
+        cocktail_available_spots.remove(pos_num)
 
 #---------display functions----------
 
@@ -1736,7 +1776,7 @@ if True:
             pygame.draw.rect(screen, (91, 91, 91), (cocktail_glass_middle - total_width / 2, WINDOW_HEIGHT - 40, total_width, total_height))
             pygame.draw.rect(screen, (151, 151, 151), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, total_width - gap * 2, total_height - gap * 2))
             if total_dif != 0:
-                pygame.draw.rect(screen, (144, 0, 0), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, round(total_dif * shake_progress_rect_increaser), total_height - gap * 2))
+                pygame.draw.rect(screen, (144, 0, 0), (cocktail_glass_middle - total_width / 2 + gap, WINDOW_HEIGHT - 40 + gap, min(round(total_dif * shake_progress_rect_increaser), total_width - gap * 2), total_height - gap * 2))
             screen.blit(cocktail_shaker_img, cocktail_shaker_rect)
             if shaking_complete:
                 temppos = (0,0)
@@ -1748,9 +1788,10 @@ if True:
                 total_dif = 0
                 shaking = False
                 backup_ingredients.clear()
-                current_shaker_cords = starting_shaker_cords
+                cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
                 if successfully_made_drink == True:
                     update_recipe_book()
+                    stash_cocktail()
                     successfully_made_drink = False
                 if currently_preparing_drink.get("new drink", False) == False:
                     screen_displayed_now = "cocktail_made_screen"
@@ -1851,7 +1892,7 @@ if True:
 
         if settings["dev_mode"] and right_mouse_clicked and money_cheat_rect.collidepoint(pos):
             balance += 10000
-
+            cheat_unlocks()
 
         #--------guest timer-------------
 
@@ -1907,6 +1948,11 @@ if True:
                 )
             screen.blit(guest_images_library[guest["image_num"]], guest_rects_library[guest["rect_num"]])
         pygame.draw.rect(screen, (255, 0, 0), money_cheat_rect, 1)
+        for cocktail in stashed_cocktails:
+            img = drink_pic_lib[cocktail["name"]]["glass_color"]
+            tag = drink_pic_lib[cocktail["name"]]["tag"]
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[img], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(tag)], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
 
     def display_create_username():
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
@@ -1948,8 +1994,8 @@ if True:
         screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
     def display_cocktail_made_screen():
-        global screen_displayed_now, made_drink_window_rect, shaking, drink_tag, drink_glass_color, backup_ingredients
-        screen.blit(cocktail_made_background_img, made_drink_window_rect)
+        global screen_displayed_now, cocktail_made_window_rect, shaking, drink_tag, drink_glass_color, backup_ingredients
+        screen.blit(cocktail_made_background_img, cocktail_made_window_rect)
         successfully_made_drink = currently_preparing_drink.get("successful", False)
         stars_text = pixel_font_letters.render(str(currently_preparing_drink.get('stars', 0)) + "/10", True,(255, 255, 255))
 
@@ -1958,19 +2004,21 @@ if True:
             drink_tag = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["tag"]
             drink_glass_color = drink_pic_lib[str(currently_preparing_drink.get('drink made', ''))]["glass_color"]
         else:
-            name_text = pixel_font_letters.render("unsuccessful drink",True,(255, 255, 255))
+            name_text = pixel_font_letters.render("smudge",True,(255, 255, 255))
 
-        if left_mouse_clicked and not made_drink_window_rect.collidepoint(pos):
+        if left_mouse_clicked and not cocktail_made_window_rect.collidepoint(pos):
             screen_displayed_now = "cocktailmaker"
             backup_ingredients = list(deepcopy(unlocked_ingredients))
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
-        screen.blit(name_text, (600, 420))
+        screen.blit(name_text, (WINDOW_WIDTH / 2 - name_text.get_width() / 2, 430))
 
         if successfully_made_drink:
             screen.blit(stars_text, (600, 520))
-            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 6), (442, 0))
-            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 6), (442, 0))
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 6), (442, 20))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 6), (442, 20))
+        else:
+            screen.blit(pygame.transform.scale_by(smudge_img, 6), (442, 20))
     
     def display_cokctail_exterior_maker():
         global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag, currently_preparing_drink, cur_photo
@@ -2073,6 +2121,13 @@ while running:
                     temppos = pos
                     cocktail_shaker_x_offset = cocktail_shaker_rect.x - event.pos[0]
                     cocktail_shaker_y_offset = cocktail_shaker_rect.y - event.pos[1]
+                for i, rect in enumerate(stashed_cocktail_rects):
+                    if i not in cocktail_available_spots:
+                        if rect.collidepoint(pos):
+                            current_dragging_cocktail = i
+                            dragging_cocktail = True
+                            dragging_cocktail_x_offset = stashed_cocktail_rects[current_dragging_cocktail].x - event.pos[0]
+                            dragging_cocktail_y_offset = stashed_cocktail_rects[current_dragging_cocktail].y - event.pos[1]
 
             if event.type == pygame.MOUSEMOTION:
                 if dragging and shaking:
@@ -2086,9 +2141,15 @@ while running:
                         temppos = pos
                         cocktail_shaker_rect.x = event.pos[0] + cocktail_shaker_x_offset
                         cocktail_shaker_rect.y = event.pos[1] + cocktail_shaker_y_offset
+                if dragging_cocktail:
+                    stashed_cocktail_rects[current_dragging_cocktail].x = event.pos[0] + dragging_cocktail_x_offset
+                    stashed_cocktail_rects[current_dragging_cocktail].y = event.pos[1] + dragging_cocktail_y_offset
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 dragging = False
+                if dragging_cocktail:
+                    dragging_cocktail = False
+                    stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 pos = event.pos
                 right_mouse_clicked = True
@@ -2108,7 +2169,7 @@ while running:
 
     #-----------debugging----------
 
-    print(personal_recipes)
+    #print(unlocked_ingredients)
 
     #--------screen selection--------
 
