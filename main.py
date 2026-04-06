@@ -1181,7 +1181,7 @@ if True:
 
     def stash_smudge():
         pos_num = random.choice(cocktail_available_spots)
-        stashed_cocktails.append({"name": "smudge", "num": pos_num, "stars": currently_preparing_drink["stars"]})
+        stashed_cocktails.append({"name": "smudge", "num": pos_num, "stars": 0})
         cocktail_available_spots.remove(pos_num)
 
 #---------display functions----------
@@ -1448,13 +1448,14 @@ if True:
             screen_displayed_now = "progress_screen"
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
         if left_mouse_clicked and cocktailmaker_button_rect.collidepoint(pos):
-            screen_displayed_now = "cocktailmaker"
-            calculate_cocktail_pages()
-            selected_cocktail_ingredient = cocktail_pages[0][0]
-            selected_cocktail_ingredient_page = 0
-            cocktail_indicator_rect.x = cocktailmaker_ing_rects[0].x - cocktail_indicator_gap
-            backup_ingredients = list(deepcopy(unlocked_ingredients))
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            if len(stashed_cocktails) < 8:
+                screen_displayed_now = "cocktailmaker"
+                calculate_cocktail_pages()
+                selected_cocktail_ingredient = cocktail_pages[0][0]
+                selected_cocktail_ingredient_page = 0
+                cocktail_indicator_rect.x = cocktailmaker_ing_rects[0].x - cocktail_indicator_gap
+                backup_ingredients = list(deepcopy(unlocked_ingredients))
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
         if left_mouse_clicked and guest_screen_button_rect.collidepoint(pos):
             screen_displayed_now = "guest_screen"
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -1793,6 +1794,8 @@ if True:
                     update_recipe_book()
                     stash_cocktail()
                     successfully_made_drink = False
+                else:
+                    stash_smudge()
                 if currently_preparing_drink.get("new drink", False) == False:
                     screen_displayed_now = "cocktail_made_screen"
                 else:
@@ -1949,10 +1952,13 @@ if True:
             screen.blit(guest_images_library[guest["image_num"]], guest_rects_library[guest["rect_num"]])
         pygame.draw.rect(screen, (255, 0, 0), money_cheat_rect, 1)
         for cocktail in stashed_cocktails:
-            img = drink_pic_lib[cocktail["name"]]["glass_color"]
-            tag = drink_pic_lib[cocktail["name"]]["tag"]
-            screen.blit(pygame.transform.scale_by(glasses_bar_library[img], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
-            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(tag)], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
+            if cocktail["name"] == "smudge":
+                screen.blit(pygame.transform.scale_by(smudge_img, 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
+            else:
+                img = drink_pic_lib[cocktail["name"]]["glass_color"]
+                tag = drink_pic_lib[cocktail["name"]]["tag"]
+                screen.blit(pygame.transform.scale_by(glasses_bar_library[img], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
+                screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(tag)], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
 
     def display_create_username():
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
@@ -2007,8 +2013,12 @@ if True:
             name_text = pixel_font_letters.render("smudge",True,(255, 255, 255))
 
         if left_mouse_clicked and not cocktail_made_window_rect.collidepoint(pos):
-            screen_displayed_now = "cocktailmaker"
-            backup_ingredients = list(deepcopy(unlocked_ingredients))
+            if len(stashed_cocktails) < 8:
+                screen_displayed_now = "cocktailmaker"
+                backup_ingredients = list(deepcopy(unlocked_ingredients))
+            else:
+                screen_displayed_now = "homescreen"
+        
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         screen.blit(name_text, (WINDOW_WIDTH / 2 - name_text.get_width() / 2, 430))
