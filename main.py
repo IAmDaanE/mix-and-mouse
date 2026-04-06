@@ -2251,6 +2251,7 @@ while running:
                     for guest in guests:
                         if guest_rects_library[guest["rect_num"]].collidepoint(pos):
                             sold = True
+                            cocktail_available_spots.append(current_dragging_cocktail)
                             for lib in stashed_cocktails:
                                 if current_dragging_cocktail == lib["num"]:
                                     client_request_completed(guest["name"], lib['name'], lib["stars"])
@@ -2280,8 +2281,10 @@ while running:
 
     #-----------debugging----------
 
-    #print(stashed_cocktails)
-
+    if now % 15 == 0:
+        print(len(stashed_cocktails),end="   ")
+        print(cocktail_available_spots)
+    
     #--------screen selection--------
 
     if screen_displayed_now == "username":
