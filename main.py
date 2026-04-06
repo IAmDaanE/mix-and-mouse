@@ -2010,6 +2010,15 @@ if True:
                 screen.blit(pygame.transform.scale_by(glasses_bar_library[img], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
                 screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(tag)], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
 
+        if dragging_cocktail:
+            for cocktail in stashed_cocktails:
+                if cocktail["num"] == current_dragging_cocktail:
+                    name_text = save_detail_font_nums.render(cocktail["name"], True, (0,0,0))
+                    stars_text = save_detail_font_nums.render(str(cocktail["stars"]), True, (0,0,0))
+                    break
+            screen.blit(name_text, (10, WINDOW_HEIGHT - 45))
+            screen.blit(stars_text, (name_text.get_width() + 30, WINDOW_HEIGHT - 45))
+
     def display_create_username():
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
         #----------button logic--------
@@ -2252,7 +2261,7 @@ while running:
 
     #-----------debugging----------
 
-    #print(unlocked_ingredients)
+    #print(stashed_cocktails)
 
     #--------screen selection--------
 
