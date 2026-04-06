@@ -679,17 +679,23 @@ if True:
     balance = 0
     x = -1
 
-    def client_request_completed(client_name, star_multiplier):
+    def client_request_completed(client_name, name ,star_multiplier):
         global guests, balance, customers_served
 
         customers_served += 1
 
         for guest in guests:
             if guest["name"] == client_name:
-                balance += guest["price"] * star_multiplier
-                guest_available_spots.append(guest["rect_num"])
-                guests.remove(guest)
-                break
+                if guest["order_item"] == name:
+                    balance += guest["price"] * star_multiplier
+                    guest_available_spots.append(guest["rect_num"])
+                    guests.remove(guest)
+                    break
+                else:
+                    balance += 2 * star_multiplier
+                    guest_available_spots.append(guest["rect_num"])
+                    guests.remove(guest)
+                    break
 
     temp_price = 0
 
@@ -732,7 +738,6 @@ if True:
         for position_num in positions:
             x += 1
             want2 = random.choice(cur_menu)
-            temp_price2 = 0
             
             for recipe in all_recipes_in_game:
                 if recipe["name"] == want2:
@@ -1924,7 +1929,7 @@ if True:
         screen.blit(page_text, (WINDOW_WIDTH / 2 - page_text.get_width() / 2, WINDOW_HEIGHT - page_text.get_height() - 20))
 
     def display_guest_screen():
-        global screen_displayed_now, settings, guests, temp_guest_spawn_wait, temp_guest_timer, back_button_clicked, back_button_clicktime, balance
+        global screen_displayed_now, settings, guests, temp_guest_spawn_wait, temp_guest_timer, back_button_clicked, back_button_clicktime, balance, dragging_cocktail
         #---------button logic----------
 
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -1978,8 +1983,17 @@ if True:
             for guest in guests:
                 if right_mouse_clicked and guest_rects_library[guest["rect_num"]].collidepoint(pos):
                     check_unlocks()
-                    client_request_completed(guest["name"], 1)
+                    client_request_completed(guest["name"], "test", 1)
 
+        for guest in guests:
+                if dragging_cocktail and guest_rects_library[guest["rect_num"]].collidepoint(pos):
+                    
+                    for lib in stashed_cocktails:
+                        if current_dragging_cocktail == lib["num"]:
+                            client_request_completed(guest["name"], lib['name'], lib["stars"])
+                            check_unlocks()
+                            dragging_cocktail = False
+                            stashed_cocktails.remove(lib)
         #----------displaying-----------
 
         screen.blit(guest_screen_background_img,  (0,0))
