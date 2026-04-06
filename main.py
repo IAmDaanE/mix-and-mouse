@@ -424,7 +424,7 @@ if True:
     color_pointer = 1
     glass_pointer = 1
     cur_tag = 1
-    drink_pic_lib = {}
+    drink_pic_lib = {"screwdriver": {"glass_color": str(1.1), "tag": 1}}
     drink_tag = 1
     drink_glass_color = "1.1"
     stashed_cocktails = []
@@ -432,6 +432,7 @@ if True:
     current_dragging_cocktail = -1
     dragging_cocktail = False
     item_added_to_menu = ""
+    balance = 50
 
 #--------random rects and lists--------
 
@@ -2161,7 +2162,7 @@ if True:
             screen_displayed_now = "cocktail_made_screen"
             make_button_clicktime = 0
             shaking_complete = True
-            drink_pic_lib.update({str(currently_preparing_drink.get('drink made', '')): {"glass_color": str(cur_photo), "tag": str(cur_tag)}})
+            drink_pic_lib.update({str(currently_preparing_drink.get('drink made', '')): {"glass_color": str(cur_photo), "tag": cur_tag}})
         
         name2_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
         
