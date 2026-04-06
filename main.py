@@ -52,6 +52,7 @@ if True:
     save_button_img = convert_asset("assets/save_button.png", 1)
     save_exit_button_img = convert_asset("assets/save_exit_button.png", 1)
     make_button_img = convert_asset("assets/make_button_bar.png", 2)
+    add_button_img = convert_asset("assets/add_button.png", 1)
 
     continue_button_clicked_img = convert_asset("assets/continue_button_clicked.png", 1)
     continue_button2_clicked_img = convert_asset("assets/continue_button_clicked.png", 2)
@@ -66,6 +67,7 @@ if True:
     save_button_clicked_img = convert_asset("assets/save_button_clicked.png", 1)
     save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
     make_button_clicked_img = convert_asset("assets/make_button_clicked_bar.png", 2)
+    add_button_clicked_img = convert_asset("assets/add_button_clicked.png", 1)
 
     startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
     settings_screen_background_img = convert_asset("assets/settings_screen_background.png", 1)
@@ -429,6 +431,7 @@ if True:
     cocktail_available_spots = [0,1,2,3,4,5,6,7]
     current_dragging_cocktail = -1
     dragging_cocktail = False
+    item_added_to_menu = ""
 
 #--------random rects and lists--------
 
@@ -455,6 +458,24 @@ if True:
         x = 141 + stashed_cocktail_spacing + i * (stashed_cocktail_rect_width + stashed_cocktail_spacing)
         og_stashed_cocktail_rects.append(pygame.Rect(x, 557, 66, 66))
     stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
+
+    add_button_rects = [
+        make_button_img.get_rect(topleft=(76,246)),
+        make_button_img.get_rect(topleft=(706,246)),
+        make_button_img.get_rect(topleft=(76,552)),
+        make_button_img.get_rect(topleft=(706,552)),
+    ]
+
+    add_button_clicked_list = [False, False, False, False]
+
+    add_button_clicktimes = [0, 0, 0, 0]
+
+    delete_from_menu_rects = [
+        pygame.Rect(20, 20, 610, 330),
+        pygame.Rect(650, 20, 610, 330),
+        pygame.Rect(20, 370, 610, 330),
+        pygame.Rect(650, 370, 610, 330)
+    ]
 
     for i in range(9):
         unlocks[f"group{i}"] = False
@@ -885,7 +906,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -901,6 +922,7 @@ if True:
             unlocked_drinks = raw_unloaded_data["unlocked_drinks"]
             stashed_cocktails = raw_unloaded_data["stashed_cocktails"]
             cocktail_available_spots = raw_unloaded_data["cocktail_available_spots"]
+            cur_menu = raw_unloaded_data["cur_menu"]
         with open(username_txt_file, "r") as f:
             username = f.read()
         calculate_recipe_pages()
@@ -934,7 +956,8 @@ if True:
             "recipe_icons": drink_pic_lib,
             "unlocked_drinks": unlocked_drinks,
             "stashed_cocktails": stashed_cocktails,
-            "cocktail_available_spots": cocktail_available_spots
+            "cocktail_available_spots": cocktail_available_spots,
+            "cur_menu": cur_menu
             }
         
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
@@ -1825,8 +1848,10 @@ if True:
         pygame.draw.rect(screen, (137,0,0), progress_rect)
 
     def display_recipe_book():
-        global recipe_page_displayed
+        global recipe_page_displayed, screen_displayed_now, item_added_to_menu, displaying_recipe_book
         #---------button logic----------
+
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         if left_mouse_clicked and recipes_left_arrow_rect.collidepoint(pos):
             if recipe_page_displayed != 0:
@@ -1835,6 +1860,27 @@ if True:
         if left_mouse_clicked and recipes_right_arrow_rect.collidepoint(pos):
             if recipe_page_displayed != len(recipe_book_pages) - 1:
                 recipe_page_displayed += 1
+
+        if left_mouse_clicked:
+            for i, rect in enumerate(add_button_rects):
+             if rect.collidepoint(pos):
+                 add_button_clicked_list[i] = True
+                 add_button_clicktimes[i] = now
+        
+        for i, clicktime in enumerate(add_button_clicktimes):
+            if clicktime != 0 and clicktime <= now - click_duration:
+                add_button_clicked_list[i] = False
+            if clicktime != 0 and clicktime <= now - screen_switch_duration:
+                add_button_clicktimes[i] = 0
+                if recipe_book_pages[recipe_page_displayed][i]["name"] not in cur_menu:
+                    if len(cur_menu) < 4:
+                        cur_menu.append(recipe_book_pages[recipe_page_displayed][i]["name"])
+                        screen_displayed_now = "menu_screen"
+                        displaying_recipe_book = False
+                    else:
+                        screen_displayed_now = "delete_from_menu"
+                        item_added_to_menu = recipe_book_pages[recipe_page_displayed][i]["name"]
+                        displaying_recipe_book = False
 
         #----------displaying-----------
         screen.fill((62, 39, 35))
@@ -1863,6 +1909,10 @@ if True:
             screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 3), (recipe_book_cords[recipe_counter][0] - 1, recipe_book_cords[recipe_counter][1] - 4))
             #counter
             recipe_counter += 1
+
+        for i, rect in enumerate(add_button_rects):
+            if len(recipe_book_pages[recipe_page_displayed]) >= i + 1:
+                screen.blit(add_button_clicked_img if add_button_clicked_list[i] else add_button_img, rect)
 
         for i in range(len(recipe_book_pages[recipe_page_displayed])):
             pygame.draw.rect(screen, (0,0,0), recipe_book_rects[i], 2, border_radius=5)
@@ -2107,6 +2157,29 @@ if True:
         screen.blit(pygame.transform.scale_by(glasses_bar_library[cur_photo], 6), (200, 125))
         screen.blit(pygame.transform.scale_by(glass_tags_bar_library[cur_tag], 6), (200, 125))
 
+    def display_delete_from_menu():
+        global screen_displayed_now, item_added_to_menu
+        #---------button logic----------
+
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        #----------displaying-----------
+
+        screen.blit(menu_screen_background_img, (0,0))
+        for i, recipe in enumerate(cur_menu):
+            name_text = save_detail_font_nums.render(recipe, True, (255,255,255))
+            screen.blit(name_text, (menu_cords[i][0] + (610 / 2 - name_text.get_width() / 2), menu_cords[i][1] + 10))
+            drink_tag = drink_pic_lib[recipe]["tag"]
+            drink_glass_color = drink_pic_lib[recipe]["glass_color"]
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 5), (menu_cords[i][0] - 40, menu_cords[i][1] - 50))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 5), (menu_cords[i][0] - 40, menu_cords[i][1] - 50))
+        for i, rect in enumerate(delete_from_menu_rects):
+            if left_mouse_clicked and rect.collidepoint(pos):
+                cur_menu.pop(i)
+                cur_menu.insert(i, item_added_to_menu)
+                item_added_to_menu = ""
+                screen_displayed_now = "menu_screen"
+
 #-------------main loop-----------
 
 while running:
@@ -2180,7 +2253,6 @@ while running:
     #-----------debugging----------
 
     #print(unlocked_ingredients)
-    print(len(stashed_cocktails))
 
     #--------screen selection--------
 
@@ -2198,6 +2270,10 @@ while running:
 
     elif screen_displayed_now == "startscreen":
         display_startscreen()
+
+    elif screen_displayed_now == "delete_from_menu":
+        display_delete_from_menu()
+
     else:
         if displaying_recipe_book:
             display_recipe_book()
