@@ -2170,6 +2170,7 @@ while running:
     #-----------debugging----------
 
     #print(unlocked_ingredients)
+    print(len(stashed_cocktails))
 
     #--------screen selection--------
 
