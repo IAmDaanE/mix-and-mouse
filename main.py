@@ -497,16 +497,16 @@ if True:
     menu_cords = [[20, 20], [650, 20], [20, 369], [650, 369]]
 
     unlocked_ingredients = [
-        {"name": "vodka", "price": 10, "owned": 0},
-        {"name": "gin", "price": 15, "owned": 0},
-        {"name": "orange juice", "price": 4, "owned": 0},
-        {"name": "white rum", "price": 6, "owned": 0},
-        {"name": "cola", "price": 3, "owned": 0},
-        {"name": "tonic water", "price": 7, "owned": 0},
-        {"name": "soda water", "price": 4, "owned": 0},
-        {"name": "lime juice", "price": 2, "owned": 0},
-        {"name": "mint", "price": 4, "owned": 0},
-        {"name": "sugar syrup", "price": 9, "owned": 0},
+        {"name": "vodka", "price": 3, "owned": 0},
+        {"name": "gin", "price": 3, "owned": 0},
+        {"name": "orange juice", "price": 1, "owned": 0},
+        {"name": "white rum", "price": 2, "owned": 0},
+        {"name": "cola", "price": 1, "owned": 0},
+        {"name": "tonic water", "price": 1, "owned": 0},
+        {"name": "soda water", "price": 1, "owned": 0},
+        {"name": "lime juice", "price": 1, "owned": 0},
+        {"name": "mint", "price": 1, "owned": 0},
+        {"name": "sugar syrup", "price": 1, "owned": 0},
         {"name": "ice", "price": 1, "owned": 0}]
     
     guest_rect_y = 319
@@ -1097,93 +1097,93 @@ if True:
 if True:
     def check_unlocks():
         if not unlocks["group1"] and customers_served == 5:
-            unlocked_ingredients.append({"name": "tequila", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "ginger beer", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "grenadine", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "lemon juice", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "lime", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "apple juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "tequila", "price": 6, "owned": 0})
+            unlocked_ingredients.append({"name": "ginger beer", "price": 5, "owned": 0})
+            unlocked_ingredients.append({"name": "grenadine", "price": 5, "owned": 0})
+            unlocked_ingredients.append({"name": "lemon juice", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "lime", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "apple juice", "price": 2, "owned": 0})
         if not unlocks["group2"] and customers_served == 15:
-            unlocked_ingredients.append({"name": "triple sec", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "cranberry juice", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "pineapple juice", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "dark rum", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "mango juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "triple sec", "price": 8, "owned": 0})
+            unlocked_ingredients.append({"name": "cranberry juice", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "pineapple juice", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "dark rum", "price": 7, "owned": 0})
+            unlocked_ingredients.append({"name": "mango juice", "price": 2, "owned": 0})
         if not unlocks["group3"] and customers_served == 30:
             unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 0})
             unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "coconut cream", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "egg white", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "champagne", "price": 11, "owned": 0})
+            unlocked_ingredients.append({"name": "passionfruit juice", "price": 2, "owned": 0})
         if not unlocks["group4"] and customers_served == 50:
-            unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "baileys", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "grapefruit juice", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "bitters", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "kahlúa", "price": 12, "owned": 0})
+            unlocked_ingredients.append({"name": "cream", "price": 2, "owned": 0})
+            unlocked_ingredients.append({"name": "baileys", "price": 13, "owned": 0})
+            unlocked_ingredients.append({"name": "grapefruit juice", "price": 3, "owned": 0})
+            unlocked_ingredients.append({"name": "bitters", "price": 3, "owned": 0})
         if not unlocks["group5"] and customers_served == 75:
-            unlocked_ingredients.append({"name": "prosecco", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "peach schnapps", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "peach juice", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "prosecco", "price": 14, "owned": 0})
+            unlocked_ingredients.append({"name": "peach schnapps", "price": 15, "owned": 0})
+            unlocked_ingredients.append({"name": "peach juice", "price": 3, "owned": 0})
+            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 14, "owned": 0})
         if not unlocks["group6"] and customers_served == 110:
-            unlocked_ingredients.append({"name": "blue curaçao", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "midori", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "blue curaçao", "price": 17, "owned": 0})
+            unlocked_ingredients.append({"name": "midori", "price": 18, "owned": 0})
         if not unlocks["group7"] and customers_served == 150:
-            unlocked_ingredients.append({"name": "campari", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "dry vermouth", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "sweet vermouth", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "campari", "price": 20, "owned": 0})
+            unlocked_ingredients.append({"name": "dry vermouth", "price": 19, "owned": 0})
+            unlocked_ingredients.append({"name": "sweet vermouth", "price": 19, "owned": 0})
         if not unlocks["group8"] and customers_served == 200:
-            unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 0})
+            unlocked_ingredients.append({"name": "absinthe", "price": 25, "owned": 0})
 
     def cheat_unlocks():
             global unlocked_ingredients, customers_served
             customers_served = 400
             unlocked_ingredients.clear()
-            unlocked_ingredients.append({"name": "vodka", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "gin", "price": 15, "owned": 300})
-            unlocked_ingredients.append({"name": "orange juice", "price": 4, "owned": 300})
-            unlocked_ingredients.append({"name": "white rum", "price": 6, "owned": 300})
-            unlocked_ingredients.append({"name": "cola", "price": 3, "owned": 300})
-            unlocked_ingredients.append({"name": "tonic water", "price": 7, "owned": 300})
-            unlocked_ingredients.append({"name": "soda water", "price": 4, "owned": 300})
-            unlocked_ingredients.append({"name": "lime juice", "price": 2, "owned": 300})
-            unlocked_ingredients.append({"name": "mint", "price": 4, "owned": 300})
-            unlocked_ingredients.append({"name": "sugar syrup", "price": 9, "owned": 300})
+            unlocked_ingredients.append({"name": "vodka", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "gin", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "orange juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "white rum", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "cola", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "tonic water", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "soda water", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "lime juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "mint", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "sugar syrup", "price": 1, "owned": 300})
             unlocked_ingredients.append({"name": "ice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "tequila", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "ginger beer", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "grenadine", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "lemon juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "lime", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "apple juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "triple sec", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "cranberry juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "pineapple juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "dark rum", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "mango juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "coconut cream", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "egg white", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "champagne", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "passionfruit juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "kahlúa", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "cream", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "baileys", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "grapefruit juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "bitters", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "prosecco", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "peach schnapps", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "peach juice", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "blue curaçao", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "midori", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "campari", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "dry vermouth", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "sweet vermouth", "price": 10, "owned": 300})
-            unlocked_ingredients.append({"name": "absinthe", "price": 10, "owned": 300})
+            unlocked_ingredients.append({"name": "tequila", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "ginger beer", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "grenadine", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "lemon juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "lime", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "apple juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "triple sec", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "cranberry juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "pineapple juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "dark rum", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "mango juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "whiskey", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "amaretto", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "coconut cream", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "egg white", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "champagne", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "passionfruit juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "kahlúa", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "cream", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "baileys", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "grapefruit juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "bitters", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "prosecco", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "peach schnapps", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "peach juice", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "blue curaçao", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "midori", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "campari", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "dry vermouth", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "sweet vermouth", "price": 1, "owned": 300})
+            unlocked_ingredients.append({"name": "absinthe", "price": 1, "owned": 300})
 
 #---------recipe book system---------
 
