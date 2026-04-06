@@ -1980,21 +1980,13 @@ if True:
                     for dict in guests:
                         dict["clicked"] = False
                     guest["clicked"] = True
+
         if settings["dev_mode"]:
             for guest in guests:
                 if right_mouse_clicked and guest_rects_library[guest["rect_num"]].collidepoint(pos):
                     check_unlocks()
                     client_request_completed(guest["name"], "test", 1)
 
-        for guest in guests:
-                if dragging_cocktail and guest_rects_library[guest["rect_num"]].collidepoint(pos):
-                    
-                    for lib in stashed_cocktails:
-                        if current_dragging_cocktail == lib["num"]:
-                            client_request_completed(guest["name"], lib['name'], lib["stars"])
-                            check_unlocks()
-                            dragging_cocktail = False
-                            stashed_cocktails.remove(lib)
         #----------displaying-----------
 
         screen.blit(guest_screen_background_img,  (0,0))
@@ -2255,8 +2247,20 @@ while running:
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 dragging = False
                 if dragging_cocktail:
-                    dragging_cocktail = False
-                    stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
+                    sold = False
+                    for guest in guests:
+                        if guest_rects_library[guest["rect_num"]].collidepoint(pos):
+                            sold = True
+                            for lib in stashed_cocktails:
+                                if current_dragging_cocktail == lib["num"]:
+                                    client_request_completed(guest["name"], lib['name'], lib["stars"])
+                                    check_unlocks()
+                                    dragging_cocktail = False
+                                    stashed_cocktails.remove(lib)
+                    if not sold:
+                        dragging_cocktail = False
+                        stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 pos = event.pos
                 right_mouse_clicked = True
