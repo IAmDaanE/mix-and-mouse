@@ -2252,6 +2252,7 @@ while running:
                         if guest_rects_library[guest["rect_num"]].collidepoint(pos):
                             sold = True
                             cocktail_available_spots.append(current_dragging_cocktail)
+                            stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
                             for lib in stashed_cocktails:
                                 if current_dragging_cocktail == lib["num"]:
                                     client_request_completed(guest["name"], lib['name'], lib["stars"])
