@@ -433,6 +433,7 @@ if True:
     dragging_cocktail = False
     item_added_to_menu = ""
     balance = 50
+    star_price_ratio_lib = {1: "0,2" ,2: "0,4", 3: "0,6",4: "0,8",5: "1,0",6: "1,5",7: "2",8: "3",9: "4",10: "10"}
 
 #--------random rects and lists--------
 
@@ -688,7 +689,7 @@ if True:
         for guest in guests:
             if guest["name"] == client_name:
                 if guest["order_item"] == name:
-                    balance += guest["price"] * star_multiplier
+                    balance += guest["price"] * float(star_price_ratio_lib[star_multiplier])
                     guest_available_spots.append(guest["rect_num"])
                     guests.remove(guest)
                     break
