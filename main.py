@@ -433,7 +433,8 @@ if True:
     dragging_cocktail = False
     item_added_to_menu = ""
     balance = 50
-    star_price_ratio_lib = {1: "0,2" ,2: "0,4", 3: "0,6",4: "0,8",5: "1,0",6: "1,5",7: "2",8: "3",9: "4",10: "10"}
+    star_price_ratio_lib = {1: "0.2", 2: "0.4", 3: "0.6", 4: "0.8", 5: "1.0", 6: "1.5", 7: "2", 8: "3", 9: "4", 10: "10"}
+    earnings_text_duration = 100
 
 #--------random rects and lists--------
 
@@ -460,6 +461,12 @@ if True:
         x = 141 + stashed_cocktail_spacing + i * (stashed_cocktail_rect_width + stashed_cocktail_spacing)
         og_stashed_cocktail_rects.append(pygame.Rect(x, 557, 66, 66))
     stashed_cocktail_rects = deepcopy(og_stashed_cocktail_rects)
+
+    earnings_texts = []
+    earnings_texts_timings = []
+    for i in range(6):
+        earnings_texts.append("")
+        earnings_texts_timings.append(0)
 
     add_button_rects = [
         make_button_img.get_rect(topleft=(76,246)),
@@ -687,15 +694,22 @@ if True:
         customers_served += 1
 
         for guest in guests:
+            i = guest["rect_num"]
             if guest["name"] == client_name:
                 if guest["order_item"] == name:
-                    balance += guest["price"] * float(star_price_ratio_lib[star_multiplier])
-                    guest_available_spots.append(guest["rect_num"])
+                    earnings = guest["price"] * float(star_price_ratio_lib[star_multiplier])
+                    balance += earnings
+                    earnings_texts[i] = str(earnings)
+                    earnings_texts_timings[i] = earnings_text_duration
+                    guest_available_spots.append(i)
                     guests.remove(guest)
                     break
                 else:
-                    balance += 2 * star_multiplier
-                    guest_available_spots.append(guest["rect_num"])
+                    earnings = 2 * star_multiplier
+                    balance += earnings
+                    earnings_texts[i] = str(earnings)
+                    earnings_texts_timings[i] = earnings_text_duration
+                    guest_available_spots.append(i)
                     guests.remove(guest)
                     break
 
@@ -2017,7 +2031,6 @@ if True:
                 tag = drink_pic_lib[cocktail["name"]]["tag"]
                 screen.blit(pygame.transform.scale_by(glasses_bar_library[img], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
                 screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(tag)], 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
-
         if dragging_cocktail:
             for cocktail in stashed_cocktails:
                 if cocktail["num"] == current_dragging_cocktail:
@@ -2026,6 +2039,11 @@ if True:
                     break
             screen.blit(name_text, (10, WINDOW_HEIGHT - 45))
             screen.blit(stars_text, (name_text.get_width() + 30, WINDOW_HEIGHT - 45))
+        for i, num in enumerate(earnings_texts_timings):
+            if num > 0:
+                earnings_texts_timings[i] -= 1
+                text = save_detail_font_nums.render(f"+{earnings_texts[i]}$", True, (50, 180, 50))
+                screen.blit(text, ((guest_rects_library[i].x + guest_rects_library[i].width / 2) - text.get_width() / 2, 250))
 
     def display_create_username():
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
@@ -2283,9 +2301,8 @@ while running:
 
     #-----------debugging----------
 
-    if now % 15 == 0:
-        print(len(stashed_cocktails),end="   ")
-        print(cocktail_available_spots)
+    if now % 3 == 0:
+        print(earnings_texts_timings)
     
     #--------screen selection--------
 
