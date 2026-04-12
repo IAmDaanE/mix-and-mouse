@@ -489,7 +489,7 @@ if True:
     for i in range(9):
         unlocks[f"group{i}"] = False
     
-    personal_recipes = [{'name': 'screwdriver', 'stars': 7, 'price': 55, 'preparation': {'vodka': 9, 'orange juice': 9, 'ice': 2}, 'image_num': 74}]
+    personal_recipes = [{'name': 'screwdriver', 'stars': 7, 'price': 64, 'preparation': {'vodka': 9, 'orange juice': 9, 'ice': 2}, 'image_num': 74}]
                                                             
     stock_indicator_rect = pygame.Rect(stock_screen_row1_rect.x - stock_indicator_gap, stock_screen_row1_rect.y - stock_indicator_gap, stock_screen_row_img.get_width() + stock_indicator_gap * 2, stock_screen_row_img.get_height() + stock_indicator_gap * 2)
     cocktail_indicator_rect = pygame.Rect(cocktailmaker_ing_rects[0].x - cocktail_indicator_gap, cocktailmaker_ing_rects[0].y - cocktail_indicator_gap, cocktailmaker_ing_rects[0].width + 2 * cocktail_indicator_gap, cocktailmaker_ing_rects[0].height + 2 * cocktail_indicator_gap)
@@ -688,7 +688,7 @@ if True:
     balance = 0
     x = -1
 
-    def client_request_completed(client_name, name ,star_multiplier):
+    def client_request_completed(client_name, drink_served_name, star_multiplier):
         global guests, balance, customers_served
 
         customers_served += 1
@@ -696,19 +696,19 @@ if True:
         for guest in guests:
             i = guest["rect_num"]
             if guest["name"] == client_name:
-                if guest["order_item"] == name:
+                if guest["order_item"] == drink_served_name:
                     earnings = guest["price"] * float(star_price_ratio_lib[star_multiplier])
                     balance += earnings
-                    earnings_texts[i] = str(earnings)
-                    earnings_texts_timings[i] = earnings_text_duration
+                    earnings_texts[i - 1] = str(earnings)
+                    earnings_texts_timings[i - 1] = earnings_text_duration
                     guest_available_spots.append(i)
                     guests.remove(guest)
                     break
                 else:
                     earnings = 2 * star_multiplier
                     balance += earnings
-                    earnings_texts[i] = str(earnings)
-                    earnings_texts_timings[i] = earnings_text_duration
+                    earnings_texts[i - 1] = str(earnings)
+                    earnings_texts_timings[i - 1] = earnings_text_duration
                     guest_available_spots.append(i)
                     guests.remove(guest)
                     break
@@ -1209,10 +1209,24 @@ def update_recipe_book():
             if currently_preparing_drink["stars"] > recipe["stars"]:
                 recipe["preparation"] = currently_preparing_drink["preparation"]
                 recipe["stars"] = currently_preparing_drink["stars"]
+                for correct_recipe in all_recipes_in_game:
+                    if currently_preparing_drink["drink made"] == correct_recipe["name"]:
+                        price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
+                        print(price)
+                        break
+                recipe["price"] = price
             new_recipe = False
             break
     if new_recipe:
-        personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": 55, "preparation": currently_preparing_drink["preparation"], "image_num": random.randint(0, 80)})
+        price = 0
+        for correct_recipe in all_recipes_in_game:
+            if currently_preparing_drink["drink made"] == correct_recipe["name"]:
+                price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
+                print(price)
+                print(correct_recipe["price"])
+                print(float(star_price_ratio_lib[currently_preparing_drink["stars"]]))
+                break
+        personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": price, "preparation": currently_preparing_drink["preparation"], "image_num": random.randint(0, 80)})
     calculate_recipe_pages()
 
 #------stashed cocktail system-------
@@ -1915,6 +1929,9 @@ if True:
             screen.blit(star_img, (recipe_book_cords[recipe_counter][0] + 25, recipe_book_cords[recipe_counter][1] + 15))
             stars_text = save_detail_font_nums.render(f'{int(recipe["stars"] / 2) if recipe["stars"] / 2 == int(recipe["stars"] / 2) else recipe["stars"] / 2}', True, (0,0,0))
             screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 50, recipe_book_cords[recipe_counter][1] + 4))
+            #recip price
+            price_text = save_detail_font_nums.render(f"{round(recipe['price'])}$", True, (0,0,0))
+            screen.blit(price_text, (recipe_book_cords[recipe_counter][0] + recipe_book_rects[0][2] - 25 - price_text.get_width(), recipe_book_cords[recipe_counter][1] + 4))
             #recipe ingredients
             step_y = recipe_book_cords[recipe_counter][1] + 46
             for ingredient, amount in recipe["preparation"].items():
@@ -2035,15 +2052,16 @@ if True:
             for cocktail in stashed_cocktails:
                 if cocktail["num"] == current_dragging_cocktail:
                     name_text = save_detail_font_nums.render(cocktail["name"], True, (0,0,0))
-                    stars_text = save_detail_font_nums.render(str(cocktail["stars"]), True, (0,0,0))
+                    stars_text = save_detail_font_nums.render(str(int(cocktail["stars"] / 2) if cocktail["stars"] / 2 == int(cocktail["stars"] / 2) else cocktail["stars"] / 2), True, (0,0,0))
                     break
             screen.blit(name_text, (10, WINDOW_HEIGHT - 45))
-            screen.blit(stars_text, (name_text.get_width() + 30, WINDOW_HEIGHT - 45))
+            screen.blit(star_img, (name_text.get_width() + 30, WINDOW_HEIGHT - 33))
+            screen.blit(stars_text, (name_text.get_width() + 56, WINDOW_HEIGHT - 45))
         for i, num in enumerate(earnings_texts_timings):
             if num > 0:
                 earnings_texts_timings[i] -= 1
                 text = save_detail_font_nums.render(f"+{earnings_texts[i]}$", True, (50, 180, 50))
-                screen.blit(text, ((guest_rects_library[i].x + guest_rects_library[i].width / 2) - text.get_width() / 2, 250))
+                screen.blit(text, ((guest_rects_library[i + 1].x + guest_rects_library[i + 1].width / 2) - text.get_width() / 2, 250))
 
     def display_create_username():
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
@@ -2087,8 +2105,9 @@ if True:
     def display_cocktail_made_screen():
         global screen_displayed_now, cocktail_made_window_rect, shaking, drink_tag, drink_glass_color, backup_ingredients
         screen.blit(cocktail_made_background_img, cocktail_made_window_rect)
+        
         successfully_made_drink = currently_preparing_drink.get("successful", False)
-        stars_text = pixel_font_letters.render(str(currently_preparing_drink.get('stars', 0)) + "/10", True,(255, 255, 255))
+        stars_text = pixel_font_letters.render(str(int(currently_preparing_drink.get('stars', 0) / 2) if currently_preparing_drink.get('stars', 0) / 2 == int(currently_preparing_drink.get('stars', 0) / 2) else currently_preparing_drink.get('stars', 0) / 2) + "/5", True, (255, 255, 255))
 
         if successfully_made_drink:
             name_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
@@ -2119,6 +2138,8 @@ if True:
         global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag, currently_preparing_drink, cur_photo
 
         cur_photo = str(color_pointer) + "." + str(glass_pointer)
+
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         # ----------------glass_right--------------------
         if left_mouse_clicked and glass_left_arrow_rect.collidepoint(pos):
@@ -2301,8 +2322,7 @@ while running:
 
     #-----------debugging----------
 
-    if now % 3 == 0:
-        print(earnings_texts_timings)
+    
     
     #--------screen selection--------
 
