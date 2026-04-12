@@ -1601,10 +1601,18 @@ if True:
             screen.blit(name_text, (menu_cords[i][0] + (610 / 2 - name_text.get_width() / 2), menu_cords[i][1] + 10))
             drink_tag = drink_pic_lib[recipe]["tag"]
             drink_glass_color = drink_pic_lib[recipe]["glass_color"]
-            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 5), (menu_cords[i][0] - 40, menu_cords[i][1] - 50))
-            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 5), (menu_cords[i][0] - 40, menu_cords[i][1] - 50))
+            screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 4.5), (menu_cords[i][0] - 34, menu_cords[i][1] - 30))
+            screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 4.5), (menu_cords[i][0] - 34, menu_cords[i][1] - 30))
+            for my_recipe in personal_recipes:
+                if recipe == my_recipe["name"]:
+                    stars_text = playthrough_name_font.render(str(int(my_recipe["stars"] / 2) if my_recipe["stars"] / 2 == int(my_recipe["stars"] / 2) else my_recipe["stars"] / 2), True, (0,0,0))
+                    price_text = playthrough_name_font.render(f"{my_recipe['price']}$", True, (0,0,0))
+                    break
+            screen.blit(pygame.transform.scale_by(star_img, 2), (menu_cords[i][0] + 250, menu_cords[i][1] + 100))
+            screen.blit(stars_text, (menu_cords[i][0] + 300, menu_cords[i][1] + 90))
+            screen.blit(price_text, (menu_cords[i][0] + 250, menu_cords[i][1] + 190))
 
-    def display_stock_screen(): 
+    def display_stock_screen():
         global back_button_clicked, back_button_clicktime, screen_displayed_now, plus_button_clicked, plus_button_clicktime, min_button_clicked, min_button_clicktime, stock_screen_row_counter, stock_page_displayed, selected_stock_ingredient, selected_stock_ingredient_page, buy_button_clicked, buy_button_clicktime, stock_amount_selected, balance
         
         #---------button logic---------
