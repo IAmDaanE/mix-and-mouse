@@ -706,6 +706,8 @@ if True:
                     break
                 else:
                     earnings = 2 * star_multiplier
+                    if earnings == 0:
+                        earnings = 8.0
                     balance += earnings
                     earnings_texts[i - 1] = str(earnings)
                     earnings_texts_timings[i - 1] = earnings_text_duration
@@ -992,13 +994,19 @@ if True:
     base_api_url = "https://cocktail-game-leaderboard-api.onrender.com"
 
     def initial_post():
-        name = username
-        customers_served = 0
-        best_cocktail_value = 0
-        response = requests.post(f"{base_api_url}/initial_post", json={"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
-
+        try:
+            name = username
+            customers_served = 0
+            best_cocktail_value = 0
+            response = requests.post(f"{base_api_url}/initial_post", json={"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
+        except requests.exceptions.RequestException:
+            return None
+        
     def update_post():
-        response = requests.post(f"{base_api_url}/update_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": 15})
+        try:
+            response = requests.post(f"{base_api_url}/update_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": 15})
+        except requests.exceptions.RequestException:
+            return None
         
     def check_username_conflict(username):
         response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
@@ -1009,25 +1017,28 @@ if True:
     
     def get_leaderboard():
         global leaderboard_data
-        response = requests.get(f"{base_api_url}/top3").json()
-        leaderboard_data = []
-        for row in response:
-            name = row["name"]
-            customers_served = row["customers_served"]
-            best_cocktail_value = row["best_cocktail_value"]
-            leaderboard_data.append({"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
+        try:
+            response = requests.get(f"{base_api_url}/top3").json()
+            leaderboard_data = []
+            for row in response:
+                name = row["name"]
+                customers_served = row["customers_served"]
+                best_cocktail_value = row["best_cocktail_value"]
+                leaderboard_data.append({"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
+        except requests.exceptions.RequestException:
+            return None
 
     get_leaderboard()
 
     def display_leaderboard():
-        name_column_text = leaderboard_columns_font.render("name", True, (0,0,0))
-        customers_served_column_text = leaderboard_columns_font.render("customers served", True, (0,0,0))
-        best_cocktail_column_text = leaderboard_columns_font.render("best cocktail", True, (0,0,0))
-        screen.blit(name_column_text, (493, 483))
-        screen.blit(customers_served_column_text, (645, 483))
-        screen.blit(best_cocktail_column_text, (843, 483))        
-        row_counter = 0
         if len(leaderboard_data) > 0:
+            name_column_text = leaderboard_columns_font.render("name", True, (0,0,0))
+            customers_served_column_text = leaderboard_columns_font.render("customers served", True, (0,0,0))
+            best_cocktail_column_text = leaderboard_columns_font.render("best cocktail", True, (0,0,0))
+            screen.blit(name_column_text, (493, 483))
+            screen.blit(customers_served_column_text, (645, 483))
+            screen.blit(best_cocktail_column_text, (843, 483))        
+            row_counter = 0
             for row in leaderboard_data:
                 name_text = leaderboard_items_font.render(str(row["name"]), True, (0,0,0))
                 customers_served_text = leaderboard_items_font.render(str(row["customers_served"]), True, (0,0,0))
@@ -1036,6 +1047,10 @@ if True:
                 screen.blit(customers_served_text, (692, leaderboard_row_cords[row_counter]))
                 screen.blit(best_cocktail_text, (867, leaderboard_row_cords[row_counter]))
                 row_counter += 1
+            pygame.draw.line(screen, (0, 0, 0), (468, 516), (935, 516), 2)
+        else:
+            error_text = leaderboard_columns_font.render("leaderboard unavailable", True, (0,0,0))
+            screen.blit(error_text, (620, 500))
 
 #-------stock screen page calculations-------
 
@@ -1572,7 +1587,6 @@ if True:
         pygame.draw.rect(screen, (100, 0, 0), progress_screen_button_rect, 1)
         if settings["show_leaderboard"]:
             display_leaderboard()
-            pygame.draw.line(screen, (0, 0, 0), (468, 516), (935, 516), 2)
 
     def display_menu_screen():
         global back_button_clicktime, back_button_clicked, screen_displayed_now
