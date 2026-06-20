@@ -295,7 +295,7 @@ if True:
     back_button_rect = back_button_img.get_rect(topleft=(20, 20))
     back_button2_rect = back_button_img.get_rect(topleft=(10, 208 + 10))
     stock_screen_button_rect = pygame.Rect(68, 143, 221, 364)
-    progress_screen_button_rect = pygame.Rect(WINDOW_WIDTH - 100 - 5, WINDOW_HEIGHT - 80, 50, 50) #PLACEHOLDER
+    progress_screen_button_rect = pygame.Rect(900, 400, 180, 80) #PLACEHOLDER
     cocktailmaker_button_rect = pygame.Rect(547, 336, 143, 107)
     guest_screen_button_rect = pygame.Rect(777, 123, 182, 272)
     menu_screen_button_rect = pygame.Rect(1025, 475, 137, 209)
@@ -1517,7 +1517,7 @@ if True:
         display_save_details()
 
     def display_homescreen():
-        global screen_displayed_now, progress_rect, selected_cocktail_ingredient, selected_cocktail_ingredient_page, backup_ingredients, running, settings_button_clicked, settings_button_clicktime, save_button_clicked, save_button_clicktime, save_exit_button_clicked, save_exit_button_clicktime
+        global screen_displayed_now, progress_rect, selected_cocktail_ingredient, selected_cocktail_ingredient_page, backup_ingredients, running, settings_button_clicked, settings_button_clicktime, save_button_clicked, save_button_clicktime, save_exit_button_clicked, save_exit_button_clicktime, progress_screen_button_rect
         #--------button logic--------
 
         if left_mouse_clicked and stock_screen_button_rect.collidepoint(pos):
@@ -1591,10 +1591,10 @@ if True:
         screen.blit(save_exit_button_clicked_img if save_exit_button_clicked else save_exit_button_img, save_exit_button_rect)
         screen.blit(settings_button_clicked_img if settings_button_clicked else settings_button_img, settings_button_rect)
         username_text = save_detail_font_nums.render(username, True, (255,255,255))
+        progress_screen_button_rect = username_text.get_rect(topleft=(WINDOW_WIDTH - 10 - username_text.get_width(), 10))
         screen.blit(username_text, (WINDOW_WIDTH - 10 - username_text.get_width(), 10))
         balance_text = save_detail_font_nums.render(f"$ {balance}", True, (255,255,255))
         screen.blit(balance_text, ((WINDOW_WIDTH - 10 - balance_text.get_width(), 349)))
-        pygame.draw.rect(screen, (100, 0, 0), progress_screen_button_rect, 1)
         if settings["show_leaderboard"]:
             display_leaderboard()
 
