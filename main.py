@@ -24,8 +24,8 @@ if True:
 
 #------loading in assets--------
 
-def convert_asset(pngName, scale):
-    return pygame.transform.scale_by(pygame.image.load(pngName).convert_alpha(), scale)
+def convert_asset(png_name, scale):
+    return pygame.transform.scale_by(pygame.image.load(png_name).convert_alpha(), scale)
 
 def slice_tilesheet(path, tile_width, tile_height):
     sheet = pygame.image.load(path).convert_alpha()
@@ -505,14 +505,14 @@ if True:
     menu_cords = [[20, 20], [650, 20], [20, 369], [650, 369]]
 
     unlocked_ingredients = [
-        {"name": "vodka", "price": 3, "owned": 0},
-        {"name": "gin", "price": 3, "owned": 0},
-        {"name": "orange juice", "price": 1, "owned": 0},
-        {"name": "white rum", "price": 2, "owned": 0},
-        {"name": "cola", "price": 1, "owned": 0},
-        {"name": "tonic water", "price": 1, "owned": 0},
+        {"name": "vodka", "price": 5, "owned": 0},
+        {"name": "gin", "price": 5, "owned": 0},
+        {"name": "orange juice", "price": 2, "owned": 0},
+        {"name": "white rum", "price": 5, "owned": 0},
+        {"name": "cola", "price": 2, "owned": 0},
+        {"name": "tonic water", "price": 2, "owned": 0},
         {"name": "soda water", "price": 1, "owned": 0},
-        {"name": "lime juice", "price": 1, "owned": 0},
+        {"name": "lime juice", "price": 2, "owned": 0},
         {"name": "mint", "price": 1, "owned": 0},
         {"name": "sugar syrup", "price": 1, "owned": 0},
         {"name": "ice", "price": 1, "owned": 0}]
@@ -685,7 +685,6 @@ if True:
     guest_images_list = [1, 2, 3, 4, 5, 6, 7, 8]
     temp_guest_spawn_wait = 0
     temp_guest_timer = 0
-    balance = 0
     x = -1
 
     def client_request_completed(client_name, drink_served_name, star_multiplier):
@@ -1168,52 +1167,70 @@ if True:
             unlocked_ingredients.append({"name": "absinthe", "price": 25, "owned": 0})
 
     def cheat_unlocks():
-            global unlocked_ingredients, customers_served
-            customers_served = 400
-            unlocked_ingredients.clear()
-            unlocked_ingredients.append({"name": "vodka", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "gin", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "orange juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "white rum", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "cola", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "tonic water", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "soda water", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "lime juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "mint", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "sugar syrup", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "ice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "tequila", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "ginger beer", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "grenadine", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "lemon juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "lime", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "apple juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "triple sec", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "cranberry juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "pineapple juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "dark rum", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "mango juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "whiskey", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "amaretto", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "coconut cream", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "egg white", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "champagne", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "passionfruit juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "kahlúa", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "cream", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "baileys", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "grapefruit juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "bitters", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "prosecco", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "peach schnapps", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "peach juice", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "blue curaçao", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "midori", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "campari", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "dry vermouth", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "sweet vermouth", "price": 1, "owned": 300})
-            unlocked_ingredients.append({"name": "absinthe", "price": 1, "owned": 300})
+        global unlocked_ingredients, customers_served
+        customers_served = 400
+        unlocked_ingredients.clear()
+
+        # start ingredients
+        unlocked_ingredients.append({"name": "vodka", "price": 5, "owned": 300})
+        unlocked_ingredients.append({"name": "gin", "price": 5, "owned": 300})
+        unlocked_ingredients.append({"name": "orange juice", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "white rum", "price": 5, "owned": 300})
+        unlocked_ingredients.append({"name": "cola", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "tonic water", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "soda water", "price": 1, "owned": 300})
+        unlocked_ingredients.append({"name": "lime juice", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "mint", "price": 1, "owned": 300})
+        unlocked_ingredients.append({"name": "sugar syrup", "price": 1, "owned": 300})
+        unlocked_ingredients.append({"name": "ice", "price": 1, "owned": 300})
+
+        # group 1
+        unlocked_ingredients.append({"name": "tequila", "price": 6, "owned": 300})
+        unlocked_ingredients.append({"name": "ginger beer", "price": 5, "owned": 300})
+        unlocked_ingredients.append({"name": "grenadine", "price": 5, "owned": 300})
+        unlocked_ingredients.append({"name": "lemon juice", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "lime", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "apple juice", "price": 2, "owned": 300})
+
+        # group 2
+        unlocked_ingredients.append({"name": "triple sec", "price": 8, "owned": 300})
+        unlocked_ingredients.append({"name": "cranberry juice", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "pineapple juice", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "dark rum", "price": 7, "owned": 300})
+        unlocked_ingredients.append({"name": "mango juice", "price": 2, "owned": 300})
+
+        # group 3
+        unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 300})
+        unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 300})
+        unlocked_ingredients.append({"name": "coconut cream", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "egg white", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "champagne", "price": 11, "owned": 300})
+        unlocked_ingredients.append({"name": "passionfruit juice", "price": 2, "owned": 300})
+
+        # group 4
+        unlocked_ingredients.append({"name": "kahlúa", "price": 12, "owned": 300})
+        unlocked_ingredients.append({"name": "cream", "price": 2, "owned": 300})
+        unlocked_ingredients.append({"name": "baileys", "price": 13, "owned": 300})
+        unlocked_ingredients.append({"name": "grapefruit juice", "price": 3, "owned": 300})
+        unlocked_ingredients.append({"name": "bitters", "price": 3, "owned": 300})
+
+        # group 5
+        unlocked_ingredients.append({"name": "prosecco", "price": 14, "owned": 300})
+        unlocked_ingredients.append({"name": "peach schnapps", "price": 15, "owned": 300})
+        unlocked_ingredients.append({"name": "peach juice", "price": 3, "owned": 300})
+        unlocked_ingredients.append({"name": "elderflower liqueur", "price": 14, "owned": 300})
+
+        # group 6
+        unlocked_ingredients.append({"name": "blue curaçao", "price": 17, "owned": 300})
+        unlocked_ingredients.append({"name": "midori", "price": 18, "owned": 300})
+
+        # group 7
+        unlocked_ingredients.append({"name": "campari", "price": 20, "owned": 300})
+        unlocked_ingredients.append({"name": "dry vermouth", "price": 19, "owned": 300})
+        unlocked_ingredients.append({"name": "sweet vermouth", "price": 19, "owned": 300})
+
+        # group 8
+        unlocked_ingredients.append({"name": "absinthe", "price": 25, "owned": 300})
 
 #---------recipe book system---------
 
@@ -1510,7 +1527,7 @@ if True:
 
     def display_homescreen():
         global screen_displayed_now, progress_rect, selected_cocktail_ingredient, selected_cocktail_ingredient_page, backup_ingredients, running, settings_button_clicked, settings_button_clicktime, save_button_clicked, save_button_clicktime, save_exit_button_clicked, save_exit_button_clicktime
-        #--------button variables--------
+        #--------button logic--------
 
         if left_mouse_clicked and stock_screen_button_rect.collidepoint(pos):
             screen_displayed_now = "stock_screen"
@@ -1584,6 +1601,8 @@ if True:
         screen.blit(settings_button_clicked_img if settings_button_clicked else settings_button_img, settings_button_rect)
         username_text = save_detail_font_nums.render(username, True, (255,255,255))
         screen.blit(username_text, (WINDOW_WIDTH - 10 - username_text.get_width(), 10))
+        balance_text = save_detail_font_nums.render(f"$ {balance}", True, (255,255,255))
+        screen.blit(balance_text, ((WINDOW_WIDTH - 10 - balance_text.get_width(), 349)))
         pygame.draw.rect(screen, (100, 0, 0), progress_screen_button_rect, 1)
         if settings["show_leaderboard"]:
             display_leaderboard()
@@ -2001,12 +2020,6 @@ if True:
             screen_displayed_now = "homescreen"
             back_button_clicktime = 0
 
-        money_cheat_rect = pygame.Rect(500, 20, 50, 50)
-
-        if settings["dev_mode"] and right_mouse_clicked and money_cheat_rect.collidepoint(pos):
-            balance += 10000
-            cheat_unlocks()
-
         #--------guest timer-------------
 
         if settings["dev_mode"]:
@@ -2061,7 +2074,6 @@ if True:
                     custom_order_rect
                 )
             screen.blit(guest_images_library[guest["image_num"]], guest_rects_library[guest["rect_num"]])
-        pygame.draw.rect(screen, (255, 0, 0), money_cheat_rect, 1)
         for cocktail in stashed_cocktails:
             if cocktail["name"] == "smudge":
                 screen.blit(pygame.transform.scale_by(smudge_img, 2), (stashed_cocktail_rects[cocktail["num"]].x - 33, stashed_cocktail_rects[cocktail["num"]].y - 33))
@@ -2084,6 +2096,15 @@ if True:
                 earnings_texts_timings[i] -= 1
                 text = save_detail_font_nums.render(f"+{earnings_texts[i]}$", True, (50, 180, 50))
                 screen.blit(text, ((guest_rects_library[i + 1].x + guest_rects_library[i + 1].width / 2) - text.get_width() / 2, 250))
+        if settings["dev_mode"]:
+            rect_offset = 15
+            money_cheat_text = leaderboard_items_font.render("money cheat - dev mode only", True, (0,0,0))
+            money_cheat_rect = pygame.Rect(WINDOW_WIDTH - money_cheat_text.get_width() - rect_offset * 3, rect_offset, money_cheat_text.get_width() + 2 * rect_offset, money_cheat_text.get_height() + 2 * rect_offset)
+            pygame.draw.rect(screen, (68, 137, 20), money_cheat_rect, border_radius=5)
+            screen.blit(money_cheat_text, (money_cheat_rect.x + rect_offset, money_cheat_rect.y + rect_offset))
+            if left_mouse_clicked and money_cheat_rect.collidepoint(pos):
+                balance += 10000
+                cheat_unlocks()
 
     def display_create_username():
         global continue_button2_clicktime, continue_button2_clicked, username, current_username_string, screen_displayed_now, username_error_message
