@@ -53,6 +53,8 @@ if True:
     save_exit_button_img = convert_asset("assets/save_exit_button.png", 1)
     make_button_img = convert_asset("assets/make_button_bar.png", 2)
     add_button_img = convert_asset("assets/add_button.png", 1)
+    enable_anyway_button_img = convert_asset("assets/enable_anyway_button.png", 1)
+    cancel_button_img = convert_asset("assets/cancel_button.png", 1)
 
     continue_button_clicked_img = convert_asset("assets/continue_button_clicked.png", 1)
     continue_button2_clicked_img = convert_asset("assets/continue_button_clicked.png", 2)
@@ -68,6 +70,8 @@ if True:
     save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
     make_button_clicked_img = convert_asset("assets/make_button_clicked_bar.png", 2)
     add_button_clicked_img = convert_asset("assets/add_button_clicked.png", 1)
+    enable_anyway_button_clicked_img = convert_asset("assets/enable_anyway_button_clicked.png", 1)
+    cancel_button_clicked_img = convert_asset("assets/cancel_button_clicked.png", 1)
 
     startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
     settings_screen_background_img = convert_asset("assets/settings_screen_background.png", 1)
@@ -305,6 +309,8 @@ if True:
     stock_left_arrow_rect = left_arrow_img.get_rect(topleft=(58, WINDOW_HEIGHT / 2 - left_arrow_img.get_height() / 2))
     cocktail_right_arrow_rect = right_arrow_img.get_rect(topleft=(1142 + 25*2, 56))
     cocktail_left_arrow_rect = left_arrow_img.get_rect(topleft=(24 + 27, 56))
+    enable_anyway_button_rect = enable_anyway_button_img.get_rect(topleft=(300, 300))
+    cancel_button_rect = cancel_button_img.get_rect(topleft=(500, 300))
 
     color_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 106))
     color_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 106))
@@ -341,6 +347,8 @@ if True:
     save_button_clicked = False
     save_exit_button_clicked = False
     make_button_clicked = False
+    enable_anyway_button_clicked = False
+    cancel_button_clicked = False
 
     make_button_clicktime = 0
     continue_button_clicktime = 0
@@ -355,9 +363,10 @@ if True:
     create_button_clicktime = 0
     save_button_clicktime = 0
     save_exit_button_clicktime = 0
+    enable_anyway_button_clicktime = 0
+    cancel_button_clicktime = 0
 
-
-    settings_devmode_checkmark_rect = checkmark_img.get_rect(topleft=(146, 97))
+    settings_sandbox_checkmark_rect = checkmark_img.get_rect(topleft=(146, 97))
     settings_soundon_checkmark_rect = checkmark_img.get_rect(topleft=(146, 133))
     settings_showleaderboard_checkmark_rect = checkmark_img.get_rect(topleft=(146, 168))
 
@@ -368,7 +377,7 @@ if True:
     screen_switch_duration = 85
     running = True
     pos = (0,0)
-    settings = {"dev_mode": True, "sound_on": True, "show_leaderboard": True}
+    settings = {"sandbox": False, "sound_on": True, "show_leaderboard": True}
     guests = []
     guest_available_spots = []
     unlocked_ingredients = []
@@ -435,6 +444,8 @@ if True:
     balance = 160
     star_price_ratio_lib = {1: "0.2", 2: "0.4", 3: "0.6", 4: "0.8", 5: "1.0", 6: "1.5", 7: "2", 8: "3", 9: "4", 10: "10"}
     earnings_text_duration = 100
+    legit_playthrough = True
+    best_cocktail_value = 0
 
 #--------random rects and lists--------
 
@@ -688,7 +699,7 @@ if True:
     x = -1
 
     def client_request_completed(client_name, drink_served_name, star_multiplier):
-        global guests, balance, customers_served
+        global guests, balance, customers_served, best_cocktail_value
 
         customers_served += 1
 
@@ -697,6 +708,8 @@ if True:
             if guest["name"] == client_name:
                 if guest["order_item"] == drink_served_name:
                     earnings = guest["price"] * float(star_price_ratio_lib[star_multiplier])
+                    if earnings > best_cocktail_value:
+                        best_cocktail_value = earnings
                     balance += earnings
                     earnings_texts[i - 1] = str(earnings)
                     earnings_texts_timings[i - 1] = earnings_text_duration
@@ -799,7 +812,6 @@ if True:
             recipe_ingredients = [ing["name"] for ing in recipe["makingprocess"].values()]
             
             if set(recipe_ingredients) == set(used_ing.keys()):
-                print("you succesfully made a " + recipe["name"])
                 temp_drink_info['successful'] = True
                 temp_succes = True
 
@@ -849,7 +861,6 @@ if True:
             temp_drink_info["stars"] = stars_temp
 
         temp_drink_info["preparation"] = used_ing
-        
         
         temp_succes = False
         return temp_drink_info
@@ -911,8 +922,8 @@ if True:
         global username
         if playthrough_name_text != "data.json":
             os.mkdir(f"{save_files_location}/{playthrough_name_text}")
-            basic_data = {"balance": balance, "customers_served": customers_served, "dev_mode": str(settings["dev_mode"]), "sound_on": str(settings["sound_on"]), "last_save": time.strftime("%m/%d/%Y")}
-            guest_data = {"key": "value"} #TWAN
+            basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value}
+            guest_data = {"key": "value"}
             unlocked_ingredients_data = unlocked_ingredients
             settings_data = settings
             unlocks_data = unlocks
@@ -929,7 +940,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu, legit_playthrough, best_cocktail_value
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -946,6 +957,9 @@ if True:
             stashed_cocktails = raw_unloaded_data["stashed_cocktails"]
             cocktail_available_spots = raw_unloaded_data["cocktail_available_spots"]
             cur_menu = raw_unloaded_data["cur_menu"]
+            legit_playthrough = raw_unloaded_data["legit_playthrough"]
+            best_cocktail_value = raw_unloaded_data["best_cocktail_value"]
+
         with open(username_txt_file, "r") as f:
             username = f.read()
         calculate_recipe_pages()
@@ -964,7 +978,7 @@ if True:
             save_counter += 1
 
     def regular_save():
-        basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y")}
+        basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value}
         guest_data = {"guests": guests, "guest_available_spots": guest_available_spots, "first_save_done": first_save_done}
         unlocked_ingredients_data = unlocked_ingredients
         settings_data = settings
@@ -990,7 +1004,6 @@ if True:
 #----------leaderboard logic----------
 
 if True:
-
     base_api_url = "https://cocktail-game-leaderboard-api.onrender.com"
 
     def initial_post():
@@ -1003,10 +1016,11 @@ if True:
             return None
         
     def update_post():
-        try:
-            response = requests.post(f"{base_api_url}/update_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": 15})
-        except requests.exceptions.RequestException:
-            return None
+        if legit_playthrough:
+            try:
+                response = requests.post(f"{base_api_url}/update_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
+            except requests.exceptions.RequestException:
+                return None
         
     def check_username_conflict(username):
         response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
@@ -1236,7 +1250,6 @@ def update_recipe_book():
                 for correct_recipe in all_recipes_in_game:
                     if currently_preparing_drink["drink made"] == correct_recipe["name"]:
                         price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
-                        print(price)
                         break
                 recipe["price"] = price
             new_recipe = False
@@ -1246,9 +1259,6 @@ def update_recipe_book():
         for correct_recipe in all_recipes_in_game:
             if currently_preparing_drink["drink made"] == correct_recipe["name"]:
                 price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
-                print(price)
-                print(correct_recipe["price"])
-                print(float(star_price_ratio_lib[currently_preparing_drink["stars"]]))
                 break
         personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": price, "preparation": currently_preparing_drink["preparation"], "image_num": random.randint(0, 80)})
     calculate_recipe_pages()
@@ -1325,8 +1335,12 @@ if True:
             back_button_clicked = True
             back_button_clicktime = now
         
-        if left_mouse_clicked and settings_devmode_checkmark_rect.collidepoint(pos):
-            settings["dev_mode"] = not settings["dev_mode"]
+        if left_mouse_clicked and settings_sandbox_checkmark_rect.collidepoint(pos):
+            if legit_playthrough:
+                screen_displayed_now = "legit_playthrough_warning"
+            else:
+                settings["sandbox"] = not settings["sandbox"]
+
         if left_mouse_clicked and settings_soundon_checkmark_rect.collidepoint(pos):
             settings["sound_on"] = not settings["sound_on"]
         if left_mouse_clicked and settings_showleaderboard_checkmark_rect.collidepoint(pos):
@@ -1345,8 +1359,8 @@ if True:
 
         screen.blit(settings_screen_background_img, (0,0))
         screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
-        if settings["dev_mode"]:
-            screen.blit(checkmark_img, settings_devmode_checkmark_rect)
+        if settings["sandbox"]:
+            screen.blit(checkmark_img, settings_sandbox_checkmark_rect)
         if settings["sound_on"]:
             screen.blit(checkmark_img, settings_soundon_checkmark_rect)
         if settings["show_leaderboard"]:
@@ -2019,7 +2033,7 @@ if True:
 
         #--------guest timer-------------
 
-        if settings["dev_mode"]:
+        if settings["sandbox"]:
             timer_range = sped_up_guest_timer_range.copy()
         else:
             timer_range = normal_guest_timer_range.copy()
@@ -2045,7 +2059,7 @@ if True:
                         dict["clicked"] = False
                     guest["clicked"] = True
 
-        if settings["dev_mode"]:
+        if settings["sandbox"]:
             for guest in guests:
                 if right_mouse_clicked and guest_rects_library[guest["rect_num"]].collidepoint(pos):
                     check_unlocks()
@@ -2093,9 +2107,9 @@ if True:
                 earnings_texts_timings[i] -= 1
                 text = save_detail_font_nums.render(f"+{earnings_texts[i]}$", True, (50, 180, 50))
                 screen.blit(text, ((guest_rects_library[i + 1].x + guest_rects_library[i + 1].width / 2) - text.get_width() / 2, 250))
-        if settings["dev_mode"]:
+        if settings["sandbox"]:
             rect_offset = 15
-            money_cheat_text = leaderboard_items_font.render("money cheat - dev mode only", True, (0,0,0))
+            money_cheat_text = leaderboard_items_font.render("money cheat - sandbox only", True, (0,0,0))
             money_cheat_rect = pygame.Rect(WINDOW_WIDTH - money_cheat_text.get_width() - rect_offset * 3, rect_offset, money_cheat_text.get_width() + 2 * rect_offset, money_cheat_text.get_height() + 2 * rect_offset)
             pygame.draw.rect(screen, (68, 137, 20), money_cheat_rect, border_radius=5)
             screen.blit(money_cheat_text, (money_cheat_rect.x + rect_offset, money_cheat_rect.y + rect_offset))
@@ -2174,7 +2188,7 @@ if True:
         else:
             screen.blit(pygame.transform.scale_by(smudge_img, 6), (442, 20))
     
-    def display_cokctail_exterior_maker():
+    def display_cocktail_exterior_maker():
         global make_button_clicked, make_button_rect, make_button_clicktime, screen_displayed_now, shaking_complete, make_button_clicked_img, make_button_img, tags_left_arrow_clicked, tags_left_arrow_clicktime, tags_left_arrow_rect, tags_right_arrow_clicked, tags_right_arrow_clicktime, tags_right_arrow_rect, glass_left_arrow_clicked, glass_left_arrow_clicktime, glass_left_arrow_rect, glass_right_arrow_clicked, glass_right_arrow_clicktime, glass_right_arrow_rect, color_left_arrow_clicked, color_left_arrow_clicktime, color_left_arrow_rect, color_right_arrow_clicked, color_right_arrow_clicktime, color_right_arrow_rect, color_pointer, glass_pointer, cur_tag, currently_preparing_drink, cur_photo
 
         cur_photo = str(color_pointer) + "." + str(glass_pointer)
@@ -2275,6 +2289,41 @@ if True:
                 cur_menu.insert(i, item_added_to_menu)
                 item_added_to_menu = ""
                 screen_displayed_now = "menu_screen"
+
+    def display_sandbox_warning():
+        global screen_displayed_now, enable_anyway_button_clicked, enable_anyway_button_clicktime, cancel_button_clicked, cancel_button_clicktime, legit_playthrough
+        #---------button logic-----------
+        if left_mouse_clicked and cancel_button_rect.collidepoint(pos):
+            cancel_button_clicked = True
+            cancel_button_clicktime = now
+
+        if left_mouse_clicked and enable_anyway_button_rect.collidepoint(pos):
+            enable_anyway_button_clicked = True
+            enable_anyway_button_clicktime = now
+        
+        if cancel_button_clicktime != 0 and cancel_button_clicktime <= now - click_duration:
+            cancel_button_clicked = False
+
+        if enable_anyway_button_clicktime != 0 and enable_anyway_button_clicktime <= now - click_duration:
+            enable_anyway_button_clicked = False
+
+        if cancel_button_clicktime != 0 and cancel_button_clicktime <= now - screen_switch_duration:
+            cancel_button_clicktime = 0
+            screen_displayed_now = "settings"
+            cancel_button_clicktime = 0
+
+        if enable_anyway_button_clicktime != 0 and enable_anyway_button_clicktime <= now - screen_switch_duration:
+            enable_anyway_button_clicktime = 0
+            screen_displayed_now = "settings"
+            enable_anyway_button_clicktime = 0
+            settings["sandbox"] = True
+            legit_playthrough = False
+
+        #--------displaying---------
+
+        screen.blit(cocktail_made_background_img, cocktail_made_window_rect)
+        screen.blit(cancel_button_clicked_img if cancel_button_clicked else cancel_button_img, cancel_button_rect)
+        screen.blit(enable_anyway_button_clicked_img if enable_anyway_button_clicked else enable_anyway_button_img, enable_anyway_button_rect)
 
 #-------------main loop-----------
 
@@ -2384,6 +2433,9 @@ while running:
     elif screen_displayed_now == "delete_from_menu":
         display_delete_from_menu()
 
+    elif screen_displayed_now == "legit_playthrough_warning":
+        display_sandbox_warning()
+
     else:
         if displaying_recipe_book:
             display_recipe_book()
@@ -2416,8 +2468,7 @@ while running:
                 display_cocktail_made_screen()
 
             elif screen_displayed_now == "cocktail_exterior_maker":
-                display_cokctail_exterior_maker()
-
+                display_cocktail_exterior_maker()
 
     #----------------------------------
 
