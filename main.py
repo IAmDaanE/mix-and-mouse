@@ -298,11 +298,6 @@ if True:
     exit_button_rect = exit_button_img.get_rect(topleft=(new_button_rect.right + 20, 20))
     back_button_rect = back_button_img.get_rect(topleft=(20, 20))
     back_button2_rect = back_button_img.get_rect(topleft=(10, 208 + 10))
-    stock_screen_button_rect = pygame.Rect(68, 143, 221, 364)
-    progress_screen_button_rect = pygame.Rect(900, 400, 180, 80) #PLACEHOLDER
-    cocktailmaker_button_rect = pygame.Rect(547, 336, 143, 107)
-    guest_screen_button_rect = pygame.Rect(777, 123, 182, 272)
-    menu_screen_button_rect = pygame.Rect(1025, 475, 137, 209)
     plus_button_rect = plus_button_img.get_rect(topleft=(754, 544))
     min_button_rect = min_button_img.get_rect(topleft=(461, 544))
     stock_right_arrow_rect = right_arrow_img.get_rect(topleft=(1187, WINDOW_HEIGHT / 2 - left_arrow_img.get_height() / 2))
@@ -311,27 +306,33 @@ if True:
     cocktail_left_arrow_rect = left_arrow_img.get_rect(topleft=(24 + 27, 56))
     enable_anyway_button_rect = enable_anyway_button_img.get_rect(topleft=(300, 300))
     cancel_button_rect = cancel_button_img.get_rect(topleft=(500, 300))
-
-    color_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 106))
-    color_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 106))
-
-    glass_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 325))
-    glass_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 325))
-
-    tags_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 544))
-    tags_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 544))
-
     buy_button_rect = buy_button_img.get_rect(topleft=(840, 544))
-    create_button_rect = create_button_img.get_rect(topleft=(WINDOW_WIDTH / 2 - create_button_img.get_width() / 2, 500))
+    create_button_rect = create_button_img.get_rect(topleft=(WINDOW_WIDTH / 2 - create_button_img.get_width() / 2, 440))
     save_button_rect = save_button_img.get_rect(topleft=(20, 20))
     save_exit_button_rect = save_exit_button_img.get_rect(topleft=(save_button_rect.right + 20, 20))
     settings_button_rect = settings_button_img.get_rect(topleft=(save_exit_button_rect.right + 20, 20))
+    make_button_rect = make_button_img.get_rect(topleft=(322, 636))
+
     add_ingredient_button_rect = pygame.Rect(510, 355, 223, 314)
+
+    color_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 106))
+    color_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 106))
+    glass_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 325))
+    glass_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 325))
+    tags_right_arrow_rect = right_arrow_img.get_rect(topleft=(743, 544))
+    tags_left_arrow_rect = left_arrow_img.get_rect(topleft=(1094, 544))
+
+    stock_screen_button_rect = pygame.Rect(68, 143, 221, 364)
+    progress_screen_button_rect = pygame.Rect(900, 400, 180, 80)
+    cocktailmaker_button_rect = pygame.Rect(547, 336, 143, 107)
+    guest_screen_button_rect = pygame.Rect(777, 123, 182, 272)
+    menu_screen_button_rect = pygame.Rect(1025, 475, 137, 209)
+
     cocktail_shaker_og_rect = cocktail_shaker_img.get_rect(topleft=(621 - cocktail_shaker_img.get_width() / 2, WINDOW_HEIGHT - 51 - cocktail_shaker_img.get_height()))
     cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
+
     recipes_left_arrow_rect = left_arrow_img.get_rect(topleft=(516, 636))
     recipes_right_arrow_rect = left_arrow_img.get_rect(topleft=(720, 636))
-    make_button_rect = make_button_img.get_rect(topleft=(322, 636))
 
     continue_button_clicked = False
     continue_button2_clicked = False
@@ -505,8 +506,8 @@ if True:
     stock_indicator_rect = pygame.Rect(stock_screen_row1_rect.x - stock_indicator_gap, stock_screen_row1_rect.y - stock_indicator_gap, stock_screen_row_img.get_width() + stock_indicator_gap * 2, stock_screen_row_img.get_height() + stock_indicator_gap * 2)
     cocktail_indicator_rect = pygame.Rect(cocktailmaker_ing_rects[0].x - cocktail_indicator_gap, cocktailmaker_ing_rects[0].y - cocktail_indicator_gap, cocktailmaker_ing_rects[0].width + 2 * cocktail_indicator_gap, cocktailmaker_ing_rects[0].height + 2 * cocktail_indicator_gap)
 
-    new_playthrough_rect_big = pygame.Rect((WINDOW_WIDTH - 600) / 2, 220, 600, 400)
-    new_playthrough_rect_small = pygame.Rect((WINDOW_WIDTH - 400) / 2, 400, 400, 70)
+    new_playthrough_rect_big = pygame.Rect((WINDOW_WIDTH - 600) / 2, 120, 600, 440)
+    new_playthrough_rect_small = pygame.Rect((WINDOW_WIDTH - 400) / 2, 340, 400, 70)
 
     stock_screen_row_cords = [109, 196, 284, 371, 458]
     continue_screen_cords = [100, 235, 370, 505]
@@ -1414,8 +1415,8 @@ if True:
         screen.blit(playthrough_name_rendered_text, (448, 401))
         playthrough_text1 = playthrough_text_font.render("new save file", True, (0,0,0))
         playthrough_text2 = playthrough_text_font.render("save name:", True, (0,0,0))
-        screen.blit(playthrough_text1, (476, 230))
-        screen.blit(playthrough_text2, (504, 300))
+        screen.blit(playthrough_text1, (WINDOW_WIDTH / 2 - playthrough_text1.get_width() / 2, 170))        
+        screen.blit(playthrough_text2, (WINDOW_WIDTH / 2 - playthrough_text2.get_width() / 2, 240))
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_big, 1, border_radius=10)
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_small, 1, border_radius=10)
 
@@ -1458,7 +1459,6 @@ if True:
             screen_displayed_now = "homescreen"
             new_ingredient_unlocked = True
             load_save()
-
 
         #----------save logic------------
         
@@ -2146,15 +2146,15 @@ if True:
         screen.fill((0, 89, 76))
         screen.blit(continue_button2_clicked_img if continue_button2_clicked else continue_button2_img, continue_button2_rect)
         username_name_rendered_text = playthrough_name_font.render(playthrough_name_text, True, (0,0,0))
-        screen.blit(username_name_rendered_text, (448, 401))
+        screen.blit(username_name_rendered_text, (448, 341))
         username_text1 = playthrough_text_font.render("enter a username:", True, (0,0,0))
-        username_text2 = playthrough_text_font.render("used on global leaderboard!", True, (0,0,0))
-        screen.blit(username_text1, (476, 230))
-        screen.blit(username_text2, (504, 300))
+        username_text2 = playthrough_text_font.render("visible on leaderboard!", True, (0,0,0))
+        screen.blit(username_text1, (WINDOW_WIDTH / 2 - username_text1.get_width() / 2, 145))
+        screen.blit(username_text2, (WINDOW_WIDTH / 2 - username_text2.get_width() / 2, 222))
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_big, 1, border_radius=10)
         pygame.draw.rect(screen, (255,255,255), new_playthrough_rect_small, 1, border_radius=10)
         error_text = pixel_font_letters.render(username_error_message, True, (255, 0, 0))
-        screen.blit(error_text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+        screen.blit(error_text, (WINDOW_WIDTH / 2 - error_text.get_width() / 2, 457))
 
     def display_cocktail_made_screen():
         global screen_displayed_now, cocktail_made_window_rect, shaking, drink_tag, drink_glass_color, backup_ingredients
