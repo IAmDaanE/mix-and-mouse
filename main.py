@@ -432,7 +432,7 @@ if True:
     current_dragging_cocktail = -1
     dragging_cocktail = False
     item_added_to_menu = ""
-    balance = 50
+    balance = 160
     star_price_ratio_lib = {1: "0.2", 2: "0.4", 3: "0.6", 4: "0.8", 5: "1.0", 6: "1.5", 7: "2", 8: "3", 9: "4", 10: "10"}
     earnings_text_duration = 100
 
@@ -878,9 +878,10 @@ if True:
         screen_displayed_now = "startscreen"
 
     saves_amount = 0
-    for folder in os.listdir(save_files_location):
-        collision_rects_saves.append(pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[saves_amount], 500, 120))
-        saves_amount += 1
+    for item in os.listdir(save_files_location):
+        if os.path.isdir(os.path.join(save_files_location, item)):
+            collision_rects_saves.append(pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[saves_amount], 500, 120))
+            saves_amount += 1
         
 
     def write_username_file(username):
@@ -1293,8 +1294,9 @@ if True:
         if continue_button_clicktime != 0 and continue_button_clicktime <= now - screen_switch_duration:
             continue_button_clicktime = 0
             continue_button_clicktime = 0
-            for folder in os.listdir(save_files_location):
-                    with open(f"{save_files_location}/{folder}/data.json", "r") as f:
+            for item in os.listdir(save_files_location):
+                if os.path.isdir(os.path.join(save_files_location, item)):
+                    with open(f"{save_files_location}/{item}/data.json", "r") as f:
                         raw_unloaded_data = json.load(f)
                     save_details.append({"last_save": raw_unloaded_data["last_save"], "balance": raw_unloaded_data["balance"], "customers_served": raw_unloaded_data["customers_served"]})
             if len(save_details) > 0:
@@ -1378,10 +1380,11 @@ if True:
                     folder_count = sum(1 for entry in entries if entry.is_dir())
                 if folder_count == 4:
                     screen_displayed_now = "overwrite_screen"
-                    for folder in os.listdir(save_files_location):
-                        with open(f"{save_files_location}/{folder}/data.json", "r") as f:
-                            raw_unloaded_data = json.load(f)
-                        save_details.append({"last_save": raw_unloaded_data["last_save"], "balance": raw_unloaded_data["balance"], "customers_served": raw_unloaded_data["customers_served"]})
+                    for item in os.listdir(save_files_location):
+                        if os.path.isdir(os.path.join(save_files_location, item)):
+                            with open(f"{save_files_location}/{item}/data.json", "r") as f:
+                                raw_unloaded_data = json.load(f)
+                            save_details.append({"last_save": raw_unloaded_data["last_save"], "balance": raw_unloaded_data["balance"], "customers_served": raw_unloaded_data["customers_served"]})
                 else:
                     screen_displayed_now = "homescreen"
                     selected_continue_save_name = playthrough_name_text
@@ -1453,18 +1456,19 @@ if True:
         row_counter = 0
         text = playthrough_text_font.render("choose a save:", True, (0,0,0))
         screen.blit(text, (450, 15))
-        for folder in os.listdir(save_files_location):
-            continue_folder_rect = pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[row_counter], 500, 120)
-            pygame.draw.rect(screen, (255,255,255), continue_folder_rect, 1, border_radius=4)
-            name_text = playthrough_name_font.render(folder, True, (0,0,0))
-            screen.blit(name_text, (continue_folder_rect.x + 20, continue_screen_cords[row_counter] + 4))
-            row_counter += 1
+        for item in os.listdir(save_files_location):
+            if os.path.isdir(os.path.join(save_files_location, item)):
+                continue_folder_rect = pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[row_counter], 500, 120)
+                pygame.draw.rect(screen, (255,255,255), continue_folder_rect, 1, border_radius=4)
+                name_text = playthrough_name_font.render(item, True, (0,0,0))
+                screen.blit(name_text, (continue_folder_rect.x + 20, continue_screen_cords[row_counter] + 4))
+                row_counter += 1
         continue_indicator_rect = pygame.Rect(continue_folder_rect.x - save_indicator_gap, continue_screen_cords[selected_continue_save] - save_indicator_gap, 500 + 2 * save_indicator_gap, 120 + 2 * save_indicator_gap)
         pygame.draw.rect(screen, (0,0,0), continue_indicator_rect, 3, border_radius=4)
         display_save_details()
 
     def display_overwrite_playthrough():
-        global back_button_clicked, back_button_clicktime, screen_displayed_now, continue_button2_clicked, continue_button2_clicktime, overwrite_indicator_rect, selected_overwrite_save
+        global back_button_clicked, back_button_clicktime, screen_displayed_now, continue_button2_clicked, continue_button2_clicktime, overwrite_indicator_rect, selected_overwrite_save, selected_continue_save_name
         #----------button logic--------
 
         if left_mouse_clicked and back_button_rect.collidepoint(pos):
@@ -1484,6 +1488,7 @@ if True:
         if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
             continue_button2_clicktime = 0
             delete_save(selected_overwrite_save)
+            selected_continue_save_name = playthrough_name_text
             new_save()
             screen_displayed_now = "homescreen"
 
@@ -1506,12 +1511,13 @@ if True:
         row_counter = 0
         text = playthrough_text_font.render("overwrite a save:", True, (0,0,0))
         screen.blit(text, (450, 15))
-        for folder in os.listdir(save_files_location):
-            continue_folder_rect = pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[row_counter], 500, 120)
-            pygame.draw.rect(screen, (255,255,255), continue_folder_rect, 1, border_radius=4)
-            name_text = playthrough_name_font.render(folder, True, (0,0,0))
-            screen.blit(name_text, (continue_folder_rect.x + 20, continue_screen_cords[row_counter] + 4))
-            row_counter += 1
+        for item in os.listdir(save_files_location):
+            if os.path.isdir(os.path.join(save_files_location, item)):
+                continue_folder_rect = pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[row_counter], 500, 120)
+                pygame.draw.rect(screen, (255,255,255), continue_folder_rect, 1, border_radius=4)
+                name_text = playthrough_name_font.render(item, True, (0,0,0))
+                screen.blit(name_text, (continue_folder_rect.x + 20, continue_screen_cords[row_counter] + 4))
+                row_counter += 1
         overwrite_indicator_rect = pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2 - save_indicator_gap, continue_screen_cords[selected_overwrite_save] - save_indicator_gap, 500 + save_indicator_gap * 2, 120 + save_indicator_gap * 2)
         pygame.draw.rect(screen, (0,0,0), overwrite_indicator_rect, 3, border_radius=4)
         display_save_details()
