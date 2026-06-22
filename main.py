@@ -51,10 +51,10 @@ if True:
     create_button_img = convert_asset("assets/create_button.png", 1)
     save_button_img = convert_asset("assets/save_button.png", 1)
     save_exit_button_img = convert_asset("assets/save_exit_button.png", 1)
-    make_button_img = convert_asset("assets/make_button_bar.png", 2)
+    make_button_img = convert_asset("assets/make_button.png", 2)
     add_button_img = convert_asset("assets/add_button.png", 1)
-    enable_anyway_button_img = convert_asset("assets/enable_anyway_button.png", 1)
-    cancel_button_img = convert_asset("assets/cancel_button.png", 1)
+    enable_anyway_button_img = convert_asset("assets/enable_anyway_button.png", 2)
+    cancel_button_img = convert_asset("assets/cancel_button.png", 2)
 
     continue_button_clicked_img = convert_asset("assets/continue_button_clicked.png", 1)
     continue_button2_clicked_img = convert_asset("assets/continue_button_clicked.png", 2)
@@ -68,10 +68,10 @@ if True:
     create_button_clicked_img = convert_asset("assets/create_button_clicked.png", 1)
     save_button_clicked_img = convert_asset("assets/save_button_clicked.png", 1)
     save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
-    make_button_clicked_img = convert_asset("assets/make_button_clicked_bar.png", 2)
+    make_button_clicked_img = convert_asset("assets/make_button_clicked.png", 2)
     add_button_clicked_img = convert_asset("assets/add_button_clicked.png", 1)
-    enable_anyway_button_clicked_img = convert_asset("assets/enable_anyway_button_clicked.png", 1)
-    cancel_button_clicked_img = convert_asset("assets/cancel_button_clicked.png", 1)
+    enable_anyway_button_clicked_img = convert_asset("assets/enable_anyway_button_clicked.png", 2)
+    cancel_button_clicked_img = convert_asset("assets/cancel_button_clicked.png", 2)
 
     startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
     settings_screen_background_img = convert_asset("assets/settings_screen_background.png", 1)
@@ -304,8 +304,8 @@ if True:
     stock_left_arrow_rect = left_arrow_img.get_rect(topleft=(58, WINDOW_HEIGHT / 2 - left_arrow_img.get_height() / 2))
     cocktail_right_arrow_rect = right_arrow_img.get_rect(topleft=(1142 + 25*2, 56))
     cocktail_left_arrow_rect = left_arrow_img.get_rect(topleft=(24 + 27, 56))
-    enable_anyway_button_rect = enable_anyway_button_img.get_rect(topleft=(300, 300))
-    cancel_button_rect = cancel_button_img.get_rect(topleft=(500, 300))
+    cancel_button_rect = cancel_button_img.get_rect(topleft=(290, 450))
+    enable_anyway_button_rect = enable_anyway_button_img.get_rect(topleft=(630, 450))
     buy_button_rect = buy_button_img.get_rect(topleft=(840, 544))
     create_button_rect = create_button_img.get_rect(topleft=(WINDOW_WIDTH / 2 - create_button_img.get_width() / 2, 440))
     save_button_rect = save_button_img.get_rect(topleft=(20, 20))
@@ -971,11 +971,11 @@ if True:
         save_counter = 0
         for save in save_details:
             last_save_text = save_detail_font_date.render(str(save["last_save"]), True, (0,0,0))
-            balance_text = save_detail_font_nums.render(f"${save['balance']}", True, (0,0,0))
+            balance_text = save_detail_font_nums.render(f"${int(save['balance'])}", True, (0,0,0))
             customers_served_text = save_detail_font_nums.render(f"guests: {save['customers_served']}", True, (0,0,0))
             screen.blit(last_save_text, (410, continue_screen_cords[save_counter] + 70))
-            screen.blit(balance_text, (730, continue_screen_cords[save_counter] + 12))
-            screen.blit(customers_served_text, (700, continue_screen_cords[save_counter] + 65))
+            screen.blit(balance_text, (870 - balance_text.get_width(), continue_screen_cords[save_counter] + 12))
+            screen.blit(customers_served_text, (870 - customers_served_text.get_width(), continue_screen_cords[save_counter] + 65))
             save_counter += 1
 
     def regular_save():
@@ -1412,7 +1412,7 @@ if True:
         screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
         screen.blit(create_button_clicked_img if create_button_clicked else create_button_img, create_button_rect)
         playthrough_name_rendered_text = playthrough_name_font.render(playthrough_name_text, True, (0,0,0))
-        screen.blit(playthrough_name_rendered_text, (448, 401))
+        screen.blit(playthrough_name_rendered_text, (448, 341))
         playthrough_text1 = playthrough_text_font.render("new save file", True, (0,0,0))
         playthrough_text2 = playthrough_text_font.render("save name:", True, (0,0,0))
         screen.blit(playthrough_text1, (WINDOW_WIDTH / 2 - playthrough_text1.get_width() / 2, 170))        
@@ -1449,6 +1449,8 @@ if True:
             back_button_clicktime = 0
             screen_displayed_now = "startscreen"
             back_button_clicktime = 0
+            save_details.clear()
+
         if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
             continue_button2_clicktime = 0
             folder_count = 0
@@ -2324,6 +2326,12 @@ if True:
         screen.blit(cocktail_made_background_img, cocktail_made_window_rect)
         screen.blit(cancel_button_clicked_img if cancel_button_clicked else cancel_button_img, cancel_button_rect)
         screen.blit(enable_anyway_button_clicked_img if enable_anyway_button_clicked else enable_anyway_button_img, enable_anyway_button_rect)
+        warning_text1 = save_detail_font_nums.render("Are you shure you want to enable sandbox mode?", True, (255,255,255))
+        warning_text2 = save_detail_font_nums.render("You will gain a money cheat button.", True, (255,255,255))
+        warning_text3 = save_detail_font_nums.render("This save will no longer count on leaderboards.", True, (255,255,255))
+        screen.blit(warning_text1, (WINDOW_WIDTH / 2 - warning_text1.get_width() / 2, 200))
+        screen.blit(warning_text2, (WINDOW_WIDTH / 2 - warning_text2.get_width() / 2, 250))
+        screen.blit(warning_text3, (WINDOW_WIDTH / 2 - warning_text3.get_width() / 2, 300))
 
 #-------------main loop-----------
 
