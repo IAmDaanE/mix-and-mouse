@@ -94,6 +94,7 @@ if True:
     ice_layer_big_img = convert_asset("assets/ice_layer_big.png", 1)
     star_img = convert_asset("assets/star.png", 1)
     smudge_img = convert_asset("assets/smudge.png", 1)
+    coin_img = convert_asset("assets/coin.png", 1.5)
 
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
@@ -327,6 +328,7 @@ if True:
     cocktailmaker_button_rect = pygame.Rect(547, 336, 143, 107)
     guest_screen_button_rect = pygame.Rect(777, 123, 182, 272)
     menu_screen_button_rect = pygame.Rect(1025, 475, 137, 209)
+    recipe_shop_button_rect = pygame.Rect(1095, 379, 123, 62)
 
     cocktail_shaker_og_rect = cocktail_shaker_img.get_rect(topleft=(621 - cocktail_shaker_img.get_width() / 2, WINDOW_HEIGHT - 51 - cocktail_shaker_img.get_height()))
     cocktail_shaker_rect = cocktail_shaker_og_rect.copy()
@@ -447,6 +449,13 @@ if True:
     earnings_text_duration = 100
     legit_playthrough = True
     best_cocktail_value = 0
+    tier_1_recipe_price = 1000
+    tier_2_recipe_price = 5000
+    tier_3_recipe_price = 10000
+    tier_recipes_available = [13, 13, 13] #[14, 13, 13] but vodka is already unlocked from the start
+    selected_recipe_shop_tier = 1
+    unlocked_recipe = 0
+    unlocked_recipe_details = {}
 
 #--------random rects and lists--------
 
@@ -486,6 +495,17 @@ if True:
         make_button_img.get_rect(topleft=(76,552)),
         make_button_img.get_rect(topleft=(706,552)),
     ]
+
+    recipe_shop_rects_widths = 500
+    recipe_shop_rects_heights = 130
+    recipe_shop_rects_offset = 25
+    recipe_shop_rects = [
+        pygame.Rect(WINDOW_WIDTH / 2 - recipe_shop_rects_widths / 2, 160, recipe_shop_rects_widths, recipe_shop_rects_heights),
+        pygame.Rect(WINDOW_WIDTH / 2 - recipe_shop_rects_widths / 2, 160 + recipe_shop_rects_offset + recipe_shop_rects_heights, recipe_shop_rects_widths, recipe_shop_rects_heights),
+        pygame.Rect(WINDOW_WIDTH / 2 - recipe_shop_rects_widths / 2, 160 + recipe_shop_rects_offset + recipe_shop_rects_heights + recipe_shop_rects_offset + recipe_shop_rects_heights, recipe_shop_rects_widths, recipe_shop_rects_heights)
+    ]
+    recipe_shop_indicator_gap = 7
+    recipe_shop_indicator_rect = pygame.Rect(0, 0, recipe_shop_rects_widths - 2 * recipe_shop_indicator_gap, recipe_shop_rects_heights - 2 * recipe_shop_indicator_gap)
 
     add_button_clicked_list = [False, False, False, False]
 
@@ -923,8 +943,8 @@ if True:
         global username
         if playthrough_name_text != "data.json":
             os.mkdir(f"{save_files_location}/{playthrough_name_text}")
-            basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value}
-            guest_data = {"key": "value"}
+            basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value, "tier_recipes_available": tier_recipes_available}
+            guest_data = {"guests": guests, "guest_available_spots": guest_available_spots, "first_save_done": first_save_done}
             unlocked_ingredients_data = unlocked_ingredients
             settings_data = settings
             unlocks_data = unlocks
@@ -941,7 +961,7 @@ if True:
                 username = f.read()
 
     def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu, legit_playthrough, best_cocktail_value
+        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu, legit_playthrough, best_cocktail_value, tier_recipes_available
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
             raw_unloaded_data = json.load(f)
             balance = raw_unloaded_data["balance"]
@@ -960,6 +980,7 @@ if True:
             cur_menu = raw_unloaded_data["cur_menu"]
             legit_playthrough = raw_unloaded_data["legit_playthrough"]
             best_cocktail_value = raw_unloaded_data["best_cocktail_value"]
+            tier_recipes_available = raw_unloaded_data["tier_recipes_available"]
 
         with open(username_txt_file, "r") as f:
             username = f.read()
@@ -979,7 +1000,7 @@ if True:
             save_counter += 1
 
     def regular_save():
-        basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value}
+        basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value, "tier_recipes_available": tier_recipes_available}
         guest_data = {"guests": guests, "guest_available_spots": guest_available_spots, "first_save_done": first_save_done}
         unlocked_ingredients_data = unlocked_ingredients
         settings_data = settings
@@ -1239,31 +1260,140 @@ if True:
         # group 8
         unlocked_ingredients.append({"name": "absinthe", "price": 25, "owned": 300})
 
-#---------recipe book system---------
+#---------recipe system---------
 
-def update_recipe_book():
-    new_recipe = True
-    for recipe in personal_recipes:
-        if currently_preparing_drink["drink made"] == recipe["name"]:
-            if currently_preparing_drink["stars"] > recipe["stars"]:
-                recipe["preparation"] = currently_preparing_drink["preparation"]
-                recipe["stars"] = currently_preparing_drink["stars"]
-                for correct_recipe in all_recipes_in_game:
-                    if currently_preparing_drink["drink made"] == correct_recipe["name"]:
-                        price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
-                        break
-                recipe["price"] = price
-            new_recipe = False
-            break
-    if new_recipe:
-        price = 0
-        for correct_recipe in all_recipes_in_game:
-            if currently_preparing_drink["drink made"] == correct_recipe["name"]:
-                price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
+if True:
+    def recipe_is_unlocked(name):
+        for recipe in personal_recipes:
+            if recipe["name"] == name:
+                return True
+        return False
+
+    def calculate_unlock_stars(used_ingredients, correct_ingredients):
+        total_dif = 0
+        for ingredient_name, amount in used_ingredients.items():
+            total_dif += abs(amount - correct_ingredients[ingredient_name])
+        stars_temp = 0
+        match total_dif:
+                case 0:
+                    stars_temp = 10
+                case 1 | 2 | 3:
+                    stars_temp = 9
+                case 4 | 5:
+                    stars_temp = 8
+                case 6 | 7:
+                    stars_temp = 7
+                case 8 | 9 | 10:
+                    stars_temp = 6
+                case 11 | 12 | 13:
+                    stars_temp = 5
+                case 14 | 15 | 16 | 17:
+                    stars_temp = 4
+                case 18 | 19 | 20:
+                    stars_temp = 3
+                case 21 | 22 | 23:
+                    stars_temp = 2
+                case 24 | 25 | 26:
+                    stars_temp = 1
+                case _:
+                    stars_temp = 0
+        return stars_temp
+
+    def update_recipe_book():
+        name = ""
+        new_recipe = True
+        for recipe in personal_recipes:
+            if currently_preparing_drink["drink made"] == recipe["name"]:
+                if currently_preparing_drink["stars"] > recipe["stars"]:
+                    recipe["preparation"] = currently_preparing_drink["preparation"]
+                    recipe["stars"] = currently_preparing_drink["stars"]
+                    for correct_recipe in all_recipes_in_game:
+                        if currently_preparing_drink["drink made"] == correct_recipe["name"]:
+                            price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
+                            break
+                    recipe["price"] = price
+                new_recipe = False
                 break
-        personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": price, "preparation": currently_preparing_drink["preparation"], "image_num": random.randint(0, 80)})
-    calculate_recipe_pages()
+            if new_recipe:
+                for i, recipe in enumerate(all_recipes_in_game):
+                    if currently_preparing_drink["drink made"] == recipe["name"]:
+                        if i < 15: 
+                            tier_recipes_available[0] -= 1
+                        elif i < 28:
+                            tier_recipes_available[1] -= 1
+                        else:
+                            tier_recipes_available[2] -= 1
+                        break
+        if new_recipe:
+            price = 0
+            for correct_recipe in all_recipes_in_game:
+                if currently_preparing_drink["drink made"] == correct_recipe["name"]:
+                    price = correct_recipe["price"] * float(star_price_ratio_lib[currently_preparing_drink["stars"]])
+                    break
+            personal_recipes.append({"name": currently_preparing_drink["drink made"], "stars": currently_preparing_drink["stars"], "price": price, "preparation": currently_preparing_drink["preparation"], "image_num": random.randint(0, 80)})
+        calculate_recipe_pages()
 
+    def add_bought_recipe_to_personal_recipes(recipe_name):
+        global unlocked_recipe_details
+        preparation = 0
+        amount_left = 20
+        final_preparation = {}
+        raw_price = 0
+        for recipe in all_recipes_in_game:
+            if recipe["name"] == recipe_name:
+                preparation = recipe["makingprocess"]
+                raw_price = recipe["price"]
+                break
+        ingredients = {}
+        for key, value in preparation.items():
+            ingredients[value["name"]] = value["amount"]
+        ingredients_left = len(preparation)
+        for key, value in ingredients.items():
+            if ingredients_left == 1:
+                choice = amount_left
+            else:
+                choice =  random.randint(1, amount_left - ingredients_left)
+            final_preparation[key] = choice
+            amount_left -= choice
+            ingredients_left -= 1
+        stars = calculate_unlock_stars(final_preparation, ingredients)
+        price = stars * int(float(star_price_ratio_lib[stars]))
+        personal_recipes.append({"name": recipe_name, "stars": stars, "price": price, "preparation": final_preparation})
+        exterior_choice = {"glass_color": random.choice(list(glasses_bar_library.keys())), "tag": random.choice(list(glass_tags_bar_library.keys()))}
+        unlocked_recipe_details = {"price": price, "stars": stars, "name": recipe_name}
+        drink_pic_lib[str(recipe_name)] = exterior_choice
+        calculate_recipe_pages()
+
+    def pick_undiscovered_recipe(tier):
+        if tier == 1:
+            choice = 0 
+            while True:
+                choice = random.randint(0, 13)
+                if recipe_is_unlocked(all_recipes_in_game[choice]["name"]):
+                    pass
+                else:
+                    break
+            print("chose the recipe:",all_recipes_in_game[choice]["name"])
+            return all_recipes_in_game[choice]["name"]
+        elif tier == 2:
+            choice = 0 
+            while True:
+                choice = random.randint(14, 26)
+                if recipe_is_unlocked(all_recipes_in_game[choice]["name"]):
+                    pass
+                else:
+                    break
+            return all_recipes_in_game[choice]["name"]
+        else:
+            choice = 0 
+            while True:
+                choice = random.randint(27, 39)
+                if recipe_is_unlocked(all_recipes_in_game[choice]["name"]):
+                    pass
+                else:
+                    break
+            return all_recipes_in_game[choice]["name"]
+        
 #------stashed cocktail system-------
 
 if True:
@@ -1565,6 +1695,8 @@ if True:
         if left_mouse_clicked and menu_screen_button_rect.collidepoint(pos):
             screen_displayed_now = "menu_screen"
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        if left_mouse_clicked and recipe_shop_button_rect.collidepoint(pos):
+            screen_displayed_now = "recipe_shop"
 
         if stock_screen_button_rect.collidepoint(pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
@@ -1575,6 +1707,8 @@ if True:
         elif menu_screen_button_rect.collidepoint(pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
         elif progress_screen_button_rect.collidepoint(pos):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        elif recipe_shop_button_rect.collidepoint(pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
         else:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -1615,8 +1749,9 @@ if True:
         username_text = save_detail_font_nums.render(username, True, (255,255,255))
         progress_screen_button_rect = username_text.get_rect(topleft=(WINDOW_WIDTH - 10 - username_text.get_width(), 10))
         screen.blit(username_text, (WINDOW_WIDTH - 10 - username_text.get_width(), 10))
-        balance_text = save_detail_font_nums.render(f"$ {balance}", True, (255,255,255))
-        screen.blit(balance_text, ((WINDOW_WIDTH - 10 - balance_text.get_width(), 349)))
+        balance_text = save_detail_font_nums.render(f"{balance}", True, (255,255,255))
+        screen.blit(balance_text, (WINDOW_WIDTH - 10 - balance_text.get_width(), 45))
+        screen.blit(pygame.image.load("assets/coin.png"), (WINDOW_WIDTH - 41 - balance_text.get_width(), 57))
         if settings["show_leaderboard"]:
             display_leaderboard()
 
@@ -1652,7 +1787,7 @@ if True:
             for my_recipe in personal_recipes:
                 if recipe == my_recipe["name"]:
                     stars_text = playthrough_name_font.render(str(int(my_recipe["stars"] / 2) if my_recipe["stars"] / 2 == int(my_recipe["stars"] / 2) else my_recipe["stars"] / 2), True, (0,0,0))
-                    price_text = playthrough_name_font.render(f"{my_recipe['price']}$", True, (0,0,0))
+                    price_text = playthrough_name_font.render(f"{my_recipe['price']}$", True, (0,200,0))
                     break
             screen.blit(pygame.transform.scale_by(star_img, 2), (menu_cords[i][0] + 250, menu_cords[i][1] + 100))
             screen.blit(stars_text, (menu_cords[i][0] + 300, menu_cords[i][1] + 90))
@@ -1984,7 +2119,7 @@ if True:
             stars_text = save_detail_font_nums.render(f'{int(recipe["stars"] / 2) if recipe["stars"] / 2 == int(recipe["stars"] / 2) else recipe["stars"] / 2}', True, (0,0,0))
             screen.blit(stars_text, (recipe_book_cords[recipe_counter][0] + 50, recipe_book_cords[recipe_counter][1] + 4))
             #recip price
-            price_text = save_detail_font_nums.render(f"{round(recipe['price'])}$", True, (0,0,0))
+            price_text = save_detail_font_nums.render(f"{round(float(recipe['price']))}$", True, (0,0,0))
             screen.blit(price_text, (recipe_book_cords[recipe_counter][0] + recipe_book_rects[0][2] - 25 - price_text.get_width(), recipe_book_cords[recipe_counter][1] + 4))
             #recipe ingredients
             step_y = recipe_book_cords[recipe_counter][1] + 46
@@ -2163,7 +2298,7 @@ if True:
         screen.blit(cocktail_made_background_img, cocktail_made_window_rect)
         
         successfully_made_drink = currently_preparing_drink.get("successful", False)
-        stars_text = pixel_font_letters.render(str(int(currently_preparing_drink.get('stars', 0) / 2) if currently_preparing_drink.get('stars', 0) / 2 == int(currently_preparing_drink.get('stars', 0) / 2) else currently_preparing_drink.get('stars', 0) / 2) + "/5", True, (255, 255, 255))
+        stars_text = pixel_font_letters.render(str(int(currently_preparing_drink.get('stars', 0) / 2) if currently_preparing_drink.get('stars', 0) / 2 == int(currently_preparing_drink.get('stars', 0) / 2) else currently_preparing_drink.get('stars', 0) / 2), True, (255, 255, 255))
 
         if successfully_made_drink:
             name_text = pixel_font_letters.render(str(currently_preparing_drink.get('drink made', '')),True,(255, 255, 255))
@@ -2184,7 +2319,8 @@ if True:
         screen.blit(name_text, (WINDOW_WIDTH / 2 - name_text.get_width() / 2, 430))
 
         if successfully_made_drink:
-            screen.blit(stars_text, (600, 520))
+            screen.blit(stars_text, (WINDOW_WIDTH / 2 - stars_text.get_width() / 2, 508))
+            screen.blit(pygame.transform.scale_by(star_img, 1.5), (WINDOW_WIDTH / 2 - stars_text.get_width() / 2 - star_img.get_width() - 18, 520))
             screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 6), (442, 20))
             screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 6), (442, 20))
         else:
@@ -2333,6 +2469,131 @@ if True:
         screen.blit(warning_text2, (WINDOW_WIDTH / 2 - warning_text2.get_width() / 2, 250))
         screen.blit(warning_text3, (WINDOW_WIDTH / 2 - warning_text3.get_width() / 2, 300))
 
+    def display_recipe_shop():
+        global back_button_clicktime, back_button_clicked, screen_displayed_now, selected_recipe_shop_tier, continue_button2_clicked, continue_button2_clicktime, unlocked_recipe, balance
+        #---------button logic---------
+
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        if left_mouse_clicked and back_button_rect.collidepoint(pos):
+            back_button_clicked = True
+            back_button_clicktime = now
+
+        if left_mouse_clicked and continue_button2_rect.collidepoint(pos):
+            continue_button2_clicked = True
+            continue_button2_clicktime = now
+        
+        if back_button_clicktime != 0 and back_button_clicktime <= now - click_duration:
+            back_button_clicked = False
+
+        if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - click_duration:
+            continue_button2_clicked = False
+
+        if back_button_clicktime != 0 and back_button_clicktime <= now - screen_switch_duration:
+            back_button_clicktime = 0
+            screen_displayed_now = "homescreen"
+        
+        if tier_recipes_available[0] > 0 or tier_recipes_available[1] > 0 or tier_recipes_available[2] > 0:
+            if continue_button2_clicktime != 0 and continue_button2_clicktime <= now - screen_switch_duration:
+                continue_button2_clicktime = 0
+                if selected_recipe_shop_tier == 1:
+                    if balance >= tier_1_recipe_price:
+                        tier_recipes_available[0] -= 1
+                        balance -= tier_1_recipe_price
+                        unlocked_recipe = pick_undiscovered_recipe(selected_recipe_shop_tier)
+                        add_bought_recipe_to_personal_recipes(unlocked_recipe)
+                        screen_displayed_now = "unlocked_recipe_popup"
+                elif selected_recipe_shop_tier == 2:
+                    if balance >= tier_2_recipe_price:
+                        balance -= tier_2_recipe_price
+                        tier_recipes_available[1] -= 1
+                        unlocked_recipe = pick_undiscovered_recipe(selected_recipe_shop_tier)
+                        add_bought_recipe_to_personal_recipes(unlocked_recipe)
+                        screen_displayed_now = "unlocked_recipe_popup"
+                else:
+                    if balance >= tier_3_recipe_price:
+                        balance -= tier_3_recipe_price
+                        tier_recipes_available[2] -= 1
+                        unlocked_recipe = pick_undiscovered_recipe(selected_recipe_shop_tier)
+                        add_bought_recipe_to_personal_recipes(unlocked_recipe)
+                        screen_displayed_now = "unlocked_recipe_popup"
+
+        if left_mouse_clicked:
+            for i, rect in enumerate(recipe_shop_rects):
+                if tier_recipes_available[i] > 0:
+                    if rect.collidepoint(pos):
+                        selected_recipe_shop_tier = i + 1
+
+        recipe_shop_indicator_rect.x = recipe_shop_rects[selected_recipe_shop_tier - 1].x + recipe_shop_indicator_gap
+        recipe_shop_indicator_rect.y = recipe_shop_rects[selected_recipe_shop_tier - 1].y + recipe_shop_indicator_gap
+
+        #----------displaying-----------
+
+        screen.fill((0, 99, 86))
+        screen.blit(back_button_clicked_img if back_button_clicked else back_button_img, back_button_rect)
+        if tier_recipes_available[0] > 0 or tier_recipes_available[1] > 0 or tier_recipes_available[2] > 0:
+            screen.blit(continue_button2_clicked_img if continue_button2_clicked else continue_button2_img, continue_button2_rect)
+        shop_title_text1 = playthrough_name_font.render("RECIPE SHOP", True, (0, 0, 0))
+        shop_title_text2 = save_detail_font_date.render("Can't discover any more recipes? Buy them instead!", True, (0, 0, 0))
+        screen.blit(shop_title_text1, (WINDOW_WIDTH / 2 - shop_title_text1.get_width() / 2, 5))
+        screen.blit(shop_title_text2, (WINDOW_WIDTH / 2 - shop_title_text2.get_width() / 2, 100))
+        pygame.draw.line(screen, (0, 0, 0), (20, 75), (WINDOW_WIDTH - 20, 75))
+        balance_text = save_detail_font_nums.render(str(balance), True, (255, 255, 255))
+        screen.blit(balance_text, (WINDOW_WIDTH - balance_text.get_width() - 21, 14))
+        screen.blit(coin_img, (WINDOW_WIDTH - balance_text.get_width() - 40 - coin_img.get_width(), 20))
+        for i, rect in enumerate(recipe_shop_rects):
+            if tier_recipes_available[i] > 0:
+                pygame.draw.rect(screen, (0,0,0), rect, 2, border_radius=5)
+        pygame.draw.rect(screen, (255,255,255), recipe_shop_indicator_rect, 2, border_radius=5)
+        tier_1_title = save_detail_font_nums.render("Tier 1", True, (255,255,255))
+        tier_2_title = save_detail_font_nums.render("Tier 2", True, (255,255,255))
+        tier_3_title = save_detail_font_nums.render("Tier 3", True, (255,255,255))
+        if tier_recipes_available[0] > 0:
+            screen.blit(tier_1_title, (415, 170))
+        if tier_recipes_available[1] > 0:
+            screen.blit(tier_2_title, (415, 325))
+        if tier_recipes_available[2] > 0:
+            screen.blit(tier_3_title, (415, 480))
+        tier_1_pricerange = save_detail_font_nums.render(f"max worth: < ${75 * int(star_price_ratio_lib[10])}", True, (0,0,0))
+        tier_2_pricerange = save_detail_font_nums.render(f"max worth: ${100 * int(star_price_ratio_lib[10])} - ${200 * int(star_price_ratio_lib[10])}", True, (0,0,0))
+        tier_3_pricerange = save_detail_font_nums.render(f"max worth: > ${200 * int(star_price_ratio_lib[10])}", True, (0,0,0))
+        tier_1_price_text = save_detail_font_nums.render(f"${tier_1_recipe_price}", True, (0,0,0))
+        tier_2_price_text = save_detail_font_nums.render(f"${tier_2_recipe_price}", True, (0,0,0))
+        tier_3_price_text = save_detail_font_nums.render(f"${tier_3_recipe_price}", True, (0,0,0)) 
+        if tier_recipes_available[0] > 0:
+            screen.blit(tier_1_pricerange, (WINDOW_WIDTH / 2 - tier_1_pricerange.get_width() / 2, 225))
+            screen.blit(tier_1_price_text, (860 - tier_1_price_text.get_width(), 170))
+        if tier_recipes_available[1] > 0:
+            screen.blit(tier_2_pricerange, (WINDOW_WIDTH / 2 - tier_2_pricerange.get_width() / 2, 380))
+            screen.blit(tier_2_price_text, (860 - tier_2_price_text.get_width(), 325))
+        if tier_recipes_available[2] > 0:
+            screen.blit(tier_3_pricerange, (WINDOW_WIDTH / 2 - tier_3_pricerange.get_width() / 2, 535))
+            screen.blit(tier_3_price_text, (860 - tier_3_price_text.get_width(), 480))
+
+    def display_unlocked_recipe_popup():
+        global screen_displayed_now
+        #----------button logic---------
+
+        if left_mouse_clicked and not cocktail_made_window_rect.collidepoint(pos):
+            screen_displayed_now = "recipe_shop"
+        
+        #----------displaying----------
+
+        screen.blit(cocktail_made_background_img, cocktail_made_window_rect)
+        stars_text = f'{int(unlocked_recipe_details["stars"] / 2) if unlocked_recipe_details["stars"] / 2 == int(unlocked_recipe_details["stars"] / 2) else unlocked_recipe_details["stars"] / 2}'
+        name_text = playthrough_text_font.render(unlocked_recipe_details["name"], True, (0,0,0))
+        stars_rendered_text = playthrough_name_font.render(stars_text, True, (0,0,0))
+        price_text = playthrough_name_font.render(f"${unlocked_recipe_details['price']}", True, (0,0,0))
+        screen.blit(name_text, (WINDOW_WIDTH / 2 - name_text.get_width() / 2, 145))
+        spacing = 50
+        screen.blit(price_text, (WINDOW_WIDTH / 2 - (price_text.get_width() + spacing + star_img.get_width() + 5 + stars_rendered_text.get_width()) / 2, 490))
+        screen.blit(stars_rendered_text, (WINDOW_WIDTH / 2 - (price_text.get_width() + spacing + star_img.get_width() + 5 + stars_rendered_text.get_width()) / 2 + spacing + 5 + star_img.get_width() + price_text.get_width(), 490))
+        screen.blit(pygame.transform.scale_by(star_img, 1.5), (WINDOW_WIDTH / 2 - (price_text.get_width() + spacing + star_img.get_width() + 5 + stars_rendered_text.get_width()) / 2 + spacing + price_text.get_width() - 10, 516))
+        drink_tag = drink_pic_lib[unlocked_recipe_details["name"]]["tag"]
+        drink_glass_color = drink_pic_lib[unlocked_recipe_details["name"]]["glass_color"]
+        screen.blit(pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 5), (WINDOW_WIDTH / 2 - pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 5).get_width() / 2, 120))
+        screen.blit(pygame.transform.scale_by(glass_tags_bar_library[int(drink_tag)], 5), (WINDOW_WIDTH / 2 - pygame.transform.scale_by(glasses_bar_library[drink_glass_color], 5).get_width() / 2, 120))
+
 #-------------main loop-----------
 
 while running:
@@ -2369,6 +2630,7 @@ while running:
                 if dragging and shaking:
                     if total_dif >= max_total_difference:
                         shaking_complete = True
+                        total_dif = 0
                     else:
                         difference_shaker_x = abs(temppos[0] - pos[0])
                         difference_shaker_y = abs(temppos[1] - pos[1])
@@ -2418,9 +2680,9 @@ while running:
     now = pygame.time.get_ticks()
 
     #-----------debugging----------
+    
+    #print(drink_pic_lib)
 
-    
-    
     #--------screen selection--------
 
     if screen_displayed_now == "username":
@@ -2443,6 +2705,12 @@ while running:
 
     elif screen_displayed_now == "legit_playthrough_warning":
         display_sandbox_warning()
+
+    elif screen_displayed_now == "unlocked_recipe_popup":
+                display_unlocked_recipe_popup()
+    
+    elif screen_displayed_now == "cocktail_exterior_maker":
+                display_cocktail_exterior_maker()
 
     else:
         if displaying_recipe_book:
@@ -2475,8 +2743,8 @@ while running:
             elif screen_displayed_now == "cocktail_made_screen":
                 display_cocktail_made_screen()
 
-            elif screen_displayed_now == "cocktail_exterior_maker":
-                display_cocktail_exterior_maker()
+            elif screen_displayed_now == "recipe_shop":
+                display_recipe_shop()
 
     #----------------------------------
 
