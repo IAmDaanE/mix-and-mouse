@@ -12,7 +12,7 @@ def html():
     return render_template("testing.html")
 
 @app.route("/wakeup")
-def top_3():
+def wakeup():
     try:
         conn = get_db()
         cursor = conn.cursor()
