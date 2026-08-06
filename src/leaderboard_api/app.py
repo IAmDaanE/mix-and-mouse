@@ -12,8 +12,16 @@ def html():
     return render_template("testing.html")
 
 @app.route("/wakeup")
-def wakeup():
-    return "im awake gng"
+def top_3():
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+        conn.close()
+        return "all good pall", 200
+    except Exception as e:
+        return "database is sleeping pall", 500
 
 @app.route("/top10")
 def top_10():

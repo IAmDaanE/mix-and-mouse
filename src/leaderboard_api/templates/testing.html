@@ -1,53 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocktail Game Leaderboard</title>
     <style>
+        :root {
+            --bg-color: #fcf8f2;
+            --border-color: #1a1a1a;
+            --cocktail-pink: #ff85a2;
+            --cocktail-yellow: #f9db6d;
+            --cocktail-green: #a3e2c9;
+            --text-color: #1a1a1a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-color: #011d3d;
-            padding-left: 50px;
-            padding-right: 50px;
-            min-height: 100vh;
+            /* Systeemlettertypen: laden direct, super clean en crash-proof */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* --- Introductie --- */
+        .header-section {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .header-section p {
+            font-size: 1.1rem;
+            color: #4a4a4a;
+            max-width: 700px;
+        }
+
+        /* --- Dashboard Grid --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        /* --- Widgets --- */
+        .widget {
+            background-color: #ffffff;
+            border: 2px solid var(--border-color);
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: flex-start;
-            margin: 0;
-            }
-
-        h1 {
-            color: #ffffff;
-            text-align: center;
-            font-family: Inter;
-            margin: 0;
-            padding: 50px;
-            padding-bottom: 100px;
-        }
-        
-        h3 {
-            color: #000000;
-            text-align: center;
-            margin: 0;
-            padding-bottom: 10px;
+            height: 260px;
+            transition: padding 0.2s linear, margin 0.2s linear;
         }
 
-        .mainbox {
-            box-sizing: border-box;
-            background-color: #77c4f4;
-            border-radius: 50px;
-            width: 450px;
-            padding: 50px;
-            font-family: Roboto;
+        /* Strakke fysieke vergroting op hover */
+        .widget:hover {
+            padding: 30px;
+            margin: -6px;
+        }
+
+        /* Kleuren per widget */
+        .widget.about-game { background-color: var(--cocktail-pink); }
+        .widget.leaderboard { background-color: #ffffff; height: auto; min-height: 260px; }
+        .widget.game-features { background-color: var(--cocktail-green); }
+
+        .widget h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .widget p {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* --- Ranglijst Data --- */
+        .leaderboard-list {
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1rem;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .player-name {
+            font-weight: 500;
+        }
+
+        .player-score {
+            font-weight: 700;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 60px;
+            font-size: 0.9rem;
+            color: #7a7a7a;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>alles goed twan</h1>
-    <div class="mainbox">
-        <h3>heel het internet kan dit zien btw</h3>
-        <h3>is dit fire twin</h3>
-        <h3>check the subpage /top10 in de plaats van /html</h3>
+
+    <div class="container">
+        
+        <!-- INTRO -->
+        <header class="header-section">
+            <h1>Welkom bij de API van Game Over 🌴</h1>
+            <p>Dit is het live leaderboard-endpoint van onze Python cocktail game. Hieronder zie je direct welke spelers momenteel de beste zaken doen achter de bar.</p>
+        </header>
+
+        <!-- WIDGETS -->
+        <main class="dashboard-grid">
+
+            <!-- WIDGET: OVER DE GAME -->
+            <div class="widget about-game">
+                <h3><span>🎮</span> De Game</h3>
+                <p>In deze game run je je eigen cocktailbar. Je mixt dranken voor binnenstromende klanten, ontdekt geheime recepten en investeert je verdiende cash in nieuwe ingrediënten om je menu uit te breiden.</p>
+            </div>
+
+            <!-- WIDGET: LIVE LEADERBOARD -->
+            <div class="widget leaderboard">
+                <h3><span>🏆</span> Top Mixologen</h3>
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item">
+                        <span class="player-name">🥇 CocktailQueen</span>
+                        <span class="player-score">$120,550</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="player-name">🥈 MixMaster99</span>
+                        <span class="player-score">$85,400</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="player-name">🥉 NeonBartender</span>
+                        <span class="player-score">$73,100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WIDGET: HOE HET WERKT -->
+            <div class="widget game-features">
+                <h3><span>🍸</span> De Gameplay</h3>
+                <p>Houd je klanten tevreden door snel de juiste combinaties te shaken. Koop strategisch duurdere recepten in om je winst per glas te verhogen en stijg zo sneller in de ranglijst.</p>
+            </div>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>Cocktail Game API — Server Status: Actief</p>
+        </footer>
+
     </div>
+
 </body>
 </html>
