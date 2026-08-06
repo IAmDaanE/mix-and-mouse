@@ -9,10 +9,8 @@ if True:
     import json
     from platformdirs import user_data_dir
     from copy import deepcopy
-    import shutil
-    import requests
-    from recipes import all_recipes_in_game
-
+    from lists import all_recipes_in_game, drink_bar_library, glass_tags_bar_library, glasses_bar_library, ingredient_color_library
+    from utils import convert_asset, slice_tilesheet, draw_text_centered, get_text_block_height, write_username_file, check_valid_dir_input, delete_save, new_save, load_save, display_save_details, regular_save, rond_af_12, rond_af_4, rond_af_5, initial_post, check_username_conflict, display_leaderboard, get_leaderboard, calculate_cocktail_pages, calculate_stock_pages, calculate_recipe_pages, cheat_unlocks, check_unlocks
     WINDOW_WIDTH = 1280
     WINDOW_HEIGHT = 720
 
@@ -23,20 +21,6 @@ if True:
     clock = pygame.time.Clock()
 
 #------loading in assets--------
-
-def convert_asset(png_name, scale):
-    return pygame.transform.scale_by(pygame.image.load(png_name).convert_alpha(), scale)
-
-def slice_tilesheet(path, tile_width, tile_height):
-    sheet = pygame.image.load(path).convert_alpha()
-    sheet_width, sheet_height = sheet.get_size()
-    tiles = []
-    for y in range(0, sheet_height, tile_height):
-        for x in range(0, sheet_width, tile_width):
-            rect = pygame.Rect(x, y, tile_width, tile_height)
-            tile = sheet.subsurface(rect)
-            tiles.append(tile)
-    return tiles
 
 if True:
     continue_button_img = convert_asset("assets/continue_button.png", 1) 
@@ -120,176 +104,6 @@ if True:
     glass_tags_list = slice_tilesheet("assets/tags_tilesheet.png", 66, 66)
     glasses_list = slice_tilesheet("assets/glasses_tilesheet.png", 66, 66)
 
-#----------assigning image names---------
-
-if True: 
-    drink_bar_library = {
-                            "vodka": ingredient_icons_list[0],
-                            "gin": ingredient_icons_list[40],
-                            "orange juice": ingredient_icons_list[20],
-                            "white rum": ingredient_icons_list[1],
-                            "cola": ingredient_icons_list[3],
-                            "tonic water": ingredient_icons_list[33],
-                            "soda water": ingredient_icons_list[34],
-                            "lime juice": ingredient_icons_list[23],
-                            "mint": ingredient_icons_list[38],
-                            "sugar syrup": ingredient_icons_list[30],
-                            "ice": ingredient_icons_list[37],
-                            "dark rum": ingredient_icons_list[2],
-                            "tequila": ingredient_icons_list[5],
-                            "whiskey": ingredient_icons_list[41],
-                            "triple sec": ingredient_icons_list[6],
-                            "amaretto": ingredient_icons_list[7],
-                            "kahlúa": ingredient_icons_list[8],
-                            "baileys": ingredient_icons_list[10],
-                            "champagne": ingredient_icons_list[4],
-                            "prosecco": ingredient_icons_list[11],
-                            "peach schnapps": ingredient_icons_list[12],
-                            "blue curaçao": ingredient_icons_list[13],
-                            "midori": ingredient_icons_list[14],
-                            "absinthe": ingredient_icons_list[15],
-                            "dry vermouth": ingredient_icons_list[17],
-                            "sweet vermouth": ingredient_icons_list[16],
-                            "campari": ingredient_icons_list[18],
-                            "elderflower liqueur": ingredient_icons_list[9],
-                            "pineapple juice": ingredient_icons_list[21],
-                            "cranberry juice": ingredient_icons_list[22],
-                            "lemon juice": ingredient_icons_list[24],
-                            "grapefruit juice": ingredient_icons_list[25],
-                            "apple juice": ingredient_icons_list[26],
-                            "mango juice": ingredient_icons_list[28],
-                            "passionfruit juice": ingredient_icons_list[19],
-                            "peach juice": ingredient_icons_list[27],
-                            "grenadine": ingredient_icons_list[31],
-                            "coconut cream": ingredient_icons_list[32],
-                            "ginger beer": ingredient_icons_list[36],
-                            "egg white": ingredient_icons_list[35],
-                            "cream": ingredient_icons_list[42],
-                            "lime": ingredient_icons_list[29],
-                            "bitters": ingredient_icons_list[39]
-                        }
-    glass_tags_bar_library = {
-                            1: glass_tags_list[0],
-                            2: glass_tags_list[1],
-                            3: glass_tags_list[2],
-                            4: glass_tags_list[3],
-                            5: glass_tags_list[4],
-                            6: glass_tags_list[5],
-                            7: glass_tags_list[6],
-                            8: glass_tags_list[7],
-                            9: glass_tags_list[8],
-                            10: glass_tags_list[9],
-                            11: glass_tags_list[10],
-                            12: glass_tags_list[11],
-                            13: glass_tags_list[12],
-                            14: glass_tags_list[13],
-                            15: glass_tags_list[14],
-                            16: glass_tags_list[15],
-                            17: glass_tags_list[16],
-                            18: glass_tags_list[17],
-                            19: glass_tags_list[18],
-                            20: glass_tags_list[19],
-                            21: glass_tags_list[20],
-                            22: glass_tags_list[21],
-                            23: glass_tags_list[22],
-                            24: glass_tags_list[23],
-                            25: glass_tags_list[24],
-                            26: glass_tags_list[25],
-                            27: glass_tags_list[26],
-                            28: glass_tags_list[27],
-                            29: glass_tags_list[28],
-                            30: glass_tags_list[29],
-                            31: glass_tags_list[30],
-                            32: glass_tags_list[31],
-                            33: glass_tags_list[32],
-                            34: glass_tags_list[33],
-                            35: glass_tags_list[34],
-                            36: glass_tags_list[35],
-                        }
-    glasses_bar_library = {
-                            "1.1": glasses_list[0],
-                            "1.2": glasses_list[1],
-                            "1.3": glasses_list[2],
-                            "2.1": glasses_list[3],
-                            "2.2": glasses_list[4],
-                            "2.3": glasses_list[5],
-                            "3.1": glasses_list[6],
-                            "3.2": glasses_list[7],
-                            "3.3": glasses_list[8],
-                            "4.1": glasses_list[9],
-                            "4.2": glasses_list[10],
-                            "4.3": glasses_list[11],
-                            "5.1": glasses_list[12],
-                            "5.2": glasses_list[13],
-                            "5.3": glasses_list[14],
-                            "6.1": glasses_list[15],
-                            "6.2": glasses_list[16],
-                            "6.3": glasses_list[17],
-                            "7.1": glasses_list[18],
-                            "7.2": glasses_list[19],
-                            "7.3": glasses_list[20],
-                            "8.1": glasses_list[21],
-                            "8.2": glasses_list[22],
-                            "8.3": glasses_list[23],
-                            "9.1": glasses_list[24],
-                            "9.2": glasses_list[25],
-                            "9.3": glasses_list[26],
-                            "10.1": glasses_list[27],
-                            "10.2": glasses_list[28],
-                            "10.3": glasses_list[29],
-                            "11.1": glasses_list[30],
-                            "11.2": glasses_list[31],
-                            "11.3": glasses_list[32],
-                            "12.1": glasses_list[33],
-                            "12.2": glasses_list[34],
-                            "12.3": glasses_list[35],
-                            "13.1": glasses_list[36],
-                            "13.2": glasses_list[37],
-                            "13.3": glasses_list[38],
-                            "14.1": glasses_list[39],
-                            "14.2": glasses_list[40],
-                            "14.3": glasses_list[41],
-                            "15.1": glasses_list[42],
-                            "15.2": glasses_list[43],
-                            "15.3": glasses_list[44],
-                            "16.1": glasses_list[45],
-                            "16.2": glasses_list[46],
-                            "16.3": glasses_list[47],
-                            "17.1": glasses_list[48],
-                            "17.2": glasses_list[49],
-                            "17.3": glasses_list[50],
-                            "18.1": glasses_list[51],
-                            "18.2": glasses_list[52],
-                            "18.3": glasses_list[53],
-                            "19.1": glasses_list[54],
-                            "19.2": glasses_list[55],
-                            "19.3": glasses_list[56],
-                            "20.1": glasses_list[57],
-                            "20.2": glasses_list[58],
-                            "20.3": glasses_list[59],
-                            "21.1": glasses_list[60],
-                            "21.2": glasses_list[61],
-                            "21.3": glasses_list[62],
-                            "22.1": glasses_list[63],
-                            "22.2": glasses_list[64],
-                            "22.3": glasses_list[65],
-                            "23.1": glasses_list[66],
-                            "23.2": glasses_list[67],
-                            "23.3": glasses_list[68],
-                            "24.1": glasses_list[69],
-                            "24.2": glasses_list[70],
-                            "24.3": glasses_list[71],
-                            "25.1": glasses_list[72],
-                            "25.2": glasses_list[73],
-                            "25.3": glasses_list[74],
-                            "26.1": glasses_list[75],
-                            "26.2": glasses_list[76],
-                            "26.3": glasses_list[77],
-                            "27.1": glasses_list[78],
-                            "27.2": glasses_list[79],
-                            "27.3": glasses_list[80]
-                        }
-    
 #-----------button variables-----------
 
 if True:
@@ -535,19 +349,6 @@ if True:
     recipe_book_rects = [(18, 37, 612, 268), (18 + 612 + 18, 37, 612, 268), (18, 37 + 268 + 37, 612, 268), (18 + 612 + 18, 37 + 268 + 37, 612, 268)]
     recipe_book_cords = [[18, 37], [18 + 612 + 18, 37], [18, 37 + 268 + 37], [18 + 612 + 18, 37 + 268+ 37]]
     menu_cords = [[20, 20], [650, 20], [20, 369], [650, 369]]
-
-    unlocked_ingredients = [
-        {"name": "vodka", "price": 5, "owned": 0},
-        {"name": "gin", "price": 5, "owned": 0},
-        {"name": "orange juice", "price": 2, "owned": 0},
-        {"name": "white rum", "price": 5, "owned": 0},
-        {"name": "cola", "price": 2, "owned": 0},
-        {"name": "tonic water", "price": 2, "owned": 0},
-        {"name": "soda water", "price": 1, "owned": 0},
-        {"name": "lime juice", "price": 2, "owned": 0},
-        {"name": "mint", "price": 1, "owned": 0},
-        {"name": "sugar syrup", "price": 1, "owned": 0},
-        {"name": "ice", "price": 1, "owned": 0}]
     
     guest_rect_y = 319
 
@@ -564,7 +365,7 @@ if True:
     guest_order4_rect = pygame.Rect(guest4_rect.x - 20, guest_rect_y - 28, 150, 100)
     guest_order5_rect = pygame.Rect(guest5_rect.x - 20, guest_rect_y - 28, 150, 100)
     guest_order6_rect = pygame.Rect(guest6_rect.x - 20, guest_rect_y - 28, 150, 100)
-    
+
     guest_rects_library = { 1: guest1_rect,
                             2: guest2_rect,
                             3: guest3_rect,
@@ -587,113 +388,6 @@ if True:
                              6: guest6_img,
                              7: guest7_img,
                              8: guest8_img}
-
-    ingredient_color_library = {
-        # spirits
-        "white rum":            (195, 230, 220),
-        "dark rum":             (101, 55,  20),
-        "gin":                  (180, 220, 235),
-        "vodka":                (160, 200, 230),
-        "tequila":              (195, 210, 130),
-        "whiskey":              (180, 100, 30),
-        "triple sec":           (255, 200, 50),
-        "amaretto":             (160, 60,  10),
-        "kahlúa":               (45,  20,  5),
-        "baileys":              (210, 165, 90),
-        "champagne":            (220, 195, 60),
-        "prosecco":             (210, 185, 55),
-        "peach schnapps":       (255, 160, 60),
-        "blue curaçao":         (0,   120, 210),
-        "midori":               (40,  200, 60),
-        "absinthe":             (60,  150, 40),
-        "dry vermouth":         (190, 195, 80),
-        "sweet vermouth":       (160, 45,  20),
-        "campari":              (200, 30,  20),
-        "elderflower liqueur":  (190, 210, 80),
-
-        # juices
-        "orange juice":         (240, 130, 20),
-        "pineapple juice":      (225, 195, 20),
-        "cranberry juice":      (170, 10,  40),
-        "lime juice":           (100, 185, 30),
-        "lemon juice":          (220, 200, 20),
-        "grapefruit juice":     (230, 100, 50),
-        "apple juice":          (150, 190, 40),
-        "mango juice":          (245, 140, 10),
-        "passionfruit juice":  (232, 175, 16),
-        "peach juice":          (230, 130, 50),
-
-        # syrups & sweet
-        "sugar syrup":          (180, 210, 140),
-        "grenadine":            (190,  10,  40),
-        "coconut cream":        (242, 230, 196),
-
-        # sodas
-        "cola":                 (45,   20,   5),
-        "tonic water":          (224, 242, 220),
-        "ginger beer":          (195, 160,  60),
-        "soda water":           (225, 247, 242),
-
-        # other
-        "egg white":            (200, 210, 160),
-        "cream":                (210, 185, 100),
-        "lime":                 (80,  165, 30),
-        "mint":                 (30,  140, 40),
-        "bitters":              (110, 40,  15),
-        "ice":                  (0,    0,   0) #PLACEHOLDER
-    }
-
-#-----------text formatting------------
-
-if True:
-    def wrap_text_colored(segments, font, max_width):
-        lines = []
-        current_line = []
-        current_width = 0
-
-        for text, color in segments:
-            words = text.split(" ")
-
-            for i, word in enumerate(words):
-                word_text = word + (" " if i < len(words) - 1 else "")
-                word_width = font.size(word_text)[0]
-
-                if current_width + word_width <= max_width:
-                    current_line.append((word_text, color))
-                    current_width += word_width
-                else:
-                    lines.append(current_line)
-                    current_line = [(word_text, color)]
-                    current_width = word_width
-
-        if current_line:
-            lines.append(current_line)
-
-        return lines
-
-    def draw_text_centered(surface, segments, font, rect):
-        lines = wrap_text_colored(segments, font, rect.width)
-
-        y_offset = rect.top
-        returned_y_offset = 0
-
-        for line in lines:
-            total_width = sum(font.size(text)[0] for text, _ in line)
-            x_offset = rect.centerx - total_width // 2
-
-            for text, color in line:
-                text_surf = font.render(text, True, color)
-                surface.blit(text_surf, (x_offset, y_offset))
-                x_offset += font.size(text)[0]
-
-            y_offset += font.get_linesize()
-            returned_y_offset += font.get_linesize()
-
-        return returned_y_offset
-    
-    def get_text_block_height(segments, font, max_width):
-        lines = wrap_text_colored(segments, font, max_width)
-        return len(lines) * font.get_linesize()
 
 #-------------guest logic-------------
 
@@ -889,14 +583,6 @@ if True:
 #-------------file saving-------------
 
 if True:
-    def rond_af_5(n):
-        return int(math.ceil(n / 5) * 5)
-    
-    def rond_af_12(n):
-        return int(math.ceil(n / 12) * 12)
-
-    def rond_af_4(n):
-        return int(math.ceil(n / 4) * 4)
 
     save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}/save_files"
     username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}/username.txt"
@@ -914,351 +600,26 @@ if True:
         if os.path.isdir(os.path.join(save_files_location, item)):
             collision_rects_saves.append(pygame.Rect(WINDOW_WIDTH / 2 - 500 / 2, continue_screen_cords[saves_amount], 500, 120))
             saves_amount += 1
-        
 
-    def write_username_file(username):
-        with open(username_txt_file, "w") as f:
-            f.write(username)
+#------update leaderboard-------------------
 
-    def check_valid_dir_input():
-        global playthrough_name_text
-        if playthrough_name_text == "":
-            return False
-        elif any(char in playthrough_name_text for char in invalid_dir_chars):
-            return False
-        elif os.path.isdir(f"save_files/{playthrough_name_text}"):
-            return False
-        else:
-            return True
-
-    def delete_save(save_num):
-        folder_counter = 0
-        for folder in os.listdir(save_files_location):
-            if save_num == folder_counter:
-                shutil.rmtree(f"{save_files_location}/{folder}")
-                break
-            folder_counter += 1
-
-    def new_save():
-        global username
-        if playthrough_name_text != "data.json":
-            os.mkdir(f"{save_files_location}/{playthrough_name_text}")
-            basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value, "tier_recipes_available": tier_recipes_available}
-            guest_data = {"guests": guests, "guest_available_spots": guest_available_spots, "first_save_done": first_save_done}
-            unlocked_ingredients_data = unlocked_ingredients
-            settings_data = settings
-            unlocks_data = unlocks
-            save_data = {
-                **basic_data,
-                **guest_data,
-                "settings": settings_data,
-                "ingredients": unlocked_ingredients_data,
-                "unlocks": unlocks_data
-                }
-            with open(f"{save_files_location}/{playthrough_name_text}/data.json", "w") as f:
-                json.dump(save_data, f)
-            with open(username_txt_file, "r") as f:
-                username = f.read()
-
-    def load_save():
-        global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu, legit_playthrough, best_cocktail_value, tier_recipes_available
-        with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
-            raw_unloaded_data = json.load(f)
-            balance = raw_unloaded_data["balance"]
-            customers_served = raw_unloaded_data["customers_served"]
-            settings = raw_unloaded_data["settings"]
-            unlocked_ingredients = raw_unloaded_data["ingredients"]
-            unlocks = raw_unloaded_data["unlocks"]
-            guests = raw_unloaded_data["guests"]
-            guest_available_spots = raw_unloaded_data["guest_available_spots"]
-            first_save_done = raw_unloaded_data["first_save_done"]
-            personal_recipes = raw_unloaded_data["recipes"]
-            drink_pic_lib = raw_unloaded_data["recipe_icons"]
-            unlocked_drinks = raw_unloaded_data["unlocked_drinks"]
-            stashed_cocktails = raw_unloaded_data["stashed_cocktails"]
-            cocktail_available_spots = raw_unloaded_data["cocktail_available_spots"]
-            cur_menu = raw_unloaded_data["cur_menu"]
-            legit_playthrough = raw_unloaded_data["legit_playthrough"]
-            best_cocktail_value = raw_unloaded_data["best_cocktail_value"]
-            tier_recipes_available = raw_unloaded_data["tier_recipes_available"]
-
-        with open(username_txt_file, "r") as f:
-            username = f.read()
-        calculate_recipe_pages()
-        calculate_cocktail_pages()
-        calculate_stock_pages()
-    
-    def display_save_details():
-        save_counter = 0
-        for save in save_details:
-            last_save_text = save_detail_font_date.render(str(save["last_save"]), True, (0,0,0))
-            balance_text = save_detail_font_nums.render(f"${int(save['balance'])}", True, (0,0,0))
-            customers_served_text = save_detail_font_nums.render(f"guests: {save['customers_served']}", True, (0,0,0))
-            screen.blit(last_save_text, (410, continue_screen_cords[save_counter] + 70))
-            screen.blit(balance_text, (870 - balance_text.get_width(), continue_screen_cords[save_counter] + 12))
-            screen.blit(customers_served_text, (870 - customers_served_text.get_width(), continue_screen_cords[save_counter] + 65))
-            save_counter += 1
-
-    def regular_save():
-        basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value, "tier_recipes_available": tier_recipes_available}
-        guest_data = {"guests": guests, "guest_available_spots": guest_available_spots, "first_save_done": first_save_done}
-        unlocked_ingredients_data = unlocked_ingredients
-        settings_data = settings
-        unlocks_data = unlocks
-        save_data = {
-            **basic_data,
-            **guest_data,
-            "unlocks": unlocks_data,
-            "ingredients": unlocked_ingredients_data,
-            "settings": settings_data,
-            "recipes": personal_recipes,
-            "recipe_icons": drink_pic_lib,
-            "unlocked_drinks": unlocked_drinks,
-            "stashed_cocktails": stashed_cocktails,
-            "cocktail_available_spots": cocktail_available_spots,
-            "cur_menu": cur_menu
-            }
-        
-        with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
-            json.dump(save_data, f)
-        update_post()
-    
-#----------leaderboard logic----------
-
-if True:
-    base_api_url = "https://cocktail-game-leaderboard-api.onrender.com"
-
-    def initial_post():
-        try:
-            name = username
-            customers_served = 0
-            best_cocktail_value = 0
-            response = requests.post(f"{base_api_url}/initial_post", json={"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
-        except requests.exceptions.RequestException:
-            return None
-        
-    def update_post():
-        if legit_playthrough:
-            try:
-                response = requests.post(f"{base_api_url}/update_post", json={"name": username, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
-            except requests.exceptions.RequestException:
-                return None
-        
-    def check_username_conflict(username):
-        response = requests.post(f"{base_api_url}/check_conflict", json={"name": username})
-        if response.json()["exists"]:
-            return True
-        else:
-            return False
-    
-    def get_leaderboard():
-        global leaderboard_data
-        try:
-            response = requests.get(f"{base_api_url}/top3").json()
-            leaderboard_data = []
-            for row in response:
-                name = row["name"]
-                customers_served = row["customers_served"]
-                best_cocktail_value = row["best_cocktail_value"]
-                leaderboard_data.append({"name": name, "customers_served": customers_served, "best_cocktail_value": best_cocktail_value})
-        except requests.exceptions.RequestException:
-            return None
-
-    get_leaderboard()
-
-    def display_leaderboard():
-        if len(leaderboard_data) > 0:
-            name_column_text = leaderboard_columns_font.render("name", True, (0,0,0))
-            customers_served_column_text = leaderboard_columns_font.render("customers served", True, (0,0,0))
-            best_cocktail_column_text = leaderboard_columns_font.render("best cocktail", True, (0,0,0))
-            screen.blit(name_column_text, (493, 483))
-            screen.blit(customers_served_column_text, (645, 483))
-            screen.blit(best_cocktail_column_text, (843, 483))        
-            row_counter = 0
-            for row in leaderboard_data:
-                name_text = leaderboard_items_font.render(str(row["name"]), True, (0,0,0))
-                customers_served_text = leaderboard_items_font.render(str(row["customers_served"]), True, (0,0,0))
-                best_cocktail_text = leaderboard_items_font.render(f"{row['best_cocktail_value']} $", True, (0,0,0))
-                screen.blit(name_text, (470, leaderboard_row_cords[row_counter]))
-                screen.blit(customers_served_text, (692, leaderboard_row_cords[row_counter]))
-                screen.blit(best_cocktail_text, (867, leaderboard_row_cords[row_counter]))
-                row_counter += 1
-            pygame.draw.line(screen, (0, 0, 0), (468, 516), (935, 516), 2)
-        else:
-            error_text = leaderboard_columns_font.render("leaderboard unavailable", True, (0,0,0))
-            screen.blit(error_text, (620, 500))
+get_leaderboard()
 
 #-------stock screen page calculations-------
 
-if True:
-    def calculate_stock_pages():
-        stock_pages.clear()
-        num_of_pages = rond_af_5(len(unlocked_ingredients)) // 5
-        ingredients_left = len(unlocked_ingredients)
-        ingredient_counter = 0
-        for i in range(num_of_pages):
-            stock_pages.append([])
-        for page in stock_pages:
-                    if ingredients_left >= 5:
-                        ingredients_left -= 5
-                        for i in range(5):
-                            page.append(unlocked_ingredients[ingredient_counter])
-                            ingredient_counter += 1
-                    else:
-                        for i in range(ingredients_left):
-                            page.append(unlocked_ingredients[ingredient_counter])
-                            ingredient_counter += 1
-    calculate_stock_pages()
-    selected_stock_ingredient = stock_pages[0][0]
-    selected_stock_ingredient_page = 0
+calculate_stock_pages()
+selected_stock_ingredient = stock_pages[0][0]
+selected_stock_ingredient_page = 0
 
 #------cocktailmaker page calculations------
 
-if True:
-        def calculate_cocktail_pages():
-            cocktail_pages.clear()
-            num_of_pages = rond_af_12(len(unlocked_ingredients)) // 12
-            ingredients_left = len(unlocked_ingredients)
-            ingredient_counter = 0
-            for i in range(num_of_pages):
-                cocktail_pages.append([])
-            for page in cocktail_pages:
-                        if ingredients_left >= 12:
-                            ingredients_left -= 12
-                            for i in range(12):
-                                page.append(unlocked_ingredients[ingredient_counter])
-                                ingredient_counter += 1
-                        else:
-                            for i in range(ingredients_left):
-                                page.append(unlocked_ingredients[ingredient_counter])
-                                ingredient_counter += 1
-        calculate_cocktail_pages()
-        selected_cocktail_ingredient = cocktail_pages[0][0]
-        selected_cocktail_ingredient_page = 0
+calculate_cocktail_pages()
+selected_cocktail_ingredient = cocktail_pages[0][0]
+selected_cocktail_ingredient_page = 0
 
 #-------recipe book page calculations------
 
-if True:
-    def calculate_recipe_pages():
-        recipe_book_pages.clear()
-        num_of_pages = rond_af_4(len(personal_recipes)) // 4
-        recipes_left = len(personal_recipes)
-        recipe_counter = 0
-        for i in range(num_of_pages):
-            recipe_book_pages.append([])
-        for page in recipe_book_pages:
-                    if recipes_left >= 4:
-                        recipes_left -= 4
-                        for i in range(4):
-                            page.append(personal_recipes[recipe_counter])
-                            recipe_counter += 1
-                    else:
-                        for i in range(recipes_left):
-                            page.append(personal_recipes[recipe_counter])
-                            recipe_counter += 1
-    calculate_recipe_pages()
-
-#----------progression system---------
-
-if True:
-    def check_unlocks():
-        if not unlocks["group1"] and customers_served == 5:
-            unlocked_ingredients.append({"name": "tequila", "price": 6, "owned": 0})
-            unlocked_ingredients.append({"name": "ginger beer", "price": 5, "owned": 0})
-            unlocked_ingredients.append({"name": "grenadine", "price": 5, "owned": 0})
-            unlocked_ingredients.append({"name": "lemon juice", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "lime", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "apple juice", "price": 2, "owned": 0})
-        if not unlocks["group2"] and customers_served == 15:
-            unlocked_ingredients.append({"name": "triple sec", "price": 8, "owned": 0})
-            unlocked_ingredients.append({"name": "cranberry juice", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "pineapple juice", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "dark rum", "price": 7, "owned": 0})
-            unlocked_ingredients.append({"name": "mango juice", "price": 2, "owned": 0})
-        if not unlocks["group3"] and customers_served == 30:
-            unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 0})
-            unlocked_ingredients.append({"name": "coconut cream", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "egg white", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "champagne", "price": 11, "owned": 0})
-            unlocked_ingredients.append({"name": "passionfruit juice", "price": 2, "owned": 0})
-        if not unlocks["group4"] and customers_served == 50:
-            unlocked_ingredients.append({"name": "kahlúa", "price": 12, "owned": 0})
-            unlocked_ingredients.append({"name": "cream", "price": 2, "owned": 0})
-            unlocked_ingredients.append({"name": "baileys", "price": 13, "owned": 0})
-            unlocked_ingredients.append({"name": "grapefruit juice", "price": 3, "owned": 0})
-            unlocked_ingredients.append({"name": "bitters", "price": 3, "owned": 0})
-        if not unlocks["group5"] and customers_served == 75:
-            unlocked_ingredients.append({"name": "prosecco", "price": 14, "owned": 0})
-            unlocked_ingredients.append({"name": "peach schnapps", "price": 15, "owned": 0})
-            unlocked_ingredients.append({"name": "peach juice", "price": 3, "owned": 0})
-            unlocked_ingredients.append({"name": "elderflower liqueur", "price": 14, "owned": 0})
-        if not unlocks["group6"] and customers_served == 110:
-            unlocked_ingredients.append({"name": "blue curaçao", "price": 17, "owned": 0})
-            unlocked_ingredients.append({"name": "midori", "price": 18, "owned": 0})
-        if not unlocks["group7"] and customers_served == 150:
-            unlocked_ingredients.append({"name": "campari", "price": 20, "owned": 0})
-            unlocked_ingredients.append({"name": "dry vermouth", "price": 19, "owned": 0})
-            unlocked_ingredients.append({"name": "sweet vermouth", "price": 19, "owned": 0})
-        if not unlocks["group8"] and customers_served == 200:
-            unlocked_ingredients.append({"name": "absinthe", "price": 25, "owned": 0})
-
-    def cheat_unlocks():
-        global unlocked_ingredients, customers_served
-        customers_served = 400
-        unlocked_ingredients.clear()
-        # start ingredients
-        unlocked_ingredients.append({"name": "vodka", "price": 5, "owned": 300})
-        unlocked_ingredients.append({"name": "gin", "price": 5, "owned": 300})
-        unlocked_ingredients.append({"name": "orange juice", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "white rum", "price": 5, "owned": 300})
-        unlocked_ingredients.append({"name": "cola", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "tonic water", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "soda water", "price": 1, "owned": 300})
-        unlocked_ingredients.append({"name": "lime juice", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "mint", "price": 1, "owned": 300})
-        unlocked_ingredients.append({"name": "sugar syrup", "price": 1, "owned": 300})
-        unlocked_ingredients.append({"name": "ice", "price": 1, "owned": 300})
-        # group 1
-        unlocked_ingredients.append({"name": "tequila", "price": 6, "owned": 300})
-        unlocked_ingredients.append({"name": "ginger beer", "price": 5, "owned": 300})
-        unlocked_ingredients.append({"name": "grenadine", "price": 5, "owned": 300})
-        unlocked_ingredients.append({"name": "lemon juice", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "lime", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "apple juice", "price": 2, "owned": 300})
-        # group 2
-        unlocked_ingredients.append({"name": "triple sec", "price": 8, "owned": 300})
-        unlocked_ingredients.append({"name": "cranberry juice", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "pineapple juice", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "dark rum", "price": 7, "owned": 300})
-        unlocked_ingredients.append({"name": "mango juice", "price": 2, "owned": 300})
-        # group 3
-        unlocked_ingredients.append({"name": "whiskey", "price": 10, "owned": 300})
-        unlocked_ingredients.append({"name": "amaretto", "price": 10, "owned": 300})
-        unlocked_ingredients.append({"name": "coconut cream", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "egg white", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "champagne", "price": 11, "owned": 300})
-        unlocked_ingredients.append({"name": "passionfruit juice", "price": 2, "owned": 300})
-        # group 4
-        unlocked_ingredients.append({"name": "kahlúa", "price": 12, "owned": 300})
-        unlocked_ingredients.append({"name": "cream", "price": 2, "owned": 300})
-        unlocked_ingredients.append({"name": "baileys", "price": 13, "owned": 300})
-        unlocked_ingredients.append({"name": "grapefruit juice", "price": 3, "owned": 300})
-        unlocked_ingredients.append({"name": "bitters", "price": 3, "owned": 300})
-        # group 5
-        unlocked_ingredients.append({"name": "prosecco", "price": 14, "owned": 300})
-        unlocked_ingredients.append({"name": "peach schnapps", "price": 15, "owned": 300})
-        unlocked_ingredients.append({"name": "peach juice", "price": 3, "owned": 300})
-        unlocked_ingredients.append({"name": "elderflower liqueur", "price": 14, "owned": 300})
-        # group 6
-        unlocked_ingredients.append({"name": "blue curaçao", "price": 17, "owned": 300})
-        unlocked_ingredients.append({"name": "midori", "price": 18, "owned": 300})
-        # group 7
-        unlocked_ingredients.append({"name": "campari", "price": 20, "owned": 300})
-        unlocked_ingredients.append({"name": "dry vermouth", "price": 19, "owned": 300})
-        unlocked_ingredients.append({"name": "sweet vermouth", "price": 19, "owned": 300})
-        # group 8
-        unlocked_ingredients.append({"name": "absinthe", "price": 25, "owned": 300})
+calculate_recipe_pages()
 
 #---------recipe system---------
 
