@@ -584,8 +584,8 @@ if True:
 
 if True:
 
-    save_files_location = f"{user_data_dir('cocktail_game', 'DTstudios')}/save_files"
-    username_txt_file = f"{user_data_dir('cocktail_game', 'DTstudios')}/username.txt"
+    save_files_location = f"{user_data_dir('mix-and-mouse', 'DTstudios')}/save_files"
+    username_txt_file = f"{user_data_dir('mix-and-mouse', 'DTstudios')}/username.txt"
 
     os.makedirs(save_files_location, exist_ok=True)
                 
