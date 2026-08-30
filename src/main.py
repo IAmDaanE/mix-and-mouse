@@ -1,6 +1,15 @@
 #---------initiations---------
 
 if True:
+    import ctypes
+    import sys
+
+    try:
+        myappid = 'DTStudios.MixAndMouse.MainGame.v1.0' 
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except AttributeError:
+        pass
+
     import requests
     import pygame
     import time
@@ -11,6 +20,7 @@ if True:
     from platformdirs import user_data_dir
     from copy import deepcopy
     import shutil
+
     WINDOW_WIDTH = 1280
     WINDOW_HEIGHT = 720
 
@@ -22,8 +32,14 @@ if True:
 
 #------loading in assets--------
 
+def get_asset_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 def convert_asset(png_name, scale):
-        return pygame.transform.scale_by(pygame.image.load(png_name).convert_alpha(), scale)
+    return pygame.transform.scale_by(pygame.image.load(get_asset_path(png_name)).convert_alpha(), scale)
 
 def slice_tilesheet(path, tile_width, tile_height):
         sheet = pygame.image.load(path).convert_alpha()
@@ -37,86 +53,88 @@ def slice_tilesheet(path, tile_width, tile_height):
         return tiles
 
 if True:
-    continue_button_img = convert_asset("../assets/continue_button.png", 1) 
-    continue_button2_img = convert_asset("../assets/continue_button.png", 2)
-    new_button_img = convert_asset("../assets/new_button.png", 1)
-    settings_button_img = convert_asset("../assets/settings_button.png", 1)
-    exit_button_img = convert_asset("../assets/exit_button.png", 1)
-    back_button_img = convert_asset("../assets/back_button.png", 1)
-    plus_button_img = convert_asset("../assets/plus_button.png", 1)
-    min_button_img = convert_asset("../assets/min_button.png", 1)
-    buy_button_img = convert_asset("../assets/buy_button.png", 1)
-    create_button_img = convert_asset("../assets/create_button.png", 1)
-    save_button_img = convert_asset("../assets/save_button.png", 1)
-    save_exit_button_img = convert_asset("../assets/save_exit_button.png", 1)
-    make_button_img = convert_asset("../assets/make_button.png", 2)
-    add_button_img = convert_asset("../assets/add_button.png", 1)
-    enable_anyway_button_img = convert_asset("../assets/enable_anyway_button.png", 2)
-    cancel_button_img = convert_asset("../assets/cancel_button.png", 2)
+    continue_button_img = convert_asset("assets/continue_button.png", 1) 
+    continue_button2_img = convert_asset("assets/continue_button.png", 2)
+    new_button_img = convert_asset("assets/new_button.png", 1)
+    settings_button_img = convert_asset("assets/settings_button.png", 1)
+    exit_button_img = convert_asset("assets/exit_button.png", 1)
+    back_button_img = convert_asset("assets/back_button.png", 1)
+    plus_button_img = convert_asset("assets/plus_button.png", 1)
+    min_button_img = convert_asset("assets/min_button.png", 1)
+    buy_button_img = convert_asset("assets/buy_button.png", 1)
+    create_button_img = convert_asset("assets/create_button.png", 1)
+    save_button_img = convert_asset("assets/save_button.png", 1)
+    save_exit_button_img = convert_asset("assets/save_exit_button.png", 1)
+    make_button_img = convert_asset("assets/make_button.png", 2)
+    add_button_img = convert_asset("assets/add_button.png", 1)
+    enable_anyway_button_img = convert_asset("assets/enable_anyway_button.png", 2)
+    cancel_button_img = convert_asset("assets/cancel_button.png", 2)
 
-    continue_button_clicked_img = convert_asset("../assets/continue_button_clicked.png", 1)
-    continue_button2_clicked_img = convert_asset("../assets/continue_button_clicked.png", 2)
-    new_button_clicked_img = convert_asset("../assets/new_button_clicked.png", 1)
-    settings_button_clicked_img = convert_asset("../assets/settings_button_clicked.png", 1)
-    exit_button_clicked_img = convert_asset("../assets/exit_button_clicked.png", 1)
-    back_button_clicked_img = convert_asset("../assets/back_button_clicked.png", 1)
-    plus_button_clicked_img = convert_asset("../assets/plus_button_clicked.png", 1)
-    min_button_clicked_img = convert_asset("../assets/min_button_clicked.png", 1)
-    buy_button_clicked_img = convert_asset("../assets/buy_button_clicked.png", 1)
-    create_button_clicked_img = convert_asset("../assets/create_button_clicked.png", 1)
-    save_button_clicked_img = convert_asset("../assets/save_button_clicked.png", 1)
-    save_exit_button_clicked_img = convert_asset("../assets/save_exit_button_clicked.png", 1)
-    make_button_clicked_img = convert_asset("../assets/make_button_clicked.png", 2)
-    add_button_clicked_img = convert_asset("../assets/add_button_clicked.png", 1)
-    enable_anyway_button_clicked_img = convert_asset("../assets/enable_anyway_button_clicked.png", 2)
-    cancel_button_clicked_img = convert_asset("../assets/cancel_button_clicked.png", 2)
+    continue_button_clicked_img = convert_asset("assets/continue_button_clicked.png", 1)
+    continue_button2_clicked_img = convert_asset("assets/continue_button_clicked.png", 2)
+    new_button_clicked_img = convert_asset("assets/new_button_clicked.png", 1)
+    settings_button_clicked_img = convert_asset("assets/settings_button_clicked.png", 1)
+    exit_button_clicked_img = convert_asset("assets/exit_button_clicked.png", 1)
+    back_button_clicked_img = convert_asset("assets/back_button_clicked.png", 1)
+    plus_button_clicked_img = convert_asset("assets/plus_button_clicked.png", 1)
+    min_button_clicked_img = convert_asset("assets/min_button_clicked.png", 1)
+    buy_button_clicked_img = convert_asset("assets/buy_button_clicked.png", 1)
+    create_button_clicked_img = convert_asset("assets/create_button_clicked.png", 1)
+    save_button_clicked_img = convert_asset("assets/save_button_clicked.png", 1)
+    save_exit_button_clicked_img = convert_asset("assets/save_exit_button_clicked.png", 1)
+    make_button_clicked_img = convert_asset("assets/make_button_clicked.png", 2)
+    add_button_clicked_img = convert_asset("assets/add_button_clicked.png", 1)
+    enable_anyway_button_clicked_img = convert_asset("assets/enable_anyway_button_clicked.png", 2)
+    cancel_button_clicked_img = convert_asset("assets/cancel_button_clicked.png", 2)
 
-    startscreen_background_img = convert_asset("../assets/startscreen_background.png", 1)
-    settings_screen_background_img = convert_asset("../assets/settings_screen_background.png", 1)
-    guest_screen_background_img = convert_asset("../assets/guest_screen_background.png", 1)
-    stock_screen_background_img = convert_asset("../assets/stock_screen_background.png", 1)
-    progress_screen_background_img = convert_asset("../assets/progress_screen_background.png", 1)
-    cocktailmaker_background_img = convert_asset("../assets/cocktailmaker_background.png", 1)
-    homescreen_background_img = convert_asset("../assets/homescreen_background.png", 1)
-    menu_screen_background_img = convert_asset("../assets/menu_screen_background.png", 1)
-    cocktail_made_background_img = convert_asset("../assets/cocktail_made_background.png", 1)
-    coktail_exterior_customizer_background_img = convert_asset("../assets/cocktail_design_maker_bar.png",1)
+    startscreen_background_img = convert_asset("assets/startscreen_background.png", 1)
+    settings_screen_background_img = convert_asset("assets/settings_screen_background.png", 1)
+    guest_screen_background_img = convert_asset("assets/guest_screen_background.png", 1)
+    stock_screen_background_img = convert_asset("assets/stock_screen_background.png", 1)
+    progress_screen_background_img = convert_asset("assets/progress_screen_background.png", 1)
+    cocktailmaker_background_img = convert_asset("assets/cocktailmaker_background.png", 1)
+    homescreen_background_img = convert_asset("assets/homescreen_background.png", 1)
+    menu_screen_background_img = convert_asset("assets/menu_screen_background.png", 1)
+    cocktail_made_background_img = convert_asset("assets/cocktail_made_background.png", 1)
+    coktail_exterior_customizer_background_img = convert_asset("assets/cocktail_design_maker_bar.png",1)
 
-    checkmark_img = convert_asset("../assets/checkmark.png", 1)
-    right_arrow_img = convert_asset("../assets/right_arrow.png", 1)
-    left_arrow_img = convert_asset("../assets/left_arrow.png", 1)
-    stock_screen_row_img = convert_asset("../assets/stock_screen_row.png", 1)
-    cocktail_shaker_img = convert_asset("../assets/cocktail_shaker.png", 2)
-    cocktail_glass_img = convert_asset("../assets/cocktail_glass.png", 1)
-    ice_layer_small_img = convert_asset("../assets/ice_layer_small.png", 1)
-    ice_layer_big_img = convert_asset("../assets/ice_layer_big.png", 1)
-    star_img = convert_asset("../assets/star.png", 1)
-    smudge_img = convert_asset("../assets/smudge.png", 1)
-    coin_img = convert_asset("../assets/coin.png", 1.5)
+    checkmark_img = convert_asset("assets/checkmark.png", 1)
+    right_arrow_img = convert_asset("assets/right_arrow.png", 1)
+    left_arrow_img = convert_asset("assets/left_arrow.png", 1)
+    stock_screen_row_img = convert_asset("assets/stock_screen_row.png", 1)
+    cocktail_shaker_img = convert_asset("assets/cocktail_shaker.png", 2)
+    cocktail_glass_img = convert_asset("assets/cocktail_glass.png", 1)
+    ice_layer_small_img = convert_asset("assets/ice_layer_small.png", 1)
+    ice_layer_big_img = convert_asset("assets/ice_layer_big.png", 1)
+    star_img = convert_asset("assets/star.png", 1)
+    smudge_img = convert_asset("assets/smudge.png", 1)
+    coin_img = convert_asset("assets/coin.png", 1.5)
 
-    guest1_img = convert_asset("../assets/guest_1.png", 1)
-    guest2_img = convert_asset("../assets/guest_2.png", 1)
-    guest3_img = convert_asset("../assets/guest_3.png", 1)
-    guest4_img = convert_asset("../assets/guest_4.png", 1)
-    guest5_img = convert_asset("../assets/guest_5.png", 1)
-    guest6_img = convert_asset("../assets/guest_6.png", 1)
-    guest7_img = convert_asset("../assets/guest_7.png", 1)
-    guest8_img = convert_asset("../assets/guest_8.png", 1)
+    guest1_img = convert_asset("assets/guest_1.png", 1)
+    guest2_img = convert_asset("assets/guest_2.png", 1)
+    guest3_img = convert_asset("assets/guest_3.png", 1)
+    guest4_img = convert_asset("assets/guest_4.png", 1)
+    guest5_img = convert_asset("assets/guest_5.png", 1)
+    guest6_img = convert_asset("assets/guest_6.png", 1)
+    guest7_img = convert_asset("assets/guest_7.png", 1)
+    guest8_img = convert_asset("assets/guest_8.png", 1)
 
     default_font = pygame.font.SysFont('Calibri', 25)
-    pixel_font_numbers = pygame.font.Font("../assets/micro_5.ttf", 60)
-    pixel_font_letters = pygame.font.Font("../assets/Jersey10.ttf", 50)
-    playthrough_name_font = pygame.font.Font("../assets/Jersey10.ttf", 60)
-    playthrough_text_font = pygame.font.Font("../assets/Jersey10.ttf", 70)
-    save_detail_font_date = pygame.font.Font("../assets/Jersey10.ttf", 30)
-    save_detail_font_nums = pygame.font.Font("../assets/Jersey10.ttf", 40)
-    leaderboard_columns_font = pygame.font.Font("../assets/Jersey10.ttf", 20)
-    leaderboard_items_font = pygame.font.Font("../assets/Jersey10.ttf", 25)
-    recipe_steps_font = pygame.font.Font("../assets/Jersey10.ttf", 32)
+    pixel_font_numbers = pygame.font.Font(get_asset_path("assets/micro_5.ttf"), 60)
+    pixel_font_letters = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 50)
+    playthrough_name_font = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 60)
+    playthrough_text_font = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 70)
+    save_detail_font_date = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 30)
+    save_detail_font_nums = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 40)
+    leaderboard_columns_font = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 20)
+    leaderboard_items_font = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 25)
+    recipe_steps_font = pygame.font.Font(get_asset_path("assets/Jersey10.ttf"), 32)
 
-    ingredient_icons_list = slice_tilesheet("../assets/ingredients_tilesheet.png", 66, 66)
-    glass_tags_list = slice_tilesheet("../assets/tags_tilesheet.png", 66, 66)
-    glasses_list = slice_tilesheet("../assets/glasses_tilesheet.png", 66, 66)
+    ingredient_icons_list = slice_tilesheet(get_asset_path("assets/ingredients_tilesheet.png"), 66, 66)
+    glass_tags_list = slice_tilesheet(get_asset_path("assets/tags_tilesheet.png"), 66, 66)
+    glasses_list = slice_tilesheet(get_asset_path("assets/glasses_tilesheet.png"), 66, 66)
+
+    pygame.display.set_icon(convert_asset("assets/icon_png.png", 1))
 
 #-----------button variables-----------
 
