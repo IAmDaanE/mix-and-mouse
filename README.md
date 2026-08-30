@@ -47,10 +47,8 @@ When you made a cocktail or smudge if the ingredients you used didn't create an 
 
 ## Screenshots
 
-| | | |
-| :---: | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/cbc47fa4-ec5b-40c9-a8d6-f663b3ce9e9c" width="100%" /> | <img src="https://github.com/user-attachments/assets/6385fc92-2d2d-46bb-afff-dce537dad8b0" width="100%" /> | <img src="https://github.com/user-attachments/assets/014ffe19-e748-4a1e-b954-d2d63a208098" width="100%" /> |
-| <img src="https://github.com/user-attachments/assets/04e284d5-fa09-4a9a-b4a2-3b55e4829bfa" width="100%" /> | <img src="https://github.com/user-attachments/assets/9928e26a-56fc-4c6d-8f4e-40e975454fce" width="100%" /> | <img src="https://github.com/user-attachments/assets/e76a99fc-f22e-4da2-9918-de7137d7ad45" width="100%" /> |
+<img src="https://github.com/user-attachments/assets/cbc47fa4-ec5b-40c9-a8d6-f663b3ce9e9c" width="100%" /><img src="https://github.com/user-attachments/assets/6385fc92-2d2d-46bb-afff-dce537dad8b0" width="100%" /><img src="https://github.com/user-attachments/assets/014ffe19-e748-4a1e-b954-d2d63a208098" width="100%" />
+<img src="https://github.com/user-attachments/assets/04e284d5-fa09-4a9a-b4a2-3b55e4829bfa" width="100%" /><img src="https://github.com/user-attachments/assets/9928e26a-56fc-4c6d-8f4e-40e975454fce" width="100%" /><img src="https://github.com/user-attachments/assets/e76a99fc-f22e-4da2-9918-de7137d7ad45" width="100%" /> 
 
 ## Getting Started
 
