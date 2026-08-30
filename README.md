@@ -37,6 +37,7 @@ You are now at the homescreen, this is the point from where you can go to other 
 * Go to your waiting customers at the bar by clicking on the bartender himself.
 * Go to the recipe shop by clicking on the stack of recipe books on the counter.
 * Go to your own recipe book at any time by pressing the `TAB` key on your keyboard
+* Go to the progress screen by clicking on your username in the top right.
 
 Make money by first buying some ingredients, then either trying some combinations of recipes you know in real life until you discover a new one for your recipe book or making a recipe you already know. Each recipe you create gets a score of stars out of five, the more stars the more perfect your ratios of ingredients, this means you can improve on recipes you already discovered make them worth more.
 
