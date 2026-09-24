@@ -2,6 +2,17 @@
 
 A game about creating cocktails on demand for customers, discovering new recipes and unlocking new ingredients. Written in python using pygame. Has a Json file saving system and a leaderboard API.
 
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/cbc47fa4-ec5b-40c9-a8d6-f663b3ce9e9c" width="32%" />
+  <img src="https://github.com/user-attachments/assets/6385fc92-2d2d-46bb-afff-dce537dad8b0" width="32%" />
+  <img src="https://github.com/user-attachments/assets/014ffe19-e748-4a1e-b954-d2d63a208098" width="32%" />
+</p>
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/04e284d5-fa09-4a9a-b4a2-3b55e4829bfa" width="32%" />
+  <img src="https://github.com/user-attachments/assets/9928e26a-56fc-4c6d-8f4e-40e975454fce" width="32%" />
+  <img src="https://github.com/user-attachments/assets/e76a99fc-f22e-4da2-9918-de7137d7ad45" width="32%" />
+</p>
+
 ## About the Project
 
 You can find the .exe version of this game on [its itch.io page](sdfsdf).
@@ -44,19 +55,6 @@ Make money by first buying some ingredients, then either trying some combination
 To see what your guests want to order go to the guest screen by clicking on your bartender and clicking on individual guests. Customers will only pick something thats on your menu and you can add things to your menu from inside the recipe book, for the cocktail you want to add to the menu click `ADD` and they can now choose this one as well.
 
 When you made a cocktail or smudge if the ingredients you used didn't create an existing cocktail, go to your guests and drag it over to the one who ordered that drink.
-
-## Screenshots
-
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/cbc47fa4-ec5b-40c9-a8d6-f663b3ce9e9c" width="32%" />
-  <img src="https://github.com/user-attachments/assets/6385fc92-2d2d-46bb-afff-dce537dad8b0" width="32%" />
-  <img src="https://github.com/user-attachments/assets/014ffe19-e748-4a1e-b954-d2d63a208098" width="32%" />
-</p>
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/04e284d5-fa09-4a9a-b4a2-3b55e4829bfa" width="32%" />
-  <img src="https://github.com/user-attachments/assets/9928e26a-56fc-4c6d-8f4e-40e975454fce" width="32%" />
-  <img src="https://github.com/user-attachments/assets/e76a99fc-f22e-4da2-9918-de7137d7ad45" width="32%" />
-</p>
 
 ## Starting the Program
 
