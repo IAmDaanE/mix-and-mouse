@@ -17,7 +17,7 @@ A game about creating cocktails on demand for customers, discovering new recipes
 
 You can find the .exe version of this game on [its itch.io page](sdfsdf).
 
-I am a teenager from Belgium and created this together with my cousin who [is also on GitHub](https://github.com/TVR-spec). When starting the project I barely had any coding experience and due to this the entire game lives in one python file with 2500 lines of code and the codebase is very chaotic and messy.
+When starting the project I barely had any coding experience and due to this the entire game lives in one python file with 2500 lines of code and the codebase is very chaotic and messy.
 
 ### Game
 
