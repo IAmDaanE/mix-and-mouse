@@ -1,6 +1,6 @@
 # Mix and Mouse
 
-A game about creating cocktails on demand for customers, discovering new recipes and unlocking new ingredients. Written in python using pygame
+A game about creating cocktails on demand for customers, discovering new recipes and unlocking new ingredients. Written in python using pygame.
 
 <p float="left">
   <img src="https://github.com/user-attachments/assets/cbc47fa4-ec5b-40c9-a8d6-f663b3ce9e9c" width="32%" />
