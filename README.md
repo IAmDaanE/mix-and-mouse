@@ -21,9 +21,7 @@ When starting the project I barely had any coding experience and due to this the
 
 ### Game
 
-All cocktails are based on real world ones so knowing a lot about them is definitely an advantage.
-
-All assets were drawn by my cousin in `Aseprite`, which was a lot of work.
+All recipes are based on real world cocktails so knowing a lot about them is definitely an advantage.
 
 The game consists of a bunch of scenes so to display those we just use a bunch of functions like `display_homescreen()` and `display_recipe_book()`. Then in the game loop we select which one to call based on what scene we are in.
 
