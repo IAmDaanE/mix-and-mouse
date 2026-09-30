@@ -25,7 +25,7 @@ All recipes are based on real world cocktails so knowing a lot about them is def
 
 The game consists of a bunch of scenes so to display those we just use a bunch of functions like `display_homescreen()` and `display_recipe_book()`. Then in the game loop we select which one to call based on what scene we are in.
 
-When firing up the game for the first time the user is prompted to enter a username, this is saved in a text file and used from that point on.
+When firing up the game for the first time the user is prompted to enter a username, this is saved in a text file and used on leaderboards from that point on.
 
 ### Leaderboard API
 
