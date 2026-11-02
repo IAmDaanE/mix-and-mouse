@@ -26,7 +26,7 @@ if True:
 
     pygame.init()
     pygame.mixer.init()
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SCALED | pygame.RESIZABLE)
     pygame.display.set_caption("Mix and Mouse")
     clock = pygame.time.Clock()
 
