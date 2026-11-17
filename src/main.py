@@ -109,6 +109,7 @@ if True:
     star_img = convert_asset("assets/star.png", 1)
     smudge_img = convert_asset("assets/smudge.png", 1)
     coin_img = convert_asset("assets/coin.png", 1.5)
+    smaller_coin_img = convert_asset("assets/coin.png", 1)
 
     guest1_img = convert_asset("assets/guest_1.png", 1)
     guest2_img = convert_asset("assets/guest_2.png", 1)
@@ -1995,7 +1996,7 @@ if True:
         screen.blit(username_text, (WINDOW_WIDTH - 10 - username_text.get_width(), 10))
         balance_text = save_detail_font_nums.render(f"{balance}", True, (255,255,255))
         screen.blit(balance_text, (WINDOW_WIDTH - 10 - balance_text.get_width(), 45))
-        screen.blit(pygame.image.load("../assets/coin.png"), (WINDOW_WIDTH - 41 - balance_text.get_width(), 57))
+        screen.blit(smaller_coin_img, (WINDOW_WIDTH - 41 - balance_text.get_width(), 57))
         if settings["show_leaderboard"]:
             display_leaderboard()
 
