@@ -980,27 +980,6 @@ if True:
                 break
             folder_counter += 1
 
-    def new_save():
-        global username
-        if playthrough_name_text != "data.json":
-            os.mkdir(f"{save_files_location}/{playthrough_name_text}")
-            basic_data = {"balance": balance, "customers_served": customers_served, "last_save": time.strftime("%m/%d/%Y"), "legit_playthrough": legit_playthrough, "best_cocktail_value": best_cocktail_value, "tier_recipes_available": tier_recipes_available}
-            guest_data = {"guests": guests, "guest_available_spots": guest_available_spots, "first_save_done": first_save_done}
-            unlocked_ingredients_data = unlocked_ingredients
-            settings_data = settings
-            unlocks_data = unlocks
-            save_data = {
-                **basic_data,
-                **guest_data,
-                "settings": settings_data,
-                "ingredients": unlocked_ingredients_data,
-                "unlocks": unlocks_data
-                }
-            with open(f"{save_files_location}/{playthrough_name_text}/data.json", "w") as f:
-                json.dump(save_data, f)
-            with open(username_txt_file, "r") as f:
-                username = f.read()
-
     def load_save():
         global balance, customers_served, unlocked_ingredients, settings, guests, guest_available_spots, first_save_done, unlocks, username, personal_recipes, drink_pic_lib, unlocked_drinks, stashed_cocktails, cocktail_available_spots, cur_menu, legit_playthrough, best_cocktail_value, tier_recipes_available
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "r") as f:
@@ -1059,10 +1038,17 @@ if True:
             "cocktail_available_spots": cocktail_available_spots,
             "cur_menu": cur_menu
             }
-        
         with open(f"{save_files_location}/{selected_continue_save_name}/data.json", "w") as f:
             json.dump(save_data, f)
         update_post()
+        
+    def new_save():
+        global username
+        if playthrough_name_text != "data.json":
+            os.mkdir(f"{save_files_location}/{playthrough_name_text}")
+            with open(username_txt_file, "r") as f:
+                username = f.read()
+            regular_save()
 
     def rond_af_5(n):
             return int(math.ceil(n / 5) * 5)
