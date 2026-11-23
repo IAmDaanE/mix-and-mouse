@@ -2,7 +2,7 @@
 
 A game about creating cocktails on demand for customers, discovering new recipes and unlocking new ingredients. Written in python using pygame.
 
-[Here](https://dtstudios.itch.io/mix-and-mouse) is the itch.io page.
+[At this link](https://dtstudios.itch.io/mix-and-mouse) is the itch.io page.
 
 <p float="left">
   <img src="https://github.com/user-attachments/assets/cbc47fa4-ec5b-40c9-a8d6-f663b3ce9e9c" width="32%" />
